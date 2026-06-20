@@ -30,10 +30,10 @@ const portfolioData = {
 
   metrics: [
     { label: "Years Experience", value: 3, suffix: "+" },
-    { label: "Projects Delivered", value: 42, suffix: "" },
-    { label: "Production Incidents Resolved", value: 480, suffix: "+" },
-    { label: "Servers Managed", value: 10000, suffix: "+" },
-    { label: "Deployments Automated", value: 1200, suffix: "+" },
+    { label: "Projects Delivered", value: 50, suffix: "+" },
+    { label: "Production Incidents Resolved", value: 100, suffix: "+" },
+    { label: "Servers Managed", value: 1000, suffix: "+" },
+    { label: "Deployments Automated", value: 500, suffix: "+" },
     { label: "Infrastructure Availability", value: 99.999, suffix: "%" }
   ],
 
