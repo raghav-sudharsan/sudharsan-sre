@@ -15,6 +15,7 @@
   <!-- Background Mesh & Grid -->
   <div class="bg-mesh-container">
     <div class="bg-mesh"></div>
+    <canvas id="telemetry-particles-canvas"></canvas>
   </div>
   <div class="dashboard-grid-overlay"></div>
 
@@ -48,6 +49,8 @@
           <div class="system-status">
             <span class="status-dot-blink"></span>
             <span>SYSTEMS OPERATIONAL</span>
+            <span style="opacity: 0.3; margin: 0 4px;">|</span>
+            <span id="uptime-percentage-ticker" style="font-family: monospace; font-weight: 700;">99.9990% SLA</span>
           </div>
         </div>
       </div>
@@ -153,6 +156,16 @@
               data-lucide="git-branch"></i></a>
           <a href="#" id="social-link-medium" class="social-circle-btn" target="_blank" aria-label="Medium"><i
               data-lucide="book-open"></i></a>
+        </div>
+
+        <!-- Simulated SRE Live Logs -->
+        <div class="sidebar-metric-row" style="margin-top: 15px; border-top: 1px solid var(--border-color); padding-top: 15px;">
+          <span class="sidebar-metric-label" style="display:flex; align-items:center; gap:6px;">
+            <i data-lucide="activity" style="width:12px; height:12px; color:#06b6d4;"></i> Telemetry Stream
+          </span>
+          <div class="telemetry-log-console" id="sidebar-telemetry-console">
+            <span class="log-line">> init telemetry link...</span>
+          </div>
         </div>
       </aside>
 
@@ -572,8 +585,16 @@
   <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
   <script src="https://unpkg.com/lucide@latest"></script>
 
+  <!-- Split Content Configurations -->
+  <script src="content/profile.js"></script>
+  <script src="content/experience.js"></script>
+  <script src="content/skills.js"></script>
+  <script src="content/certifications.js"></script>
+  <script src="content/projects.js"></script>
+  <script src="content/achievements.js"></script>
+  <script src="content/contact.js"></script>
+
   <!-- Custom Portfolio Scripts -->
-  <script src="portfolioData.js"></script>
   <script src="app.js"></script>
 </body>
 

@@ -51,6 +51,11 @@ function initApp() {
   setupScrollObserver();
   setupBlueprintZoom();
 
+  // Initialize SRE Observability Dashboard animations
+  initTelemetryParticles();
+  initLiveUptimeTicker();
+  initRecruiterHubConsole();
+
   // Run Lucide icon creation
   lucide.createIcons();
 }
@@ -1277,4 +1282,125 @@ function initScrollReveal() {
   }, options);
 
   revealElements.forEach(el => observer.observe(el));
+}
+
+// Simulated Telemetry Connected Nodes Canvas Background
+function initTelemetryParticles() {
+  const canvas = document.getElementById("telemetry-particles-canvas");
+  if (!canvas) return;
+  const ctx = canvas.getContext("2d");
+  let particles = [];
+  const maxParticles = 40;
+
+  const resizeCanvas = () => {
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+  };
+  window.addEventListener("resize", resizeCanvas);
+  resizeCanvas();
+
+  class Particle {
+    constructor() {
+      this.reset();
+    }
+    reset() {
+      this.x = Math.random() * canvas.width;
+      this.y = Math.random() * canvas.height;
+      this.size = Math.random() * 1.5 + 1;
+      this.speedX = (Math.random() * 0.3 - 0.15);
+      this.speedY = (Math.random() * 0.3 - 0.15);
+      this.opacity = Math.random() * 0.4 + 0.1;
+    }
+    update() {
+      this.x += this.speedX;
+      this.y += this.speedY;
+      if (this.x < 0 || this.x > canvas.width || this.y < 0 || this.y > canvas.height) {
+        this.reset();
+      }
+    }
+    draw() {
+      ctx.beginPath();
+      ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+      ctx.fillStyle = `rgba(6, 182, 212, ${this.opacity})`;
+      ctx.fill();
+    }
+  }
+
+  for (let i = 0; i < maxParticles; i++) {
+    particles.push(new Particle());
+  }
+
+  function animate() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    for (let i = 0; i < particles.length; i++) {
+      particles[i].update();
+      particles[i].draw();
+
+      for (let j = i + 1; j < particles.length; j++) {
+        const dx = particles[i].x - particles[j].x;
+        const dy = particles[i].y - particles[j].y;
+        const dist = Math.sqrt(dx * dx + dy * dy);
+        if (dist < 110) {
+          ctx.beginPath();
+          ctx.moveTo(particles[i].x, particles[i].y);
+          ctx.lineTo(particles[j].x, particles[j].y);
+          ctx.strokeStyle = `rgba(99, 102, 241, ${(1 - dist/110) * 0.08})`;
+          ctx.lineWidth = 0.5;
+          ctx.stroke();
+        }
+      }
+    }
+    requestAnimationFrame(animate);
+  }
+  animate();
+}
+
+// Heartbeat uptime decimal ticker
+function initLiveUptimeTicker() {
+  const ticker = document.getElementById("uptime-percentage-ticker");
+  if (!ticker) return;
+
+  let baseUptime = 99.99923;
+  setInterval(() => {
+    const fluctuation = (Math.random() * 0.00018 - 0.00009);
+    const newUptime = Math.min(100.0, Math.max(99.99901, baseUptime + fluctuation));
+    ticker.innerText = `${newUptime.toFixed(5)}% SLA`;
+  }, 3500);
+}
+
+// Live telemetry log feed
+function initRecruiterHubConsole() {
+  const consoleEl = document.getElementById("sidebar-telemetry-console");
+  if (!consoleEl) return;
+
+  const mockLogs = [
+    { type: "info", text: "sysctl net.ipv4.ip_forward = 1" },
+    { type: "success", text: "APIs operational: 99.99% uptime" },
+    { type: "info", text: "observability telemetry stream ACTIVE" },
+    { type: "success", text: "Prometheus scrape target Wikiprospects [OK]" },
+    { type: "success", text: "Karpenter scaled down node pool - 14% cost saved" },
+    { type: "info", text: "GitOps hook sync: ArgoCD HEAD -> EKS us-west-2" },
+    { type: "warning", text: "Vault secret renewal dispatched: token_ttl=3600" },
+    { type: "info", text: "incident responder idle, active alerts: 0" },
+    { type: "success", text: "Route53 latency routing: us-west-2 RTT 12ms" },
+    { type: "success", text: "Craftsilicon cluster heartbeat: OK" },
+    { type: "info", text: "Elasticsearch index cleanup complete: deleted 8 indices" }
+  ];
+
+  let logIndex = 0;
+  setInterval(() => {
+    const log = mockLogs[Math.floor(Math.random() * mockLogs.length)];
+    const time = new Date().toLocaleTimeString('en-US', { hour12: false });
+
+    const lineEl = document.createElement("span");
+    lineEl.className = `log-line log-${log.type}`;
+    lineEl.innerText = `[${time}] ${log.text}`;
+
+    consoleEl.appendChild(lineEl);
+
+    // maintain max 4 lines in logs terminal window
+    while (consoleEl.children.length > 5) {
+      consoleEl.removeChild(consoleEl.firstChild);
+    }
+  }, 4000);
 }
