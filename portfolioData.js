@@ -1,9 +1,9 @@
 const portfolioData = {
     personalInfo: {
         name: "Sudharsan S",
-        designation: "AI DevOps & SRE Engineer | DevOps Engineer | Cloud Architect",
-        summary: "Highly skilled AI DevOps & Site Reliability Engineer specializing in cloud infrastructure, AI-powered automation, CI/CD, observability, incident response, reliability engineering, and enterprise-scale platform operations. Passionate about maintaining 99.999% availability, reducing MTTR, and engineering intelligent self-healing systems.",
-        bio: "With extensive experience managing high-throughput production environments, I bridge the gap between AI-driven automation and systems engineering. I specialize in building robust platforms, designing scalable multi-cloud architectures, and embedding AI capabilities into DevOps workflows. My approach focuses on treating operational challenges as software engineering problems, automating everything intelligently, and implementing data-driven observability pipelines at enterprise scale.",
+        designation: "Site Reliability Engineer | DevOps Engineer | Cloud Engineer",
+        summary: "Highly skilled Site Reliability Engineer specializing in cloud infrastructure, automated CI/CD, observability, incident response, reliability engineering, and enterprise-scale platform operations. Passionate about maintaining 99.999% availability, reducing MTTR, and engineering intelligent systems.",
+        bio: "With extensive experience managing high-throughput production environments, I bridge the gap between automation and systems engineering. I specialize in building robust platforms, designing scalable multi-cloud architectures, and embedding reliability engineering into DevOps workflows. My approach focuses on treating operational challenges as software engineering problems, automating everything intelligently, and implementing data-driven observability pipelines at enterprise scale.",
         yearsOfExperience: 3,
         industryExpertise: "Fintech, E-commerce, SaaS, Enterprise Cloud Platforms",
         coreStrengths: [
@@ -16,11 +16,11 @@ const portfolioData = {
             "Zero-Downtime Migration Strategies",
             "Observability & Telemetry Pipelines"
         ],
-        avatarUrl: "", // Defaults to generated SVG/placeholder if empty
+        avatarUrl: "Sudharsan_SRE.jpeg",
         resumeUrl: "#",
         socialLinks: {
-            linkedin: "https://linkedin.com/in/sudharsan-s",
-            github: "https://github.com/sudharsan-s",
+            linkedin: "https://linkedin.com/in/sudharsan-sre/",
+            github: "https://github.com/raghav-sudharsan",
             gitlab: "https://gitlab.com/sudharsan-s",
             medium: "https://medium.com/@sudharsan-s",
             email: "raghavsudhar07@gmail.com",
@@ -481,8 +481,8 @@ In our recent Game Day, we identified that while our system automatically recove
         primarySkills: "Kubernetes, AWS, Terraform, Ansible, Prometheus/Grafana, GitHub Actions, Linux, Python",
         noticePeriod: "30 Days (Negotiable)",
         location: "Bangalore, Karnataka, India (Open to Hybrid / Remote)",
-        availabilityStatus: "Actively interviewing for AI DevOps & SRE roles",
-        expectedRole: "AI DevOps & Site Reliability Engineer",
+        availabilityStatus: "Actively interviewing for SRE & DevOps roles",
+        expectedRole: "Site Reliability Engineer | DevOps Engineer | Cloud Engineer",
         resumeDownloadUrl: "#"
     }
 };

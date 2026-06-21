@@ -409,7 +409,7 @@ body.light-mode .nav-link.active {
 
 .hero-glass-mesh {
   display: grid;
-  grid-template-columns: auto 1fr auto;
+  grid-template-columns: auto minmax(0, 1fr) auto;
   align-items: center;
   gap: 30px;
   padding: 35px;
@@ -427,6 +427,19 @@ body.light-mode .nav-link.active {
   height: 100%;
   background: linear-gradient(135deg, rgba(6, 182, 212, 0.05) 0%, rgba(139, 92, 246, 0.05) 100%);
   pointer-events: none;
+}
+
+.avatar-container {
+  position: relative;
+  width: 140px;
+  height: 140px;
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--border-color);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
 }
 
 .avatar-upload-area {
@@ -486,6 +499,15 @@ body.light-mode .nav-link.active {
   gap: 12px;
 }
 
+.hero-name-title {
+  font-family: var(--font-heading);
+  font-weight: 700;
+  font-size: 2.25rem;
+  color: var(--text-primary);
+  padding: 2px 0px;
+  width: auto;
+}
+
 .hero-name-input {
   font-family: var(--font-heading);
   font-weight: 700;
@@ -532,6 +554,8 @@ body.light-mode .hero-name-input:focus {
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   display: inline-block;
+  word-break: break-word;
+  overflow-wrap: break-word;
 }
 
 .hero-summary {
@@ -544,6 +568,7 @@ body.light-mode .hero-name-input:focus {
 /* Hero Action Buttons */
 .hero-actions {
   display: flex;
+  flex-wrap: wrap;
   gap: 12px;
 }
 
@@ -588,7 +613,7 @@ body.light-mode .btn-secondary:hover {
 /* --- MAIN DASHBOARD CONTENT GRID --- */
 .dashboard-grid {
   display: grid;
-  grid-template-columns: 320px 1fr;
+  grid-template-columns: 320px minmax(0, 1fr);
   gap: 30px;
   padding: 0 30px 40px 30px;
   align-items: start;
@@ -602,6 +627,7 @@ body.light-mode .btn-secondary:hover {
   display: flex;
   flex-direction: column;
   gap: 20px;
+  min-width: 0;
 }
 
 .sidebar-title {
@@ -688,6 +714,7 @@ body.light-mode .btn-secondary:hover {
   display: flex;
   flex-direction: column;
   gap: 40px;
+  min-width: 0;
 }
 
 /* Section Common Styling */
@@ -770,7 +797,7 @@ body.light-mode .btn-secondary:hover {
 /* --- PROFESSIONAL KPI METRICS --- */
 .metrics-grid {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 20px;
 }
 
@@ -1518,12 +1545,16 @@ body.light-mode .timeline-impact-card {
   display: flex;
   transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
   will-change: transform;
+  transform: translateZ(0);
+  backface-visibility: hidden;
 }
 
 .testimonial-slide {
   min-width: 100%;
   width: 100%;
   padding: 0 10px;
+  transform: translateZ(0);
+  backface-visibility: hidden;
 }
 
 .testimonial-card {
@@ -1531,6 +1562,8 @@ body.light-mode .timeline-impact-card {
   display: flex;
   flex-direction: column;
   gap: 15px;
+  transform: translateZ(0);
+  backface-visibility: hidden;
 }
 
 .testimonial-quote {
@@ -1991,9 +2024,21 @@ body.light-mode .main-footer {
 
   .hero-actions {
     justify-content: center;
+    width: 100%;
+  }
+
+  .hero-actions .btn {
+    flex: 1 1 auto;
+    justify-content: center;
+    min-width: 130px;
+  }
+
+  .sidebar-socials {
+    justify-content: center;
   }
 
   .about-cards-grid,
+  .metrics-grid,
   .skills-container,
   .projects-grid,
   .certifications-grid,
@@ -2087,5 +2132,63 @@ body.light-mode .main-footer {
 
   .resume-item-details {
     color: #334155 !important;
+  }
+}
+
+/* --- DYNAMIC TRANSITIONS & SCROLL REVEAL ANIMATIONS --- */
+
+.reveal-on-scroll {
+  opacity: 0;
+  transform: translateY(24px);
+  transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1), transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: opacity, transform;
+}
+
+.reveal-on-scroll.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.reveal-stagger-1 { transition-delay: 0.1s; }
+.reveal-stagger-2 { transition-delay: 0.2s; }
+.reveal-stagger-3 { transition-delay: 0.3s; }
+.reveal-stagger-4 { transition-delay: 0.4s; }
+
+/* Smooth Page Entrance Animations on load */
+.hero-wrapper {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 1.2s cubic-bezier(0.16, 1, 0.3, 1), transform 1.2s cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: opacity, transform;
+}
+
+body.app-loaded .hero-wrapper {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.recruiter-sidebar {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 1.2s cubic-bezier(0.16, 1, 0.3, 1) 0.15s, transform 1.2s cubic-bezier(0.16, 1, 0.3, 1) 0.15s;
+  will-change: opacity, transform;
+}
+
+body.app-loaded .recruiter-sidebar {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Accessibility settings for motion preferences */
+@media (prefers-reduced-motion: reduce) {
+  .reveal-on-scroll,
+  .hero-wrapper,
+  .recruiter-sidebar,
+  .testimonials-track,
+  .bg-mesh {
+    transition: none !important;
+    animation: none !important;
+    transform: none !important;
+    opacity: 1 !important;
   }
 }

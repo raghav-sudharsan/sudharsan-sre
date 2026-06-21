@@ -6,10 +6,6 @@ document.addEventListener("DOMContentLoaded", () => {
 // Global state holding configuration overrides
 let appState = {
   theme: "dark",
-  name: portfolioData.personalInfo.name,
-  avatar: "",
-  customArchitectures: {},
-  customCerts: {},
   messages: []
 };
 
@@ -19,9 +15,18 @@ function initApp() {
   setupTerminalPreloader();
   applyTheme();
   setupThemeToggle();
-  setupEditableName();
-  setupAvatarUpload();
   setupNavigation();
+
+  // Set static SRE profile elements from portfolioData
+  const nameEl = document.getElementById("hero-name-val");
+  if (nameEl) {
+    nameEl.innerText = portfolioData.personalInfo.name;
+  }
+  const avatarEl = document.getElementById("avatar-preview-img");
+  if (avatarEl && portfolioData.personalInfo.avatarUrl) {
+    avatarEl.src = portfolioData.personalInfo.avatarUrl;
+    avatarEl.style.display = "block";
+  }
 
   // Render Dynamic Content Components
   renderRecruiterHub();
@@ -44,7 +49,7 @@ function initApp() {
   setupTestimonialsSlider();
   setupModals();
   setupScrollObserver();
-  setupCustomUploads();
+  setupBlueprintZoom();
 
   // Run Lucide icon creation
   lucide.createIcons();
@@ -82,7 +87,9 @@ function setupTerminalPreloader() {
     loadingScreen.style.opacity = "0";
     setTimeout(() => {
       loadingScreen.style.visibility = "hidden";
+      document.body.classList.add("app-loaded");
       animateOnLoad();
+      initScrollReveal();
     }, 500);
   }, delay + 500);
 }
@@ -95,32 +102,28 @@ function animateOnLoad() {
 
 // Save & load state using browser storage
 function loadLocalStorage() {
-  if (localStorage.getItem("sre_portfolio_theme")) {
-    appState.theme = localStorage.getItem("sre_portfolio_theme");
-  }
-  if (localStorage.getItem("sre_portfolio_name")) {
-    appState.name = localStorage.getItem("sre_portfolio_name");
-  }
-  if (localStorage.getItem("sre_portfolio_avatar")) {
-    appState.avatar = localStorage.getItem("sre_portfolio_avatar");
-  }
-  if (localStorage.getItem("sre_portfolio_custom_arch")) {
-    appState.customArchitectures = JSON.parse(localStorage.getItem("sre_portfolio_custom_arch"));
-  }
-  if (localStorage.getItem("sre_portfolio_custom_certs")) {
-    appState.customCerts = JSON.parse(localStorage.getItem("sre_portfolio_custom_certs"));
-  }
-  if (localStorage.getItem("sre_portfolio_messages")) {
-    appState.messages = JSON.parse(localStorage.getItem("sre_portfolio_messages"));
+  try {
+    if (localStorage.getItem("sre_portfolio_theme")) {
+      appState.theme = localStorage.getItem("sre_portfolio_theme");
+    }
+    if (localStorage.getItem("sre_portfolio_messages")) {
+      appState.messages = JSON.parse(localStorage.getItem("sre_portfolio_messages"));
+    }
+  } catch (e) {
+    console.warn("Unable to load state from localStorage:", e);
   }
 }
 
 function saveState(key, val) {
   appState[key] = val;
-  if (typeof val === "object") {
-    localStorage.setItem(`sre_portfolio_${key}`, JSON.stringify(val));
-  } else {
-    localStorage.setItem(`sre_portfolio_${key}`, val);
+  try {
+    if (typeof val === "object") {
+      localStorage.setItem(`sre_portfolio_${key}`, JSON.stringify(val));
+    } else {
+      localStorage.setItem(`sre_portfolio_${key}`, val);
+    }
+  } catch (e) {
+    console.warn("Unable to save state to localStorage:", e);
   }
 }
 
@@ -139,77 +142,13 @@ function applyTheme() {
 
 function setupThemeToggle() {
   const toggleBtn = document.getElementById("theme-toggle-btn");
-  toggleBtn.addEventListener("click", () => {
-    const newTheme = appState.theme === "dark" ? "light" : "dark";
-    saveState("theme", newTheme);
-    applyTheme();
-  });
-}
-
-// Editable Name triggers
-function setupEditableName() {
-  const nameInput = document.getElementById("hero-name-val");
-  const editBtn = document.getElementById("hero-edit-name-btn");
-
-  nameInput.value = appState.name;
-
-  editBtn.addEventListener("click", () => {
-    const isReadonly = nameInput.hasAttribute("readonly");
-    if (isReadonly) {
-      nameInput.removeAttribute("readonly");
-      nameInput.focus();
-      editBtn.innerHTML = `<i data-lucide="check" style="width: 16px; height: 16px;"></i>`;
-      lucide.createIcons();
-      nameInput.select();
-    } else {
-      nameInput.setAttribute("readonly", true);
-      editBtn.innerHTML = `<i data-lucide="edit-3" style="width: 16px; height: 16px;"></i>`;
-      lucide.createIcons();
-      saveState("name", nameInput.value.trim() || portfolioData.personalInfo.name);
-      renderResume(document.getElementById("resume-view-gui-btn").classList.contains("active") ? "gui" : "ats");
-    }
-  });
-
-  nameInput.addEventListener("keydown", (e) => {
-    if (e.key === "Enter") {
-      editBtn.click();
-    }
-  });
-}
-
-// Avatar Photo Upload triggers
-function setupAvatarUpload() {
-  const clickZone = document.getElementById("avatar-click-zone");
-  const fileInput = document.getElementById("avatar-file-input");
-  const previewImg = document.getElementById("avatar-preview-img");
-  const placeholderBox = document.getElementById("avatar-placeholder-box");
-
-  // Set default or loaded photo
-  if (appState.avatar) {
-    previewImg.src = appState.avatar;
-    previewImg.style.display = "block";
-    placeholderBox.style.display = "none";
+  if (toggleBtn) {
+    toggleBtn.addEventListener("click", () => {
+      const newTheme = appState.theme === "dark" ? "light" : "dark";
+      saveState("theme", newTheme);
+      applyTheme();
+    });
   }
-
-  clickZone.addEventListener("click", () => {
-    fileInput.click();
-  });
-
-  fileInput.addEventListener("change", (e) => {
-    const file = e.target.files[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onload = (event) => {
-        const base64 = event.target.result;
-        saveState("avatar", base64);
-        previewImg.src = base64;
-        previewImg.style.display = "block";
-        placeholderBox.style.display = "none";
-        showToast("Profile telemetry avatar synchronized.");
-      };
-      reader.readAsDataURL(file);
-    }
-  });
 }
 
 // Smooth scrolling and header active sync
@@ -263,7 +202,8 @@ function renderMetrics() {
 
   portfolioData.metrics.forEach((metric, idx) => {
     const card = document.createElement("div");
-    card.className = "metric-card glass-panel";
+    const staggerClass = `reveal-stagger-${(idx % 4) + 1}`;
+    card.className = `metric-card glass-panel reveal-on-scroll ${staggerClass}`;
     card.innerHTML = `
       <span class="metric-counter" id="counter-${idx}" data-target="${metric.value}" data-suffix="${metric.suffix}">0</span>
       <span class="metric-label">${metric.label}</span>
@@ -361,9 +301,10 @@ function renderSkills() {
   const container = document.getElementById("skills-clusters-container");
   container.innerHTML = "";
 
-  portfolioData.skills.forEach(cat => {
+  portfolioData.skills.forEach((cat, idx) => {
     const card = document.createElement("div");
-    card.className = "skills-category-card glass-panel";
+    const staggerClass = `reveal-stagger-${(idx % 4) + 1}`;
+    card.className = `skills-category-card glass-panel reveal-on-scroll ${staggerClass}`;
     card.innerHTML = `
       <h3 class="about-subtitle"><i data-lucide="tag" style="width:14px; height:14px; vertical-align:-1px; margin-right:4px;"></i> ${cat.category}</h3>
       <div class="skills-list">
@@ -400,9 +341,10 @@ function renderProjects(filterValue) {
     ? portfolioData.projects
     : portfolioData.projects.filter(p => p.category === filterValue);
 
-  filtered.forEach(p => {
+  filtered.forEach((p, idx) => {
     const card = document.createElement("div");
-    card.className = "project-card glass-panel";
+    const staggerClass = `reveal-stagger-${(idx % 4) + 1}`;
+    card.className = `project-card glass-panel reveal-on-scroll ${staggerClass}`;
     card.innerHTML = `
       <span class="project-category-tag">${p.category}</span>
       <h3 class="project-title">${p.name}</h3>
@@ -419,6 +361,9 @@ function renderProjects(filterValue) {
   });
 
   lucide.createIcons();
+  if (typeof initScrollReveal === "function") {
+    initScrollReveal();
+  }
 }
 
 function setupProjectFilters() {
@@ -464,20 +409,9 @@ function loadArchitectureView(arch) {
   const canvas = document.getElementById("arch-drawing-canvas");
   canvas.innerHTML = "";
 
-  // Check if user uploaded an override image
-  if (appState.customArchitectures[arch.id]) {
-    const img = document.createElement("img");
-    img.src = appState.customArchitectures[arch.id];
-    img.alt = arch.title;
-    img.style.maxWidth = "90%";
-    img.style.maxHeight = "90%";
-    img.style.borderRadius = "var(--radius-sm)";
-    canvas.appendChild(img);
-  } else {
-    // Generate beautiful custom animated vector inline SVG
-    const svgStr = generateSVGDiagram(arch.type);
-    canvas.innerHTML = svgStr;
-  }
+  // Generate beautiful custom animated vector inline SVG
+  const svgStr = generateSVGDiagram(arch.type);
+  canvas.innerHTML = svgStr;
 }
 
 // Generate animated SVGs in JS to avoid asset loading dependency
@@ -716,9 +650,10 @@ function renderTimeline() {
   const container = document.getElementById("experience-timeline-container");
   container.innerHTML = "";
 
-  portfolioData.experience.forEach(exp => {
+  portfolioData.experience.forEach((exp, idx) => {
     const item = document.createElement("div");
-    item.className = "timeline-item";
+    const staggerClass = `reveal-stagger-${(idx % 2) + 1}`;
+    item.className = `timeline-item reveal-on-scroll ${staggerClass}`;
     item.innerHTML = `
       <div class="timeline-bullet"></div>
       <div class="timeline-card glass-panel">
@@ -757,9 +692,10 @@ function renderAchievements() {
   const container = document.getElementById("achievements-card-scroller");
   container.innerHTML = "";
 
-  portfolioData.achievements.forEach(ach => {
+  portfolioData.achievements.forEach((ach, idx) => {
     const card = document.createElement("div");
-    card.className = "achievement-glass-card glass-panel";
+    const staggerClass = `reveal-stagger-${(idx % 4) + 1}`;
+    card.className = `achievement-glass-card glass-panel reveal-on-scroll ${staggerClass}`;
     card.innerHTML = `
       <div class="achievement-icon-row">
         <div class="achievement-icon-circle"><i data-lucide="${ach.icon}"></i></div>
@@ -776,12 +712,10 @@ function renderCertifications() {
   const container = document.getElementById("certifications-list-container");
   container.innerHTML = "";
 
-  portfolioData.certifications.forEach(cert => {
+  portfolioData.certifications.forEach((cert, idx) => {
     const card = document.createElement("div");
-    card.className = "certification-card glass-panel";
-
-    // Check if custom certificate image has been uploaded
-    const fileLabelText = appState.customCerts[cert.id] ? "Override Scan Uploaded" : "Upload Scan Certificate";
+    const staggerClass = `reveal-stagger-${(idx % 4) + 1}`;
+    card.className = `certification-card glass-panel reveal-on-scroll ${staggerClass}`;
 
     card.innerHTML = `
       <div class="cert-icon-container"><i data-lucide="${cert.icon}"></i></div>
@@ -803,9 +737,10 @@ function renderBlogs() {
   const container = document.getElementById("blogs-list-container");
   container.innerHTML = "";
 
-  portfolioData.blogs.forEach(blog => {
+  portfolioData.blogs.forEach((blog, idx) => {
     const card = document.createElement("div");
-    card.className = "blog-card glass-panel";
+    const staggerClass = `reveal-stagger-${(idx % 4) + 1}`;
+    card.className = `blog-card glass-panel reveal-on-scroll ${staggerClass}`;
     card.addEventListener("click", () => openBlogModal(blog.id));
     card.innerHTML = `
       <div class="blog-meta-row">
@@ -831,11 +766,11 @@ function renderResume(mode) {
 
     const plainText = `
 SUDHARSAN S
-AI DevOps & Site Reliability Engineer
+Site Reliability Engineer | DevOps Engineer | Cloud Engineer
 Bangalore, Karnataka, India | raghavsudhar07@gmail.com
 
 PROFESSIONAL SUMMARY
-Highly skilled AI DevOps & Site Reliability Engineer with 3+ years of experience specializing in cloud infrastructure, AI-powered automation, CI/CD, observability, incident response, reliability engineering, and enterprise-scale platform operations. Focused on maintaining 99.999% availability, reducing MTTR with AI-assisted remediation, and engineering intelligent self-healing systems.
+Highly skilled Site Reliability Engineer with 3+ years of experience specializing in cloud infrastructure, automated CI/CD pipelines, observability, incident response, reliability engineering, and enterprise-scale platform operations. Focused on maintaining 99.999% availability, reducing MTTR, and engineering intelligent self-healing systems.
 
 EXPERIENCE
 Site Reliability Engineer (SRE) | Craftsilicon | 2025 - Present
@@ -858,7 +793,6 @@ Observability: Prometheus, Grafana, ELK Stack, Datadog
 IaC: Terraform, Ansible, CloudFormation
 Operating Systems: Linux, Windows Server
 Languages: Python, Go, Shell, PowerShell
-AI/ML Ops: LLM Integration, AI-driven Alerting, Intelligent Automation
 
 CERTIFICATIONS
 - AWS Certified Solutions Architect – Professional
@@ -873,7 +807,7 @@ CERTIFICATIONS
     // GUI Visual Dashboard Layout
     resumeBox.innerHTML = `
       <div class="resume-header">
-        <h1>${appState.name}</h1>
+        <h1>${portfolioData.personalInfo.name}</h1>
         <div class="resume-contact-info">
           <span><i data-lucide="map-pin" style="width:12px; height:12px; vertical-align:middle;"></i> ${portfolioData.personalInfo.socialLinks.location}</span>
           <span><i data-lucide="mail" style="width:12px; height:12px; vertical-align:middle;"></i> ${portfolioData.personalInfo.socialLinks.email}</span>
@@ -995,6 +929,9 @@ function setupTestimonialsSlider() {
   const prevBtn = document.getElementById("testimonials-prev-btn");
   const nextBtn = document.getElementById("testimonials-next-btn");
   const track = document.getElementById("testimonials-carousel-track");
+  const container = document.querySelector(".testimonials-slider-container");
+
+  if (!track || !prevBtn || !nextBtn || !container) return;
 
   const updateSlidePosition = () => {
     track.style.transform = `translateX(-${activeTestimonialIndex * 100}%)`;
@@ -1017,6 +954,26 @@ function setupTestimonialsSlider() {
     }
     updateSlidePosition();
   });
+
+  // Touch swipe support for testimonials slider
+  let touchStartX = 0;
+  let touchEndX = 0;
+
+  container.addEventListener("touchstart", (e) => {
+    touchStartX = e.changedTouches[0].clientX;
+  }, { passive: true });
+
+  container.addEventListener("touchend", (e) => {
+    touchEndX = e.changedTouches[0].clientX;
+    const swipeThreshold = 50; // min swipe distance in px
+    if (touchStartX - touchEndX > swipeThreshold) {
+      // Swiped left -> load next testimonial
+      nextBtn.click();
+    } else if (touchEndX - touchStartX > swipeThreshold) {
+      // Swiped right -> load previous testimonial
+      prevBtn.click();
+    }
+  }, { passive: true });
 
   // Auto rotate testimonials slider every 10 seconds
   setInterval(() => {
@@ -1183,20 +1140,18 @@ window.openBlogModal = function (blogId) {
 };
 
 // Open and load Certification Modal Overlay
-let activeUploadingCertId = "";
 window.openCertModal = function (certId) {
   const c = portfolioData.certifications.find(cert => cert.id === certId);
   if (!c) return;
 
-  activeUploadingCertId = certId;
   document.getElementById("modal-cert-title").innerText = c.name;
   document.getElementById("modal-cert-issuer").innerText = `Issued by ${c.issuer} \u2022 Verified ${c.date}`;
 
   const imgElem = document.getElementById("modal-cert-image-elem");
   const placeholderEl = document.getElementById("modal-cert-placeholder-img");
 
-  if (appState.customCerts[certId]) {
-    imgElem.src = appState.customCerts[certId];
+  if (c.imageUrl) {
+    imgElem.src = c.imageUrl;
     imgElem.style.display = "block";
     placeholderEl.style.display = "none";
   } else {
@@ -1207,71 +1162,15 @@ window.openCertModal = function (certId) {
   document.getElementById("cert-modal").classList.add("open");
 };
 
-// Upload overlays files handlers
-function setupCustomUploads() {
-  const archFileInput = document.getElementById("arch-file-input");
-  const certFileInput = document.getElementById("cert-file-input");
-
-  // Custom Architecture uploads
-  document.getElementById("arch-upload-trigger").addEventListener("click", (e) => {
-    if (e.target !== archFileInput) {
-      archFileInput.click();
-    }
-  });
-
-  archFileInput.addEventListener("change", (e) => {
-    const file = e.target.files[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onload = (event) => {
-        const base64 = event.target.result;
-        const updatedArch = { ...appState.customArchitectures, [activeArchTab]: base64 };
-        saveState("customArchitectures", updatedArch);
-
-        // Reload current view
-        const currentArchObj = portfolioData.architectures.find(a => a.id === activeArchTab);
-        if (currentArchObj) loadArchitectureView(currentArchObj);
-        showToast("Architecture vector overrides synchronized.");
-      };
-      reader.readAsDataURL(file);
-    }
-  });
-
-  // Custom Cert uploads
-  document.getElementById("cert-upload-trigger-btn").addEventListener("click", (e) => {
-    if (e.target !== certFileInput) {
-      certFileInput.click();
-    }
-  });
-
-  certFileInput.addEventListener("change", (e) => {
-    const file = e.target.files[0];
-    if (file && activeUploadingCertId) {
-      const reader = new FileReader();
-      reader.onload = (event) => {
-        const base64 = event.target.result;
-        const updatedCerts = { ...appState.customCerts, [activeUploadingCertId]: base64 };
-        saveState("customCerts", updatedCerts);
-
-        // Refresh view inside modal
-        const imgElem = document.getElementById("modal-cert-image-elem");
-        const placeholderEl = document.getElementById("modal-cert-placeholder-img");
-        imgElem.src = base64;
-        imgElem.style.display = "block";
-        placeholderEl.style.display = "none";
-
-        showToast("Accreditation scanned document synchronized.");
-      };
-      reader.readAsDataURL(file);
-    }
-  });
-
-  // Setup Blueprint Zoom triggers
+// Setup Blueprint Zoom triggers
+function setupBlueprintZoom() {
   const archZoomBtn = document.getElementById("arch-zoom-btn");
   const zoomOverlay = document.getElementById("zoom-modal");
   const zoomTitle = document.getElementById("zoom-modal-title");
   const zoomDesc = document.getElementById("zoom-modal-description");
   const zoomContainer = document.getElementById("zoom-canvas-container");
+
+  if (!archZoomBtn) return;
 
   archZoomBtn.addEventListener("click", () => {
     const activeArch = portfolioData.architectures.find(a => a.id === activeArchTab);
@@ -1281,18 +1180,8 @@ function setupCustomUploads() {
     zoomDesc.innerText = activeArch.description;
     zoomContainer.innerHTML = "";
 
-    if (appState.customArchitectures[activeArch.id]) {
-      const img = document.createElement("img");
-      img.src = appState.customArchitectures[activeArch.id];
-      img.alt = activeArch.title;
-      img.style.maxWidth = "100%";
-      img.style.maxHeight = "100%";
-      img.style.objectFit = "contain";
-      zoomContainer.appendChild(img);
-    } else {
-      const svgStr = generateSVGDiagram(activeArch.type);
-      zoomContainer.innerHTML = svgStr;
-    }
+    const svgStr = generateSVGDiagram(activeArch.type);
+    zoomContainer.innerHTML = svgStr;
 
     currentZoomScale = 1;
     zoomContainer.style.transform = `scale(${currentZoomScale})`;
@@ -1320,35 +1209,72 @@ function setupCustomUploads() {
     zoomContainer.style.transform = `scale(${currentZoomScale})`;
   });
 
-  // Make zoom container draggable
+  // Make zoom container draggable & touch-pannable
   let isDragging = false;
   let startX, startY, scrollLeft, scrollTop;
   const zoomBody = document.querySelector(".zoom-modal-body");
 
-  zoomBody.addEventListener("mousedown", (e) => {
+  const dragStart = (x, y) => {
     isDragging = true;
-    startX = e.pageX - zoomBody.offsetLeft;
-    startY = e.pageY - zoomBody.offsetTop;
+    startX = x - zoomBody.offsetLeft;
+    startY = y - zoomBody.offsetTop;
     scrollLeft = zoomBody.scrollLeft;
     scrollTop = zoomBody.scrollTop;
-  });
+  };
 
-  zoomBody.addEventListener("mouseleave", () => {
+  const dragEnd = () => {
     isDragging = false;
-  });
+  };
 
-  zoomBody.addEventListener("mouseup", () => {
-    isDragging = false;
-  });
-
-  zoomBody.addEventListener("mousemove", (e) => {
+  const dragMove = (x, y, event) => {
     if (!isDragging) return;
-    e.preventDefault();
-    const x = e.pageX - zoomBody.offsetLeft;
-    const y = e.pageY - zoomBody.offsetTop;
-    const walkX = (x - startX) * 1.5;
-    const walkY = (y - startY) * 1.5;
+    if (event.cancelable) event.preventDefault();
+    const currentX = x - zoomBody.offsetLeft;
+    const currentY = y - zoomBody.offsetTop;
+    const walkX = (currentX - startX) * 1.5;
+    const walkY = (currentY - startY) * 1.5;
     zoomBody.scrollLeft = scrollLeft - walkX;
     zoomBody.scrollTop = scrollTop - walkY;
+  };
+
+  // Mouse events
+  zoomBody.addEventListener("mousedown", (e) => dragStart(e.pageX, e.pageY));
+  zoomBody.addEventListener("mouseleave", dragEnd);
+  zoomBody.addEventListener("mouseup", dragEnd);
+  zoomBody.addEventListener("mousemove", (e) => dragMove(e.pageX, e.pageY, e));
+
+  // Touch events for mobile zooming/panning
+  zoomBody.addEventListener("touchstart", (e) => {
+    dragStart(e.touches[0].pageX, e.touches[0].pageY);
+  }, { passive: true });
+  zoomBody.addEventListener("touchend", dragEnd, { passive: true });
+  zoomBody.addEventListener("touchmove", (e) => {
+    dragMove(e.touches[0].pageX, e.touches[0].pageY, e);
+  }, { passive: false });
+}
+
+// Global Scroll Reveal system trigger
+function initScrollReveal() {
+  document.querySelectorAll(".content-section").forEach(sec => {
+    if (!sec.classList.contains("reveal-on-scroll")) {
+      sec.classList.add("reveal-on-scroll");
+    }
   });
+
+  const revealElements = document.querySelectorAll(".reveal-on-scroll");
+  const options = {
+    threshold: 0.08,
+    rootMargin: "0px 0px -30px 0px"
+  };
+
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add("is-visible");
+        observer.unobserve(entry.target);
+      }
+    });
+  }, options);
+
+  revealElements.forEach(el => observer.observe(el));
 }
