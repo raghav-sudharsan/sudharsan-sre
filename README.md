@@ -1,17 +1,17 @@
-# 🌐 SRE.PORTFOLIO // Production Reliability & Cloud Operations Dashboard
+# SRE.PORTFOLIO // Production Reliability & Cloud Operations Dashboard
 
 [![Uptime SLA](https://img.shields.io/badge/Uptime_SLA-99.999%25-06b6d4?style=flat-square&logo=statuspage)](https://raghav-sudharsan.github.io/sudharsan-sre/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-10b981.svg?style=flat-square)](https://opensource.org/licenses/MIT)
 [![Technology Stack](https://img.shields.io/badge/Stack-HTML5%20%7C%20CSS3%20%7C%20JS%20(ES6)-blueviolet?style=flat-square)](https://raghav-sudharsan.github.io/sudharsan-sre/)
 [![Maintainer](https://img.shields.io/badge/Maintainer-raghav--sudharsan-blue?style=flat-square&logo=github)](https://github.com/raghav-sudharsan)
 
-An interactive, production-grade engineering dashboard built to showcase the professional capabilities, systems administration, and operational validation workflows of **Sudharsan S**, a Site Reliability Engineer with 3+ years of experience in enterprise production support.
+An interactive, production-grade operations dashboard built to showcase the professional capabilities, systems administration, and operational validation workflows of **Sudharsan S**, a Site Reliability Engineer with 3+ years of experience in enterprise production support.
 
 ---
 
 ## 1. Project Overview
 
-The objective of this project is to construct a portfolio that moves away from standard, template-driven resume templates, replacing them with a functional dashboard that mimics a real-time cloud operations console. 
+The objective of this project is to construct a portfolio that moves away from standard, template-driven resume websites, replacing them with a functional dashboard that mimics a real-time cloud operations console. 
 
 Rather than listing abstract summaries, this portfolio structures an SRE's capabilities as operational metrics, dynamic architecture flowcharts, and system telemetry feeds. It is engineered to demonstrate the author's technical background in cloud operations (AWS & GCP), IIS/.NET hosting operations, automation scripting (PowerShell & Batch), incident management, and disaster recovery validation drills.
 
@@ -21,9 +21,9 @@ Rather than listing abstract summaries, this portfolio structures an SRE's capab
 
 The interface is structured as an interactive operations center featuring the following visual indicators and utilities:
 
-*   **Terminal Bootstrap Simulator:** A simulated terminal sequence on application boot that runs diagnostic logs (`aws configure`, `powershell iis_health_check.ps1`, `prometheus config validation`, `sysctl` kernel variable configurations) to set an operational tone.
+*   **Terminal Bootstrap Simulator:** A simulated terminal sequence on application boot that runs diagnostic logs (`aws configure`, `powershell iis_health_check.ps1`, `prometheus config validation`, `sysctl` variables) to set an operational tone.
 *   **SLA Uptime Ticker:** A header-integrated decimal clock that dynamically fluctuates at micro-decimals (e.g., `99.99923% SLA`) in real time, simulating live service availability monitoring.
-*   **Operations Telemetry Feed:** An active log stream in the sidebar that continuously appends realistic SRE logs (IIS Pool health check passes, Prometheus scraps, Grafana syncs, memory warning alerts) with current local timestamps.
+*   **Operations Telemetry Feed:** An active log stream in the sidebar that continuously appends realistic SRE logs (IIS Pool health check passes, Prometheus scrapes, Grafana syncs, memory warning alerts) with current local timestamps.
 *   **Interactive Architecture Diagrams:** An inline SVG blueprint viewer displaying:
     *   *Production IIS Architecture* (Clients → LB → IIS → .NET App → DB)
     *   *Monitoring Architecture* (Windows Exporter → Prometheus → Grafana → Alerting)
@@ -47,7 +47,7 @@ An SRE's daily workflow is centered around observability platforms, Grafana dash
 Using frosted glass panels (`backdrop-filter: blur()`), subtle translucent borders, and deep midnight-gradient backing layers creates high depth and contrast. This emulates modern NOC (Network Operations Center) instruments and maintains strict readability.
 
 ### Zero Frontend Frameworks
-The project is built with **zero external framework dependencies** (no React, Angular, Vue, or Tailwind CSS). This constraints guarantees:
+The project is built with **zero external framework dependencies** (no React, Angular, Vue, or Tailwind CSS). This constraint guarantees:
 *   Zero dependencies vulnerability footprint
 *   Zero build-step compilation overhead
 *   Instant page loads and maximum browser compatibility
@@ -62,6 +62,13 @@ All data (experiences, certifications, projects, bios) is entirely isolated from
 
 The portfolio follows a simple, unidirectional data-injection flow:
 
+### Structural Components
+*   **`index.html`**: The structural shell containing container nodes, modal portals, and structural grids. It loads external CSS, dynamic scripts, and third-party utility icons (Lucide Icons and Marked library).
+*   **`styles.css`**: The master design system. Declares CSS variables under `:root` and overrides them in `body.light-mode` to implement instantaneous theme shifting.
+*   **`app.js`**: The central controller. Responsible for DOM construction, binding event listeners, initializing the background HTML5 canvas particle engine, driving the telemetry log feed, rendering dynamically zoomed SVGs, and handling the ATS-mode plain-text switch.
+*   **Content Modules (`content/*.js`)**: Modular JavaScript data files that extend a global `portfolioData` object. This separation ensures that content is completely independent of presentation logic.
+
+### Unidirectional Data Flow
 ```mermaid
 graph TD
     A[index.html - Structural Shell] --> B(styles.css - Design Tokens & Styles)
@@ -79,17 +86,11 @@ graph TD
 
     Data Modules -->|Injected dynamically via script tags| A
     C -->|Parses portfolioData object| Data Modules
-    C -->|Injects elements into| A
+    C -->|Injects templates into| A
     C -->|Initializes| K[Background Particles Canvas]
     C -->|Initializes| L[Dynamic SLA Ticker]
     C -->|Initializes| M[Telemetry Logs Console]
 ```
-
-### Components & Data Flow:
-*   **`index.html`**: The structural shell containing container nodes, modal portals, and structural grids. It loads external CSS, dynamic scripts, and third-party utility icons (Lucide Icons and Marked library).
-*   **`styles.css`**: The master design system. Declares CSS variables under `:root` and overrides them in `body.light-mode` to implement instantaneous theme shifting.
-*   **`app.js`**: The central controller. Responsible for DOM construction, binding event listeners, initializing the background HTML5 canvas particle engine, driving the telemetry log feed, rendering dynamically zoomed SVGs, and handling the ATS-mode plain-text switch.
-*   **Content Modules (`content/*.js`)**: Modular JavaScript data files that extend a global `portfolioData` object. This separation ensures that content is completely independent of presentation logic.
 
 ---
 
@@ -110,7 +111,7 @@ The project repository is organized as follows:
     ├── certifications.js      # Accreditations and future targets
     ├── contact.js             # Testimonials, blogs metadata, and recruiter info
     ├── experience.js          # SRE & System Admin job timeline
-    ├── profile.js             # Personal bio, location, and social links
+    ├── profile.js             # Core biography and social links configuration
     ├── projects.js            # Case studies and blueprints mapping
     └── skills.js              # Technical skills clusters and level statistics
 ```
@@ -133,9 +134,9 @@ The application is engineered to load and render with minimal latency:
 Accessibility (a11y) guidelines are embedded directly into the code:
 
 *   **Semantic HTML5 markup**: Layout blocks utilize explicit `<header>`, `<main>`, `<aside>`, `<section>`, and `<footer>` elements to ensure screen-reader compatibility.
-*   **Reduced Motion Support**: Media queries automatically detect if users have configured reduced-motion options in their operating systems. If active, all sliding transitions, fade-ins, and the background canvas particle engine are disabled.
-*   **Interactive Modals Focus**: Modal overlays include semantic `aria-label` tags, and close buttons are keyboard navigable.
-*   **Color Contrast**: Hex values for text elements are checked against WCAG guidelines to guarantee reading contrast in both dark and light modes.
+*   **Reduced Motion Support:** Media queries automatically detect if users have configured reduced-motion options in their operating systems. If active, all sliding transitions, fade-ins, and the background canvas particle engine are disabled.
+*   **Interactive Modals Focus:** Modal overlays include explicit `aria-label` tags, and close buttons are keyboard navigable.
+*   **Color Contrast:** Hex values for text elements are checked against WCAG guidelines to guarantee reading contrast in both dark and light modes.
 
 ---
 
