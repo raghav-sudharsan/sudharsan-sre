@@ -54,7 +54,7 @@ This application is built with **zero external framework dependencies** (no Reac
 
 The codebase follows a decoupled architectural pattern, separating raw data definitions from DOM rendering and animation engines.
 
-```mermaid
+mermaid
 graph TD
     A[index.html - Core DOM Shell] --> B(styles.css - Design System & Variables)
     A --> C(app.js - Initialization Controller)
@@ -75,7 +75,6 @@ graph TD
     C -->|Initializes| K[Background Canvas Particle Engine]
     C -->|Initializes| L[Live Uptime SLA Ticker]
     C -->|Initializes| M[Telemetry Logs Console Feed]
-```
 
 ### 1. Content Organization
 Content is isolated into modular JavaScript files under the `/content` folder. This acts as a flat-file database. Adding a project or certification simply requires modifying an array in a dedicated JavaScript file, which the core rendering loop (`app.js`) automatically parses and appends to the DOM.
