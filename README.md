@@ -105,7 +105,6 @@ Handled using CSS Grid and Flexbox with responsive columns using `minmax(0, 1fr)
 ├── app.js                     # Core frontend controller (DOM builder, event listeners, canvas engine)
 ├── index.html                 # Main HTML layout skeleton
 ├── server.js                  # Native Node.js local development web server
-├── styles.css                 # Master Design System and UI CSS definitions
 ├── content/                   # Decoupled content modules (Database Layer)
 │   ├── achievements.js        # SLA stats and achievements config
 │   ├── certifications.js      # Accreditations and awards database
@@ -114,7 +113,7 @@ Handled using CSS Grid and Flexbox with responsive columns using `minmax(0, 1fr)
 │   ├── profile.js             # Core biography and social links configuration
 │   ├── projects.js            # Case studies, blueprints type mapping, and tools tags
 │   └── skills.js              # Technical skills clusters and level statistics
-└── walkthrough.md             # Verification records and responsive layout fixes documentation
+└── styles.css                 # Master Design System and UI CSS definitions
 ```
 
 ---
