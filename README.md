@@ -34,18 +34,6 @@ The portfolio behaves like a real-time monitoring dashboard, delivering a unique
 
 ---
 
-## 📸 Screenshots
-
-### Desktop Dashboard Layout
-*Sleek, multi-column glassmorphism layout optimizing information density for engineering recruiters.*
-![Desktop Dashboard](Sudharsan_SRE.jpeg) *(Replace this with a repository screenshot or find references in `walkthrough.md`)*
-
-### Mobile Responsive Console
-*Single column stacking layout ensuring zero horizontal overflow and high readability on the go.*
-![Mobile Console View](Sudharsan_SRE.jpeg) *(Replace with Mobile layout screenshot)*
-
----
-
 ## 🛠️ Technology Stack
 
 This application is built with **zero external framework dependencies** (no React, Angular, Vue, or Tailwind CSS). This constraint was chosen deliberately to maximize performance, customize aesthetic details at a low level, and guarantee zero layout thrashing.
