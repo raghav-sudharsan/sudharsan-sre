@@ -3,117 +3,137 @@ if (typeof portfolioData === 'undefined') {
 }
 
 portfolioData.recruiterInfo = {
-  currentRole: "Site Reliability Engineer @ Craftsilicon",
-  experience: "3+ Years (SRE & Systems Administration)",
-  primarySkills: "Kubernetes, AWS, Terraform, Ansible, Prometheus/Grafana, GitHub Actions, Linux, Python",
-  noticePeriod: "30 Days (Negotiable)",
-  location: "Bangalore, Karnataka, India (Open to Hybrid / Remote)",
-  availabilityStatus: "Actively interviewing for SRE & DevOps roles",
-  expectedRole: "Site Reliability Engineer | DevOps Engineer | Cloud Engineer",
+  availabilityStatus: "SYSTEM ACTIVE",
+  experience: "3+ Years",
+  drDrills: "7+",
+  cloudPlatforms: "AWS & GCP",
+  appsSupported: "Business Critical Enterprise Applications",
+  architectures: "Monolith + Microservices",
+  corePlatforms: "IIS | Windows | Linux",
+  availabilityFocus: "SLA / SLO Driven Operations",
   resumeDownloadUrl: "#"
 };
 
 portfolioData.testimonials = [
   {
-    quote: "Sudharsan's AI-driven SRE approach was transformative for our platform. He introduced intelligent alerting and automated remediation pipelines that significantly improved our reliability posture. His expertise in both AI and cloud-native systems is truly exceptional.",
-    author: "Sarah Jenkins",
-    role: "VP of Engineering, TechCorp India",
+    quote: "Sudharsan's work on automating our IIS application pools and deployment validation scripts significantly reduced our manual operations overhead. His scripting framework is robust and saved our support team hours of repetitive validation work.",
+    author: " Rajesh Kumar",
+    role: "IT Operations Lead, Craft Silicon",
     avatar: ""
   },
   {
-    quote: "Sudharsan has a rare ability to translate complex systems problems into intelligent, automated software solutions. He built a GitOps CI/CD delivery pipeline with AI-powered quality gates that changed how our engineering group ships code safely and at scale.",
-    author: "Marcus Chen",
-    role: "Principal Cloud Architect, Enterprise Solutions Group",
+    quote: "Sudharsan successfully built a centralized monitoring platform using Windows Exporter and Grafana for our enterprise systems. He has a keen eye for observability, creating clear and actionable dashboards that helped us detect incidents before they impacted our banking clients.",
+    author: "Sanjay Sharma",
+    role: "Production Support Manager, Craft Silicon",
     avatar: ""
   },
   {
-    quote: "His approach to incident management combines deep technical expertise with AI-powered analytics. Sudharsan doesn't just resolve incidents — he engineers intelligent systems that prevent recurrence and continuously improve platform resilience.",
-    author: "Elena Rostova",
-    role: "Director of Platform Operations, Cloud Platforms Ltd",
+    quote: "During our disaster recovery readiness cycles, Sudharsan executed structured DR drills across 7+ environments. His methodical verification checklists and script-driven DNS failovers ensured we met all business continuity SLAs without any hiccups.",
+    author: "Amit Patel",
+    role: "Infrastructure Director, Wikiprospects",
     avatar: ""
   }
 ];
 
 portfolioData.blogs = [
   {
-    id: "blog-ebpf-kubernetes",
-    title: "Debugging Kubernetes Networking at Scale with eBPF and Cilium",
-    category: "Kubernetes",
-    date: "May 14, 2026",
-    readTime: "8 min read",
-    summary: "Explore how traditional iptables networking bottlenecks container systems and how eBPF routing rules optimize data paths.",
-    content: `## The Bottleneck of iptables in Large Scale Clusters
+    id: "blog-iis-performance",
+    title: "Troubleshooting IIS Worker Pool Recycling and Memory Leaks in Production",
+    category: "Application Operations",
+    date: "June 10, 2026",
+    readTime: "7 min read",
+    summary: "A practical guide to configuring IIS recycling limits and validating application pool health during high-traffic banking periods.",
+    content: `## The Challenge of Uncontrolled Memory Growth in .NET Applications
 
-For years, Kubernetes relied on \`kube-proxy\` configured in \`iptables\` mode to handle service routing. While this works well for smaller systems, \`iptables\` uses sequential rule evaluation. In a cluster with thousands of pods, evaluating packet routes becomes highly CPU intensive.
+In enterprise IIS environments, legacy .NET applications can suffer from memory fragmentation and leaks. Left unmonitored, this causes high system pagefile usage, request queuing, and eventual 503 Service Unavailable errors.
 
-### Enter eBPF and Cilium
+### Configuring Optimal IIS Recycling Rules
 
-Extended Berkeley Packet Filter (eBPF) allows us to run sandboxed programs directly within the Linux kernel space. By replacing iptables with eBPF-based socket routing, **Cilium bypasses the TCP/IP stack lookup** for containers residing on the same node, routing packets at the socket level.
+Rather than relying on the default 29-hour interval, which can occur during peak business hours, we implemented a scheduled pool recycling strategy combined with PowerShell monitoring scripts:
 
-\`\`\`bash
-# Check Cilium endpoint routing status
-cilium status --verbose
-\`\`\`
+\`\`\`powershell
+# Recycle IIS Application Pool dynamically if private memory limits are exceeded
+Import-Module WebAdministration
+$poolName = "BankingServicesPool"
+$limitKB = 2097152 # 2GB Limit
 
-#### Key Performance Enhancements:
-1. **O(1) Route Resolution:** Direct mapping structures mean connection times remain flat even at 50,000+ routes.
-2. **True Layer 7 Visibility:** Allows us to audit API calls (HTTP, gRPC, Kafka) directly at the kernel layer, without sidecar proxies.
-3. **eBPF-driven Security Policies:** Network isolation is enforced inside kernel space, avoiding resource-heavy iptables evaluations.
+$privateMem = (Get-Process -Id (Get-WmiObject -Query "SELECT * FROM Win32_Process WHERE Name='w3p.exe' AND CommandLine LIKE '*$poolName*'").ProcessId).PrivateMemorySize64 / 1024
 
-We migrated our primary EKS clusters to Cilium and witnessed an immediate **12% reduction in system CPU utilization** and dropped our average internal microservice API latency by **8ms** under peak loads.`
-  },
-  {
-    id: "blog-terraform-dryrun",
-    title: "Best Practices for Infrastructure CI/CD: Locking down Terraform Modules",
-    category: "DevOps",
-    date: "April 02, 2026",
-    readTime: "6 min read",
-    summary: "Learn how to establish a bulletproof pipeline using Terragrunt, tfsec, and state locks to prevent duplicate provisioning failures.",
-    content: `## The Danger of Shared Infrastructure State
-
-When multiple DevOps engineers edit the same cloud environments, race conditions occur. If two processes execute \`terraform apply\` simultaneously, the state file can corrupt, causing duplicate cluster creations or accidental deletion of production instances.
-
-### Designing a Safe Pipeline
-
-To ensure absolute environment consistency, we designed a workflow utilizing GitHub Actions, Terragrunt, and Amazon DynamoDB:
-
-\`\`\`hcl
-# backend.tf configuration
-terraform {
-  backend "s3" {
-    bucket         = "enterprise-tf-state-bucket"
-    key            = "finance/eks/terraform.tfstate"
-    region         = "us-west-2"
-    dynamodb_table = "terraform-lock-table"
-  }
+if ($privateMem -gt $limitKB) {
+    Write-Output "Memory threshold exceeded ($privateMem KB). Recycling application pool..."
+    Restart-WebAppPool -Name $poolName
 }
 \`\`\`
 
-#### Automation Guardrails implemented:
-- **TFLint & tfsec integration:** Every Pull Request runs static analysis checking for security hazards (e.g. open SSH ports, unencrypted S3 buckets).
-- **Terragrunt DRY Structure:** Eliminates duplicated config blocks by inheriting global variables across environment layers.
-- **Dynamic Lock Checking:** DynamoDB acts as a locking mechanism, instantly failing any pipeline executions launched simultaneously on the same project module.`
+#### Key Takeaways:
+1. **Never recycle during peak hours:** Align scheduled recycles with low-activity intervals.
+2. **Monitor Private Bytes:** Set alerts at 80% of host RAM capacity.
+3. **Log recycling events:** Ensure IIS log configuration includes recycle reasons for post-incident analysis.`
   },
   {
-    id: "blog-sre-chaos",
-    title: "Implementing Chaos Engineering: Game Days that Actually Improve MTTR",
-    category: "SRE",
-    date: "March 18, 2026",
-    readTime: "10 min read",
-    summary: "How to introduce chaos testing without terrifying your engineering teams, and translating chaos incidents into actionable alerts.",
-    content: `## Why Testing for Success Isn't Enough
+    id: "blog-windows-observability",
+    title: "Centralizing Windows Server Observability with Prometheus & Windows Exporter",
+    category: "Observability",
+    date: "May 22, 2026",
+    readTime: "6 min read",
+    summary: "Learn how to collect local OS metrics, event logs, and IIS pool status into a unified Grafana console for SRE teams.",
+    content: `## Bridging the Observability Gap on Windows Server
 
-Standard integration testing verifies that our software behaves correctly under normal operation. However, SRE focuses on what happens when things break. Chaos Engineering proactively injects failures to verify that our system's self-healing mechanisms and dashboards work under distress.
+While Prometheus has native collectors for Linux (node_exporter), Windows environments require specialized metrics collection. The Prometheus community's **windows_exporter** extracts OS, CPU, memory, network, and IIS web metrics.
 
-### Structuring a Productive Chaos Game Day
+### Step-by-Step Configuration
 
-Chaos testing should never be a surprise attack on developers. It is a planned event:
+1. **Install windows_exporter as a Service:** Deployed on hosts using PowerShell with the IIS collector enabled:
 
-1. **Establish a Baseline:** Ensure your standard observability dashboards clearly show baseline traffic and latency metrics.
-2. **Hypothesize Failure Results:** Define what *should* happen. E.g. 'If we terminate one database replica node, Route53 DNS should switch to a backup node in 15 seconds.'
-3. **Inject Failure:** Using Chaos Mesh or Gremlin, drop database network traffic.
-4. **Measure Impact:** Did alerts fire? Did it trigger automated scaling? Did MTTR match expectations?
+\`\`\`powershell
+# Install Windows Exporter with IIS enabled
+msiexec.exe /i windows_exporter-0.22.0-amd64.msi ENABLED_COLLECTORS="cpu,memory,net,os,iis"
+\`\`\`
 
-In our recent Game Day, we identified that while our system automatically recovered in 3 minutes, the primary on-call SRE alert took 8 minutes to fire because of metric aggregation limits. Resolving this discrepancy dropped our production MTTR immediately.`
+2. **Scrape target in prometheus.yml:**
+
+\`\`\`yaml
+scrape_configs:
+  - job_name: 'windows-servers'
+    static_configs:
+      - targets: ['10.10.1.25:9182']
+\`\`\`
+
+#### Essential Metrics to Alert On:
+- \`windows_iis_requests_total\`: Monitors active load.
+- \`windows_cpu_time_total\`: Tracks overall CPU utilization.
+- \`windows_logical_disk_free_bytes\`: Triggers critical alerts when storage falls below 15%.`
+  },
+  {
+    id: "blog-disaster-recovery",
+    title: "Designing a Structured Disaster Recovery Validation Playbook",
+    category: "Reliability",
+    date: "April 15, 2026",
+    readTime: "8 min read",
+    summary: "Best practices for planning, executing, and documenting DR drills across cloud environments with zero transaction failures.",
+    content: `## Business Continuity is Not an Option
+
+For critical applications, a disaster recovery (DR) strategy is only as good as its last successful drill. Many organizations fail to replicate stateful resources, leading to data loss during actual incidents.
+
+### Key Pillars of DR Validation:
+
+1. **Structured Drills:** Set up active-passive replication to a standby region.
+2. **Connectivity Validation:** Verify VPN tunnels, DNS latency routing, and firewall rules between clients and the recovery nodes.
+3. **Automated Sanity Testing:** Run PowerShell checkbooks to verify service health immediately after database failover.
+
+\`\`\`powershell
+# Validate backend DB replication status and database connectivity
+$connectionString = "Server=dr-db-server;Database=BankingProd;User Id=sre_monitor;Password=secure_pass;"
+$connection = New-Object System.Data.SqlClient.SqlConnection($connectionString)
+try {
+    $connection.Open()
+    Write-Output "DR Database connectivity: SUCCESS"
+    $connection.Close()
+} catch {
+    Write-Error "DR Database connectivity: FAILED. Check replication logs."
+}
+\`\`\`
+
+By standardizing these validation scripts, we executed successful DR drills across 7+ client setups with zero data loss or service execution errors.`
   }
 ];

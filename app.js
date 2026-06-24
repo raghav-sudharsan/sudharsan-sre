@@ -66,11 +66,11 @@ function setupTerminalPreloader() {
   const terminalBody = document.getElementById("terminal-body");
 
   const bootstrapCommands = [
-    "&gt; terraform init -upgrade ... [OK]",
-    "&gt; kubectl get nodes --watch ... 3 Nodes Ready [OK]",
-    "&gt; helm upgrade --install telemetry-agent prometheus-community/kube-prometheus-stack [OK]",
-    "&gt; sysctl net.core.somaxconn=1024 [OK]",
-    "&gt; Systems initialized. Launching executive control portal..."
+    "&gt; aws configure --profile production ... [OK]",
+    "&gt; powershell -ExecutionPolicy Bypass -File iis_health_check.ps1 ... [OK]",
+    "&gt; prometheus --config.file=prometheus.yml ... [OK]",
+    "&gt; sysctl net.ipv4.ip_forward=1 ... [OK]",
+    "&gt; Systems initialized. Launching operational control panel..."
   ];
 
   let delay = 100;
@@ -176,17 +176,27 @@ function setupNavigation() {
 
 // Render Components
 function renderRecruiterHub() {
-  document.getElementById("recruiter-avail-status").innerText = portfolioData.recruiterInfo.availabilityStatus;
-  document.getElementById("recruiter-target-role").innerText = portfolioData.recruiterInfo.expectedRole;
-  document.getElementById("recruiter-notice-period").innerText = portfolioData.recruiterInfo.noticePeriod;
-  document.getElementById("recruiter-current-role").innerText = portfolioData.recruiterInfo.currentRole;
-  document.getElementById("recruiter-experience-years").innerText = portfolioData.recruiterInfo.experience;
-  document.getElementById("recruiter-location").innerText = portfolioData.recruiterInfo.location;
+  const setVal = (id, val) => {
+    const el = document.getElementById(id);
+    if (el) el.innerText = val;
+  };
+  setVal("recruiter-avail-status", portfolioData.recruiterInfo.availabilityStatus);
+  setVal("ops-experience", portfolioData.recruiterInfo.experience);
+  setVal("ops-dr-drills", portfolioData.recruiterInfo.drDrills);
+  setVal("ops-cloud-platforms", portfolioData.recruiterInfo.cloudPlatforms);
+  setVal("ops-apps-supported", portfolioData.recruiterInfo.appsSupported);
+  setVal("ops-architectures", portfolioData.recruiterInfo.architectures);
+  setVal("ops-core-platforms", portfolioData.recruiterInfo.corePlatforms);
+  setVal("ops-availability-focus", portfolioData.recruiterInfo.availabilityFocus);
 
-  document.getElementById("social-link-linkedin").href = portfolioData.personalInfo.socialLinks.linkedin;
-  document.getElementById("social-link-github").href = portfolioData.personalInfo.socialLinks.github;
-  document.getElementById("social-link-gitlab").href = portfolioData.personalInfo.socialLinks.gitlab;
-  document.getElementById("social-link-medium").href = portfolioData.personalInfo.socialLinks.medium;
+  const linkedinEl = document.getElementById("social-link-linkedin");
+  if (linkedinEl) linkedinEl.href = portfolioData.personalInfo.socialLinks.linkedin;
+  const githubEl = document.getElementById("social-link-github");
+  if (githubEl) githubEl.href = portfolioData.personalInfo.socialLinks.github;
+  const gitlabEl = document.getElementById("social-link-gitlab");
+  if (gitlabEl) gitlabEl.href = portfolioData.personalInfo.socialLinks.gitlab;
+  const mediumEl = document.getElementById("social-link-medium");
+  if (mediumEl) mediumEl.href = portfolioData.personalInfo.socialLinks.medium;
 }
 
 function renderAboutSection() {
@@ -422,137 +432,45 @@ function loadArchitectureView(arch) {
 // Generate animated SVGs in JS to avoid asset loading dependency
 function generateSVGDiagram(type) {
   let svg = "";
-  if (type === "system") {
+  if (type === "iis") {
     svg = `
     <svg viewBox="0 0 500 250" width="100%" height="100%">
-      <!-- Definitions -->
       <defs>
         <marker id="arrow" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
           <path d="M 0 2 L 10 5 L 0 8 z" fill="#64748b"/>
         </marker>
-        <linearGradient id="primaryGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-          <stop offset="0%" stop-color="#06b6d4" />
-          <stop offset="100%" stop-color="#3b82f6" />
-        </linearGradient>
       </defs>
       
-      <!-- Paths -->
-      <path d="M 60 125 L 140 125" fill="none" stroke="#64748b" stroke-width="2" marker-end="url(#arrow)" class="packet-flow"/>
-      <path d="M 200 125 L 280 125" fill="none" stroke="#64748b" stroke-width="2" marker-end="url(#arrow)" class="packet-flow"/>
-      <path d="M 340 100 L 400 65" fill="none" stroke="#64748b" stroke-width="2" marker-end="url(#arrow)"/>
-      <path d="M 340 150 L 400 185" fill="none" stroke="#64748b" stroke-width="2" marker-end="url(#arrow)"/>
-      
-      <!-- Database Sync Link -->
-      <path d="M 430 100 L 430 150" fill="none" stroke="#ef4444" stroke-dasharray="4,4" stroke-width="2" marker-end="url(#arrow)"/>
+      <!-- Paths with packet flows -->
+      <path d="M 55 125 L 110 125" fill="none" stroke="#64748b" stroke-width="2" marker-end="url(#arrow)" class="packet-flow"/>
+      <path d="M 170 125 L 220 125" fill="none" stroke="#64748b" stroke-width="2" marker-end="url(#arrow)" class="packet-flow"/>
+      <path d="M 280 125 L 330 125" fill="none" stroke="#64748b" stroke-width="2" marker-end="url(#arrow)" class="packet-flow"/>
+      <path d="M 390 125 L 430 125" fill="none" stroke="#64748b" stroke-width="2" marker-end="url(#arrow)"/>
       
       <!-- Nodes -->
       <g class="node-group">
-        <circle cx="30" cy="125" r="25" fill="rgba(6, 182, 212, 0.15)" stroke="#06b6d4" stroke-width="2" class="node-circle"/>
-        <text x="30" y="128" text-anchor="middle" class="node-label">Client</text>
+        <circle cx="35" cy="125" r="20" fill="rgba(6, 182, 212, 0.15)" stroke="#06b6d4" stroke-width="2" class="node-circle"/>
+        <text x="35" y="128" text-anchor="middle" class="node-label">Users</text>
       </g>
       
       <g class="node-group">
-        <rect x="140" y="100" width="60" height="50" rx="8" fill="rgba(59, 130, 246, 0.15)" stroke="#3b82f6" stroke-width="2" class="node-circle"/>
-        <text x="170" y="128" text-anchor="middle" class="node-label">CDN</text>
+        <rect x="110" y="100" width="60" height="50" rx="6" fill="rgba(59, 130, 246, 0.15)" stroke="#3b82f6" stroke-width="2" class="node-circle"/>
+        <text x="140" y="128" text-anchor="middle" class="node-label">LB</text>
       </g>
 
       <g class="node-group">
-        <rect x="280" y="100" width="60" height="50" rx="8" fill="rgba(139, 92, 246, 0.15)" stroke="#8b5cf6" stroke-width="2" class="node-circle"/>
-        <text x="310" y="128" text-anchor="middle" class="node-label">Gateway</text>
+        <rect x="220" y="100" width="60" height="50" rx="6" fill="rgba(139, 92, 246, 0.15)" stroke="#8b5cf6" stroke-width="2" class="node-circle"/>
+        <text x="250" y="128" text-anchor="middle" class="node-label">IIS Server</text>
       </g>
 
       <g class="node-group">
-        <circle cx="430" cy="65" r="25" fill="rgba(20, 184, 166, 0.15)" stroke="#14b8a6" stroke-width="2" class="node-circle"/>
-        <text x="430" y="68" text-anchor="middle" class="node-label">Active DB</text>
+        <rect x="330" y="100" width="60" height="50" rx="6" fill="rgba(20, 184, 166, 0.15)" stroke="#14b8a6" stroke-width="2" class="node-circle"/>
+        <text x="360" y="128" text-anchor="middle" class="node-label">.NET App</text>
       </g>
 
       <g class="node-group">
-        <circle cx="430" cy="185" r="25" fill="rgba(100, 116, 139, 0.15)" stroke="#64748b" stroke-width="2" class="node-circle"/>
-        <text x="430" y="188" text-anchor="middle" class="node-label">Standby</text>
-      </g>
-    </svg>
-    `;
-  } else if (type === "cloud") {
-    svg = `
-    <svg viewBox="0 0 500 250" width="100%" height="100%">
-      <defs>
-        <marker id="arrow" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
-          <path d="M 0 2 L 10 5 L 0 8 z" fill="#64748b"/>
-        </marker>
-      </defs>
-      <!-- VPC Boundary -->
-      <rect x="40" y="30" width="420" height="190" rx="12" fill="none" stroke="#3b82f6" stroke-width="1.5" stroke-dasharray="6,4"/>
-      <text x="50" y="48" fill="#3b82f6" font-size="9" font-family="monospace">AWS VPC Config (us-west-2)</text>
-      
-      <!-- Subnets -->
-      <rect x="60" y="60" width="110" height="140" rx="6" fill="rgba(6, 182, 212, 0.05)" stroke="#06b6d4" stroke-width="1"/>
-      <text x="65" y="74" fill="#06b6d4" font-size="8" font-family="monospace">Pub Subnet 1A</text>
-      
-      <rect x="195" y="60" width="110" height="140" rx="6" fill="rgba(139, 92, 246, 0.05)" stroke="#8b5cf6" stroke-width="1"/>
-      <text x="200" y="74" fill="#8b5cf6" font-size="8" font-family="monospace">Priv Subnet 1B</text>
-
-      <rect x="330" y="60" width="110" height="140" rx="6" fill="rgba(20, 184, 166, 0.05)" stroke="#14b8a6" stroke-width="1"/>
-      <text x="335" y="74" fill="#14b8a6" font-size="8" font-family="monospace">DB Subnet 1C</text>
-      
-      <!-- Load Balancers, Nodes, DB -->
-      <circle cx="115" cy="130" r="18" fill="rgba(6, 182, 212, 0.15)" stroke="#06b6d4" stroke-width="1.5"/>
-      <text x="115" y="133" text-anchor="middle" font-size="8" fill="white" font-weight="bold">ALB</text>
-      
-      <rect x="220" y="110" width="60" height="40" rx="4" fill="rgba(139, 92, 246, 0.15)" stroke="#8b5cf6" stroke-width="1.5"/>
-      <text x="250" y="133" text-anchor="middle" font-size="8" fill="white" font-weight="bold">EKS Pod</text>
-
-      <circle cx="385" cy="130" r="18" fill="rgba(20, 184, 166, 0.15)" stroke="#14b8a6" stroke-width="1.5"/>
-      <text x="385" y="133" text-anchor="middle" font-size="8" fill="white" font-weight="bold">RDS</text>
-
-      <!-- Connections -->
-      <path d="M 133 130 L 220 130" fill="none" stroke="#64748b" stroke-width="1.5" marker-end="url(#arrow)" class="packet-flow"/>
-      <path d="M 280 130 L 367 130" fill="none" stroke="#64748b" stroke-width="1.5" marker-end="url(#arrow)" class="packet-flow"/>
-    </svg>
-    `;
-  } else if (type === "cicd") {
-    svg = `
-    <svg viewBox="0 0 500 250" width="100%" height="100%">
-      <defs>
-        <marker id="arrow" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
-          <path d="M 0 2 L 10 5 L 0 8 z" fill="#64748b"/>
-        </marker>
-      </defs>
-      
-      <!-- Flow links -->
-      <path d="M 60 125 L 120 125" fill="none" stroke="#64748b" stroke-width="1.5" marker-end="url(#arrow)" class="packet-flow"/>
-      <path d="M 180 125 L 240 125" fill="none" stroke="#64748b" stroke-width="1.5" marker-end="url(#arrow)" class="packet-flow"/>
-      <path d="M 300 125 L 360 125" fill="none" stroke="#64748b" stroke-width="1.5" marker-end="url(#arrow)" class="packet-flow"/>
-      <path d="M 420 125 L 440 125" fill="none" stroke="#64748b" stroke-width="1.5" marker-end="url(#arrow)"/>
-      
-      <!-- Steps -->
-      <g>
-        <rect x="10" y="100" width="50" height="50" rx="6" fill="rgba(255,255,255,0.05)" stroke="#64748b" stroke-width="1.5"/>
-        <text x="35" y="128" text-anchor="middle" font-size="8" fill="white">Git Push</text>
-      </g>
-      
-      <g>
-        <rect x="120" y="90" width="60" height="70" rx="6" fill="rgba(59,130,246,0.1)" stroke="#3b82f6" stroke-width="1.5"/>
-        <text x="150" y="115" text-anchor="middle" font-size="8" fill="white">GitHub</text>
-        <text x="150" y="127" text-anchor="middle" font-size="7" fill="white">Actions</text>
-        <text x="150" y="142" text-anchor="middle" font-size="7" fill="var(--status-ok)">Test & Build</text>
-      </g>
-
-      <g>
-        <rect x="240" y="100" width="60" height="50" rx="6" fill="rgba(139,92,246,0.1)" stroke="#8b5cf6" stroke-width="1.5"/>
-        <text x="270" y="125" text-anchor="middle" font-size="8" fill="white">Docker Registry</text>
-        <text x="270" y="137" text-anchor="middle" font-size="7" fill="var(--text-muted)">(ECR)</text>
-      </g>
-
-      <g>
-        <rect x="360" y="90" width="60" height="70" rx="6" fill="rgba(20,184,166,0.1)" stroke="#14b8a6" stroke-width="1.5"/>
-        <text x="390" y="115" text-anchor="middle" font-size="8" fill="white">ArgoCD</text>
-        <text x="390" y="127" text-anchor="middle" font-size="7" fill="white">GitOps</text>
-        <text x="390" y="142" text-anchor="middle" font-size="7" fill="var(--status-ok)">Auto Sync</text>
-      </g>
-
-      <g>
-        <circle cx="465" cy="125" r="20" fill="rgba(16,185,129,0.1)" stroke="#10b981" stroke-width="1.5"/>
-        <text x="465" y="128" text-anchor="middle" font-size="8" fill="white">Kubernetes</text>
+        <circle cx="450" cy="125" r="20" fill="rgba(100, 116, 139, 0.15)" stroke="#64748b" stroke-width="2" class="node-circle"/>
+        <text x="450" y="128" text-anchor="middle" class="node-label">Database</text>
       </g>
     </svg>
     `;
@@ -565,49 +483,35 @@ function generateSVGDiagram(type) {
         </marker>
       </defs>
       
-      <!-- Flows -->
-      <path d="M 90 90 L 150 120" fill="none" stroke="#64748b" stroke-width="1.5" marker-end="url(#arrow)" class="packet-flow"/>
-      <path d="M 90 160 L 150 130" fill="none" stroke="#64748b" stroke-width="1.5" marker-end="url(#arrow)" class="packet-flow"/>
-      <path d="M 210 125 L 270 125" fill="none" stroke="#64748b" stroke-width="1.5" marker-end="url(#arrow)"/>
-      <path d="M 330 110 L 390 80" fill="none" stroke="#64748b" stroke-width="1.5" marker-end="url(#arrow)" class="packet-flow"/>
-      <path d="M 330 140 L 390 170" fill="none" stroke="#64748b" stroke-width="1.5" marker-end="url(#arrow)"/>
-      
+      <!-- Paths -->
+      <path d="M 95 125 L 150 125" fill="none" stroke="#64748b" stroke-width="2" marker-end="url(#arrow)" class="packet-flow"/>
+      <path d="M 215 125 L 270 125" fill="none" stroke="#64748b" stroke-width="2" marker-end="url(#arrow)" class="packet-flow"/>
+      <path d="M 335 125 L 395 125" fill="none" stroke="#64748b" stroke-width="2" marker-end="url(#arrow)" class="packet-flow"/>
+      <path d="M 215 110 Q 307 75 400 112" fill="none" stroke="#ef4444" stroke-dasharray="4,4" stroke-width="1.5" marker-end="url(#arrow)"/>
+
       <!-- Nodes -->
-      <g>
-        <rect x="30" y="60" width="60" height="45" rx="4" fill="rgba(255,255,255,0.05)" stroke="#64748b" stroke-width="1.5"/>
-        <text x="60" y="85" text-anchor="middle" font-size="7" fill="white">App Pod A</text>
-        <text x="60" y="95" text-anchor="middle" font-size="6" fill="var(--text-muted)">(Prom Agent)</text>
+      <g class="node-group">
+        <rect x="25" y="100" width="70" height="50" rx="6" fill="rgba(6, 182, 212, 0.15)" stroke="#06b6d4" stroke-width="2" class="node-circle"/>
+        <text x="60" y="128" text-anchor="middle" class="node-label">Win Exporter</text>
       </g>
       
-      <g>
-        <rect x="30" y="145" width="60" height="45" rx="4" fill="rgba(255,255,255,0.05)" stroke="#64748b" stroke-width="1.5"/>
-        <text x="60" y="170" text-anchor="middle" font-size="7" fill="white">App Pod B</text>
-        <text x="60" y="180" text-anchor="middle" font-size="6" fill="var(--text-muted)">(Prom Agent)</text>
+      <g class="node-group">
+        <rect x="150" y="100" width="65" height="50" rx="6" fill="rgba(59, 130, 246, 0.15)" stroke="#3b82f6" stroke-width="2" class="node-circle"/>
+        <text x="182" y="128" text-anchor="middle" class="node-label">Prometheus</text>
       </g>
 
-      <g>
-        <rect x="150" y="100" width="60" height="50" rx="8" fill="rgba(59,130,246,0.1)" stroke="#3b82f6" stroke-width="2"/>
-        <text x="180" y="125" text-anchor="middle" font-size="8" fill="white">Thanos Proxy</text>
-        <text x="180" y="137" text-anchor="middle" font-size="7" fill="white">(Querier)</text>
+      <g class="node-group">
+        <rect x="270" y="100" width="65" height="50" rx="6" fill="rgba(139, 92, 246, 0.15)" stroke="#8b5cf6" stroke-width="2" class="node-circle"/>
+        <text x="302" y="128" text-anchor="middle" class="node-label">Grafana</text>
       </g>
 
-      <g>
-        <rect x="270" y="100" width="60" height="50" rx="8" fill="rgba(139,92,246,0.1)" stroke="#8b5cf6" stroke-width="2"/>
-        <text x="300" y="128" text-anchor="middle" font-size="8" fill="white">Prometheus</text>
-      </g>
-
-      <g>
-        <circle cx="420" cy="75" r="20" fill="rgba(20,184,166,0.1)" stroke="#14b8a6" stroke-width="1.5"/>
-        <text x="420" y="78" text-anchor="middle" font-size="8" fill="white">Grafana</text>
-      </g>
-
-      <g>
-        <circle cx="420" cy="175" r="20" fill="rgba(245,158,11,0.1)" stroke="#f59e0b" stroke-width="1.5"/>
-        <text x="420" y="178" text-anchor="middle" font-size="8" fill="white">PagerDuty</text>
+      <g class="node-group">
+        <circle cx="420" cy="125" r="20" fill="rgba(245, 158, 11, 0.15)" stroke="#f59e0b" stroke-width="2" class="node-circle"/>
+        <text x="420" y="128" text-anchor="middle" class="node-label">Alerting</text>
       </g>
     </svg>
     `;
-  } else if (type === "kubernetes") {
+  } else if (type === "dr") {
     svg = `
     <svg viewBox="0 0 500 250" width="100%" height="100%">
       <defs>
@@ -615,36 +519,68 @@ function generateSVGDiagram(type) {
           <path d="M 0 2 L 10 5 L 0 8 z" fill="#64748b"/>
         </marker>
       </defs>
-      <!-- Kubernetes Cluster box -->
-      <rect x="40" y="30" width="420" height="190" rx="10" fill="none" stroke="#10b981" stroke-width="1.5" stroke-dasharray="5,5"/>
-      <text x="50" y="46" fill="#10b981" font-size="9" font-family="monospace">K8s Cluster Node</text>
-      
-      <!-- Ingress -->
-      <rect x="60" y="100" width="60" height="50" rx="6" fill="rgba(255,255,255,0.05)" stroke="#64748b" stroke-width="1.5"/>
-      <text x="90" y="125" text-anchor="middle" font-size="8" fill="white">Ingress-NGINX</text>
-      
-      <!-- Service Mesh Cilium Boundary -->
-      <rect x="150" y="60" width="280" height="140" rx="8" fill="rgba(6,182,212,0.02)" stroke="#06b6d4" stroke-width="1.2" stroke-dasharray="2,2"/>
-      <text x="155" y="72" fill="#06b6d4" font-size="7" font-family="monospace">eBPF Cilium Mesh</text>
 
-      <!-- Pods -->
-      <g>
-        <rect x="180" y="95" width="70" height="60" rx="6" fill="rgba(59,130,246,0.1)" stroke="#3b82f6" stroke-width="1.5"/>
-        <text x="215" y="120" text-anchor="middle" font-size="8" fill="white">Pod-A (Client)</text>
-        <text x="215" y="132" text-anchor="middle" font-size="7" fill="var(--text-muted)">Namespace X</text>
-        <text x="215" y="145" text-anchor="middle" font-size="6" fill="var(--status-ok)">Running</text>
-      </g>
-      
-      <g>
-        <rect x="330" y="95" width="70" height="60" rx="6" fill="rgba(139,92,246,0.1)" stroke="#8b5cf6" stroke-width="1.5"/>
-        <text x="365" y="120" text-anchor="middle" font-size="8" fill="white">Pod-B (DB)</text>
-        <text x="365" y="132" text-anchor="middle" font-size="7" fill="var(--text-muted)">Namespace Y</text>
-        <text x="365" y="145" text-anchor="middle" font-size="6" fill="var(--status-ok)">Running</text>
+      <!-- Boundary Boxes for regions -->
+      <rect x="20" y="50" width="170" height="150" rx="10" fill="none" stroke="#06b6d4" stroke-width="1.5" stroke-dasharray="5,5"/>
+      <text x="30" y="66" fill="#06b6d4" font-size="9" font-family="monospace">Primary Env</text>
+
+      <rect x="310" y="50" width="170" height="150" rx="10" fill="none" stroke="#f59e0b" stroke-width="1.5" stroke-dasharray="5,5"/>
+      <text x="320" y="66" fill="#f59e0b" font-size="9" font-family="monospace">DR Env</text>
+
+      <!-- Replication path -->
+      <path d="M 190 125 L 310 125" fill="none" stroke="#10b981" stroke-width="2.5" stroke-dasharray="6,4" marker-end="url(#arrow)" class="packet-flow"/>
+      <text x="250" y="115" fill="#10b981" font-size="8" font-family="monospace" text-anchor="middle">Replication</text>
+
+      <!-- Nodes -->
+      <g class="node-group">
+        <rect x="50" y="100" width="80" height="50" rx="6" fill="rgba(59, 130, 246, 0.15)" stroke="#3b82f6" stroke-width="2" class="node-circle"/>
+        <text x="90" y="128" text-anchor="middle" class="node-label">Production</text>
       </g>
 
-      <!-- Flows -->
-      <path d="M 120 125 L 180 125" fill="none" stroke="#64748b" stroke-width="1.5" marker-end="url(#arrow)" class="packet-flow"/>
-      <path d="M 250 125 L 330 125" fill="none" stroke="#64748b" stroke-width="1.5" marker-end="url(#arrow)" class="packet-flow"/>
+      <g class="node-group">
+        <rect x="340" y="100" width="80" height="50" rx="6" fill="rgba(139, 92, 246, 0.15)" stroke="#8b5cf6" stroke-width="2" class="node-circle"/>
+        <text x="380" y="128" text-anchor="middle" class="node-label">Recovery Node</text>
+      </g>
+    </svg>
+    `;
+  } else if (type === "deployment") {
+    svg = `
+    <svg viewBox="0 0 500 250" width="100%" height="100%">
+      <defs>
+        <marker id="arrow" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+          <path d="M 0 2 L 10 5 L 0 8 z" fill="#64748b"/>
+        </marker>
+      </defs>
+
+      <!-- Paths -->
+      <path d="M 65 125 L 120 125" fill="none" stroke="#64748b" stroke-width="2" marker-end="url(#arrow)" class="packet-flow"/>
+      <path d="M 180 125 L 240 125" fill="none" stroke="#64748b" stroke-width="2" marker-end="url(#arrow)" class="packet-flow"/>
+      <path d="M 300 125 L 360 125" fill="none" stroke="#64748b" stroke-width="2" marker-end="url(#arrow)" class="packet-flow"/>
+      <path d="M 420 125 L 440 125" fill="none" stroke="#64748b" stroke-width="2" marker-end="url(#arrow)"/>
+      <!-- Feedback Loop -->
+      <path d="M 430 105 C 430 40, 30 40, 30 105" fill="none" stroke="#06b6d4" stroke-dasharray="5,5" stroke-width="1.5" marker-end="url(#arrow)"/>
+      <text x="230" y="55" fill="#06b6d4" font-size="8" font-family="monospace" text-anchor="middle">Continuous Feedback</text>
+
+      <!-- Nodes -->
+      <g class="node-group">
+        <circle cx="35" cy="125" r="20" fill="rgba(6, 182, 212, 0.15)" stroke="#06b6d4" stroke-width="2" class="node-circle"/>
+        <text x="35" y="128" text-anchor="middle" class="node-label">Dev</text>
+      </g>
+
+      <g class="node-group">
+        <rect x="120" y="100" width="60" height="50" rx="6" fill="rgba(59, 130, 246, 0.15)" stroke="#3b82f6" stroke-width="2" class="node-circle"/>
+        <text x="150" y="128" text-anchor="middle" class="node-label">QA</text>
+      </g>
+
+      <g class="node-group">
+        <rect x="240" y="100" width="60" height="50" rx="6" fill="rgba(139, 92, 246, 0.15)" stroke="#8b5cf6" stroke-width="2" class="node-circle"/>
+        <text x="270" y="128" text-anchor="middle" class="node-label">UAT</text>
+      </g>
+
+      <g class="node-group">
+        <rect x="360" y="100" width="60" height="50" rx="6" fill="rgba(16, 185, 129, 0.15)" stroke="#10b981" stroke-width="2" class="node-circle"/>
+        <text x="390" y="128" text-anchor="middle" class="node-label">Prod</text>
+      </g>
     </svg>
     `;
   }
@@ -771,39 +707,40 @@ function renderResume(mode) {
 
     const plainText = `
 SUDHARSAN S
-Site Reliability Engineer | DevOps Engineer | Cloud Engineer
+Site Reliability Engineer | DevOps Engineer | Cloud Operations Engineer
 Bangalore, Karnataka, India | raghavsudhar07@gmail.com
 
 PROFESSIONAL SUMMARY
-Highly skilled Site Reliability Engineer with 3+ years of experience specializing in cloud infrastructure, automated CI/CD pipelines, observability, incident response, reliability engineering, and enterprise-scale platform operations. Focused on maintaining 99.999% availability, reducing MTTR, and engineering intelligent self-healing systems.
+Site Reliability Engineer with 3+ years of experience supporting enterprise production applications across cloud and on-premises environments. Experienced in application reliability, incident management, root cause analysis, disaster recovery validation, IIS/.NET operations, monitoring & observability, AWS/GCP operations, production deployments, service availability management, and operational automation. Proven track record working with both monolithic and microservices-based architectures.
 
 EXPERIENCE
-Site Reliability Engineer (SRE) | Craftsilicon | 2025 - Present
-- Design and operate cloud-native SRE infrastructure ensuring high availability and fault tolerance.
-- Implement and manage CI/CD pipelines to accelerate software delivery with automated quality gates.
-- Established a centralized monitoring platform reducing alert response time by 60%.
-- Implemented GitOps workflows that cut manual release interventions by 80%.
+Application Support Engineer | Craft Silicon | Feb 2025 – Present
+- Support business-critical banking applications.
+- Oversee IIS and .NET application operations and production deployments.
+- Manage incident response, root cause analysis, and AWS & GCP operations.
+- Implement Prometheus and Grafana monitoring stacks to improve observability.
+- Perform release validation, change implementation, and execute DR drills for 7+ client environments.
 
-System Administrator | Wikiprospects | 2023 - 2025
-- Administered Linux and Windows Server infrastructure supporting internal and client-facing services.
-- Automated daily server health checks, saving 8+ hours of manual work per week.
-- Migrated on-premises services to cloud-based infrastructure with zero business disruption.
-- Reduced system downtime incidents by 45% through proactive patching and monitoring.
+IT Administrator | Wikiprospects | May 2023 – Jan 2025
+- Managed IT infrastructure supporting 150+ users.
+- Handled Active Directory, DNS, and DHCP administration.
+- Administered network operations, VPN management, and backup/recovery processes.
+- Provided end-user support and automated system validation tasks using PowerShell and Batch scripting.
 
 CORE SKILLS
-Cloud: AWS, Azure, Google Cloud
-DevOps: Jenkins, GitHub Actions, GitLab CI, ArgoCD
-Containers: Docker, Kubernetes, OpenShift, Helm
-Observability: Prometheus, Grafana, ELK Stack, Datadog
-IaC: Terraform, Ansible, CloudFormation
-Operating Systems: Linux, Windows Server
-Languages: Python, Go, Shell, PowerShell
+Cloud Platforms: AWS, Google Cloud Platform (GCP)
+Monitoring & Observability: Prometheus, Grafana, Windows Exporter, Infrastructure Monitoring, Alerting, Dashboard Development
+Application Operations: IIS, .NET Hosting, Application Reliability, Performance Monitoring
+Automation: PowerShell, Batch Scripting, Python
+Reliability Engineering: Incident Management, Problem Management, RCA, SLA Management, SLO Monitoring, DR Validation
+Operating Systems: Windows Server, Linux
 
-CERTIFICATIONS
-- AWS Certified Solutions Architect – Professional
-- CKA: Certified Kubernetes Administrator
-- HashiCorp Certified: Terraform Associate
-- Prometheus Certified Associate (PCA)
+CERTIFICATIONS (Roadmap Targets / In Progress)
+- AWS Certified Solutions Architect (Planned / In Progress)
+- Google Cloud Certifications (Planned / In Progress)
+- Certified Kubernetes Administrator (CKA) (Planned / In Progress)
+- HashiCorp Certified: Terraform Associate (Planned / In Progress)
+- Microsoft Certifications (Planned / In Progress)
 `;
     resumeBox.innerHTML = `<pre style="white-space: pre-wrap; font-family: monospace; font-size: 0.85rem; line-height: 1.5; color: inherit;">${plainText}</pre>`;
   } else {
@@ -1374,17 +1311,15 @@ function initRecruiterHubConsole() {
   if (!consoleEl) return;
 
   const mockLogs = [
-    { type: "info", text: "sysctl net.ipv4.ip_forward = 1" },
-    { type: "success", text: "APIs operational: 99.99% uptime" },
-    { type: "info", text: "observability telemetry stream ACTIVE" },
-    { type: "success", text: "Prometheus scrape target Wikiprospects [OK]" },
-    { type: "success", text: "Karpenter scaled down node pool - 14% cost saved" },
-    { type: "info", text: "GitOps hook sync: ArgoCD HEAD -> EKS us-west-2" },
-    { type: "warning", text: "Vault secret renewal dispatched: token_ttl=3600" },
-    { type: "info", text: "incident responder idle, active alerts: 0" },
-    { type: "success", text: "Route53 latency routing: us-west-2 RTT 12ms" },
-    { type: "success", text: "Craftsilicon cluster heartbeat: OK" },
-    { type: "info", text: "Elasticsearch index cleanup complete: deleted 8 indices" }
+    { type: "success", text: "IIS Application Pool Health Check Passed" },
+    { type: "success", text: "Prometheus Metrics Collection Successful" },
+    { type: "info", text: "Grafana Dashboard Sync Completed" },
+    { type: "success", text: "Production Deployment Validation Successful" },
+    { type: "success", text: "DR Environment Validation Completed" },
+    { type: "warning", text: "High Memory Utilization Detected" },
+    { type: "info", text: "Windows Exporter Metrics Updated" },
+    { type: "success", text: "AWS Infrastructure Health Normal" },
+    { type: "info", text: "GCP Service Monitoring Active" }
   ];
 
   let logIndex = 0;

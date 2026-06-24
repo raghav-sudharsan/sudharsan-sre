@@ -4,42 +4,34 @@ if (typeof portfolioData === 'undefined') {
 
 portfolioData.achievements = [
   {
-    title: "99.999% Infrastructure Uptime",
-    description: "Successfully designed and maintained a multi-region active-active cluster topology that achieved the gold standard 'five nines' availability SLA over a 12-month period.",
-    icon: "check-circle",
-    metric: "99.999% SLA"
+    title: "AWS & GCP Operations",
+    description: "Supported and maintained secure, high-availability application resources, firewalls, and network endpoints across AWS and GCP environments.",
+    icon: "cloud",
+    metric: "Multi-Cloud"
   },
   {
-    title: "Deployment Time Cut by 90%",
-    description: "Re-engineered standard Jenkins deployment builds into GitOps-driven pipelines, accelerating average production release cycles from 45 minutes to just 4 minutes.",
-    icon: "zap",
-    metric: "90% Fast-track"
-  },
-  {
-    title: "Automated Karpenter Scaling",
-    description: "Configured node scaling using AWS Karpenter to allocate resources dynamically based on container requests, cutting overall compute overprovisioning waste.",
-    icon: "trending-down",
-    metric: "45% Cost Saved"
-  },
-  {
-    title: "MTTR Reduction of 72%",
-    description: "Built automated alerts linked to self-healing shell commands, successfully handling memory leak recycling actions without pager escalations.",
+    title: "Production Incident Management",
+    description: "Managed high-priority application incidents, driving triage, service restoration, and root cause analysis (RCA) to protect banking SLAs.",
     icon: "shield",
-    metric: "1.2h MTTR"
+    metric: "SLA / SLO"
   },
   {
-    title: "Zero Downtime Cloud Migration",
-    description: "Orchestrated a massive live cloud data migration of 200+ million financial database records from legacy Azure SQL pools to AWS EKS with zero operations impact.",
-    icon: "refresh-cw",
-    metric: "Zero Impact"
+    title: "Enterprise Application Support",
+    description: "Orchestrated operations for business-critical banking workloads hosted on IIS and .NET servers, maintaining system integrity.",
+    icon: "server",
+    metric: "IIS / .NET"
+  },
+  {
+    title: "Monitoring Platform Implementation",
+    description: "Built centralized, proactive observability stacks using Windows Exporter agents, Prometheus, and Grafana monitoring dashboards.",
+    icon: "activity",
+    metric: "Observability"
   }
 ];
 
 portfolioData.metrics = [
   { label: "Years Experience", value: 3, suffix: "+" },
-  { label: "Projects Delivered", value: 42, suffix: "" },
-  { label: "Production Incidents Resolved", value: 480, suffix: "+" },
-  { label: "Servers Managed", value: 100, suffix: "+" },
-  { label: "Deployments Automated", value: 50, suffix: "+" },
-  { label: "Infrastructure Availability", value: 99.999, suffix: "%" }
+  { label: "DR Drills Completed", value: 7, suffix: "+" },
+  { label: "Users Supported", value: 150, suffix: "+" },
+  { label: "DR Execution Success", value: 100, suffix: "%" }
 ];

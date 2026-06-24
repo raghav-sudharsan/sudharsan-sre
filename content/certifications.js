@@ -4,59 +4,43 @@ if (typeof portfolioData === 'undefined') {
 
 portfolioData.certifications = [
   {
-    id: "cert-aws-sa",
-    name: "AWS Certified Solutions Architect – Professional",
+    id: "cert-aws",
+    name: "AWS Certifications",
     issuer: "Amazon Web Services",
-    date: "2024",
+    date: "Roadmap Target",
     icon: "cloud",
     imageUrl: ""
   },
   {
-    id: "cert-aws-sysops",
-    name: "AWS Certified SysOps Administrator – Associate",
-    issuer: "Amazon Web Services",
-    date: "2023",
+    id: "cert-gcp",
+    name: "Google Cloud Certifications",
+    issuer: "Google Cloud Platform",
+    date: "Roadmap Target",
     icon: "cloud",
     imageUrl: ""
   },
   {
     id: "cert-cka",
-    name: "CKA: Certified Kubernetes Administrator",
+    name: "Certified Kubernetes Administrator (CKA)",
     issuer: "The Linux Foundation",
-    date: "2023",
+    date: "In Progress",
     icon: "layers",
     imageUrl: ""
   },
   {
-    id: "cert-ckad",
-    name: "CKAD: Certified Kubernetes Application Developer",
-    issuer: "The Linux Foundation",
-    date: "2024",
-    icon: "layers",
-    imageUrl: ""
-  },
-  {
-    id: "cert-hashi-tf",
+    id: "cert-terraform",
     name: "HashiCorp Certified: Terraform Associate",
     issuer: "HashiCorp",
-    date: "2023",
+    date: "Roadmap Target",
     icon: "code",
     imageUrl: ""
   },
   {
-    id: "cert-redhat-rhcsa",
-    name: "Red Hat Certified System Administrator (RHCSA)",
-    issuer: "Red Hat",
-    date: "2022",
-    icon: "terminal",
-    imageUrl: ""
-  },
-  {
-    id: "cert-pca",
-    name: "PCA: Prometheus Certified Associate",
-    issuer: "The Linux Foundation",
-    date: "2024",
-    icon: "activity",
+    id: "cert-microsoft",
+    name: "Microsoft Certifications",
+    issuer: "Microsoft",
+    date: "Roadmap Target",
+    icon: "server",
     imageUrl: ""
   }
 ];

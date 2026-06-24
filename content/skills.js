@@ -6,72 +6,54 @@ portfolioData.skills = [
   {
     category: "Cloud Platforms",
     items: [
-      { name: "AWS", level: 95, icon: "cloud" },
-      { name: "Azure", level: 85, icon: "cloud" },
-      { name: "Google Cloud", level: 80, icon: "cloud" }
-    ]
-  },
-  {
-    category: "DevOps & CI/CD",
-    items: [
-      { name: "Jenkins", level: 90, icon: "cpu" },
-      { name: "GitHub Actions", level: 95, icon: "git-branch" },
-      { name: "GitLab CI/CD", level: 92, icon: "git-branch" },
-      { name: "Azure DevOps", level: 88, icon: "settings" },
-      { name: "ArgoCD", level: 95, icon: "refresh-cw" }
-    ]
-  },
-  {
-    category: "Containers & Orchestration",
-    items: [
-      { name: "Docker", level: 95, icon: "box" },
-      { name: "Kubernetes", level: 98, icon: "layers" },
-      { name: "OpenShift", level: 85, icon: "layers" },
-      { name: "Helm", level: 90, icon: "package" }
+      { name: "AWS", level: 90, icon: "cloud" },
+      { name: "Google Cloud Platform", level: 85, icon: "cloud" }
     ]
   },
   {
     category: "Monitoring & Observability",
     items: [
-      { name: "Prometheus", level: 95, icon: "activity" },
-      { name: "Grafana", level: 95, icon: "layout" },
-      { name: "ELK Stack", level: 88, icon: "search" },
-      { name: "Datadog", level: 92, icon: "pie-chart" },
-      { name: "Splunk", level: 85, icon: "bar-chart-2" },
-      { name: "Wazuh (SIEM)", level: 80, icon: "shield" }
+      { name: "Prometheus", level: 90, icon: "activity" },
+      { name: "Grafana", level: 92, icon: "layout" },
+      { name: "Windows Exporter", level: 90, icon: "cpu" },
+      { name: "Infrastructure Monitoring", level: 92, icon: "activity" },
+      { name: "Alerting", level: 92, icon: "bell" },
+      { name: "Dashboard Development", level: 88, icon: "layout" }
     ]
   },
   {
-    category: "Infrastructure as Code",
+    category: "Application Operations",
     items: [
-      { name: "Terraform", level: 96, icon: "code" },
-      { name: "Ansible", level: 90, icon: "terminal" },
-      { name: "CloudFormation", level: 85, icon: "code" }
+      { name: "IIS", level: 95, icon: "server" },
+      { name: ".NET Hosting", level: 90, icon: "server" },
+      { name: "Application Reliability", level: 92, icon: "shield" },
+      { name: "Performance Monitoring", level: 90, icon: "activity" }
+    ]
+  },
+  {
+    category: "Automation",
+    items: [
+      { name: "PowerShell", level: 95, icon: "terminal" },
+      { name: "Batch Scripting", level: 90, icon: "terminal" },
+      { name: "Python", level: 80, icon: "code" }
+    ]
+  },
+  {
+    category: "Reliability Engineering",
+    items: [
+      { name: "Incident Management", level: 92, icon: "shield" },
+      { name: "Problem Management", level: 90, icon: "shield" },
+      { name: "RCA", level: 92, icon: "search" },
+      { name: "SLA Management", level: 95, icon: "check-circle" },
+      { name: "SLO Monitoring", level: 90, icon: "activity" },
+      { name: "DR Validation", level: 95, icon: "refresh-cw" }
     ]
   },
   {
     category: "Operating Systems",
     items: [
-      { name: "Linux (RHEL, Ubuntu)", level: 95, icon: "terminal" },
-      { name: "Windows Server", level: 75, icon: "server" }
-    ]
-  },
-  {
-    category: "Scripting & Programming",
-    items: [
-      { name: "Shell / Bash", level: 95, icon: "terminal" },
-      { name: "PowerShell", level: 80, icon: "terminal" },
-      { name: "Python", level: 88, icon: "code" },
-      { name: "Go (Golang)", level: 82, icon: "code" }
-    ]
-  },
-  {
-    category: "Source Control",
-    items: [
-      { name: "Git", level: 95, icon: "github" },
-      { name: "GitHub Enterprise", level: 95, icon: "github" },
-      { name: "GitLab", level: 92, icon: "git-commit" },
-      { name: "Bitbucket", level: 85, icon: "git-pull-request" }
+      { name: "Windows Server", level: 95, icon: "server" },
+      { name: "Linux", level: 85, icon: "terminal" }
     ]
   }
 ];
