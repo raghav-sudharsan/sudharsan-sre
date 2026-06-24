@@ -5,273 +5,288 @@
 [![Technology Stack](https://img.shields.io/badge/Stack-HTML5%20%7C%20CSS3%20%7C%20JS%20(ES6)-blueviolet?style=flat-square)](https://raghav-sudharsan.github.io/sudharsan-sre/)
 [![Maintainer](https://img.shields.io/badge/Maintainer-raghav--sudharsan-blue?style=flat-square&logo=github)](https://github.com/raghav-sudharsan)
 
-Welcome to the **SRE Portfolio Dashboard**, an interactive operational console engineered specifically to reflect the professional journey, core competencies, and disaster recovery validation frameworks of **Sudharsan S**, a Site Reliability Engineer and DevOps Professional with 3+ years of experience.
-
-Designed to mirror an enterprise operations command center, this project showcases real production engineering credentials, monitoring dashboards, PowerShell automation scripts, and structured case studies directly relevant to high-availability application hosting.
+An interactive, production-grade engineering dashboard built to showcase the professional capabilities, systems administration, and operational validation workflows of **Sudharsan S**, a Site Reliability Engineer with 3+ years of experience in enterprise production support.
 
 ---
 
-## 🚀 Live Demo
+## 1. Project Overview
 
-The production dashboard is automatically deployed via GitHub Pages:
+The objective of this project is to construct a portfolio that moves away from standard, template-driven resume templates, replacing them with a functional dashboard that mimics a real-time cloud operations console. 
 
-👉 **Live Operations Console:** [https://raghav-sudharsan.github.io/sudharsan-sre/](https://raghav-sudharsan.github.io/sudharsan-sre/)
-
----
-
-## 🛡️ Key Features
-
-The portfolio behaves like a real-time monitoring console, delivering a premium technical experience:
-
-*   **Terminal Preloader Bootstrap Simulator:** Displays simulated startup routines on initialization (`aws configure`, `powershell iis_health_check.ps1`, `prometheus config validation`, `sysctl` variables) to establish a technical, operational theme.
-*   **Heartbeat SLA Uptime Ticker:** Header-integrated status widget that dynamically fluctuates at micro-decimals (e.g., `99.99923% SLA`) in real-time, mimicking active service level agreement monitoring.
-*   **Recruiter Telemetry Console Log Widget:** An active sidebar log feed that auto-appends realistic system operations logs (IIS Pool health check passes, Prometheus scrapes, Grafana syncs, memory utilization alerts) with current local timestamps.
-*   **Interactive SVG Blueprint Viewer:** Renders vector architectural blueprints (Production IIS Architecture, Monitoring Architecture, Disaster Recovery Architecture, Production Deployment Flow) with full desktop magnifier mouse zoom and mobile/tablet touch-drag/panning support.
-*   **Dynamic Case Studies Filters:** Filter critical projects in real time across Observability, Automation, and Infrastructure (DR/IaC).
-*   **Dual-Theme Mode (Dark / Light):** Native theme toggling using CSS custom properties with localized storage persistence.
+Rather than listing abstract summaries, this portfolio structures an SRE's capabilities as operational metrics, dynamic architecture flowcharts, and system telemetry feeds. It is engineered to demonstrate the author's technical background in cloud operations (AWS & GCP), IIS/.NET hosting operations, automation scripting (PowerShell & Batch), incident management, and disaster recovery validation drills.
 
 ---
 
-## 🛠️ Technology Stack
+## 2. Key Features
 
-This application is built with **zero external framework dependencies** (no React, Angular, Vue, or Tailwind CSS). This constraint was chosen deliberately to maximize performance and guarantee zero layout thrashing.
+The interface is structured as an interactive operations center featuring the following visual indicators and utilities:
 
-| Technology / Pattern | Role | Selection Rationale |
-| :--- | :--- | :--- |
-| **HTML5 (Semantic)** | Page Core Structure | Maximizes SEO indexing, facilitates accessibility (ARIA standards), and guarantees lightweight, structural hierarchy without wrapper bloat. |
-| **CSS3 (Vanilla)** | Layout & Theme Engine | Built using a standardized Design System powered by CSS Custom Properties (Variables). Allows instant dark/light mode switches, responsive media rules, and precise container constraints. |
-| **JavaScript (ES6+)** | Dynamic DOM & Telemetry | Handles modular content injections, triggers SVG blueprints, runs the background canvas particle engine, coordinates modals, and binds gesture event listeners. |
-| **Glassmorphism** | UI Aesthetic System | Implemented via `backdrop-filter: blur()`, translucent borders, and subtle radial gradients to project a high-tech "operational instrument panel" styling. |
-| **Gradient Design System** | Visual Palette | Combines deep navy (`#050811`), midnight blue (`#0a1122`), cyan (`#06b6d4`), and indigo-purple gradients to emulate modern observability portals like Grafana. |
-| **IntersectionObserver API** | Scroll Reveal System | Triggers premium staggered fade-ins and scale animations asynchronously on the browser's background thread, preventing UI lag. |
-| **HTML5 Canvas API** | Background Telemetry | Drives the node-network background particle system. Recalculates coordinates efficiently using `requestAnimationFrame`. |
+*   **Terminal Bootstrap Simulator:** A simulated terminal sequence on application boot that runs diagnostic logs (`aws configure`, `powershell iis_health_check.ps1`, `prometheus config validation`, `sysctl` kernel variable configurations) to set an operational tone.
+*   **SLA Uptime Ticker:** A header-integrated decimal clock that dynamically fluctuates at micro-decimals (e.g., `99.99923% SLA`) in real time, simulating live service availability monitoring.
+*   **Operations Telemetry Feed:** An active log stream in the sidebar that continuously appends realistic SRE logs (IIS Pool health check passes, Prometheus scraps, Grafana syncs, memory warning alerts) with current local timestamps.
+*   **Interactive Architecture Diagrams:** An inline SVG blueprint viewer displaying:
+    *   *Production IIS Architecture* (Clients → LB → IIS → .NET App → DB)
+    *   *Monitoring Architecture* (Windows Exporter → Prometheus → Grafana → Alerting)
+    *   *Disaster Recovery Architecture* (Primary → Active Replication → DR Standby)
+    *   *Production Deployment Flow* (Staged Release Lifecycle & Feedback Loop)
+    Includes complete desktop mouse-drag zoom and mobile touch-drag panning capabilities.
+*   **Responsive Dashboard UI:** A fluid two-column panel layout optimized to present data structures clearly under varying device footprints.
+*   **Uptime Theme Engine:** Persistent dark/light mode toggles with customized CSS custom properties and client storage synchronization.
+*   **Operations Board Sidebar:** A recruiter-focused summary card displaying total experience, DR drills completed, cloud platforms, architecture support types, and core hosting platforms at a glance.
 
 ---
 
-## 🏗️ Project Architecture
+## 3. Design Philosophy
 
-The codebase follows a decoupled architectural pattern, separating raw data definitions from DOM rendering and animation engines.
+The architecture of the dashboard is driven by clear engineering constraints:
 
-mermaid
+### Dashboard-Style UI
+An SRE's daily workflow is centered around observability platforms, Grafana dashboards, and command centers. The interface is deliberately styled after an operational console to provide an immediate visual association with system monitoring, incident response, and reliability operations.
+
+### Glassmorphism Grid
+Using frosted glass panels (`backdrop-filter: blur()`), subtle translucent borders, and deep midnight-gradient backing layers creates high depth and contrast. This emulates modern NOC (Network Operations Center) instruments and maintains strict readability.
+
+### Zero Frontend Frameworks
+The project is built with **zero external framework dependencies** (no React, Angular, Vue, or Tailwind CSS). This constraints guarantees:
+*   Zero dependencies vulnerability footprint
+*   Zero build-step compilation overhead
+*   Instant page loads and maximum browser compatibility
+*   Bypassing framework virtual-DOM overhead, preventing UI lag
+
+### Decoupled Content Architecture
+All data (experiences, certifications, projects, bios) is entirely isolated from the main layout markup and core application logic. It behaves like a decoupled flat-file database schema, making it extremely maintainable.
+
+---
+
+## 4. Technical Architecture
+
+The portfolio follows a simple, unidirectional data-injection flow:
+
+```mermaid
 graph TD
-    A[index.html - Core DOM Shell] --> B(styles.css - Design System & Variables)
-    A --> C(app.js - Initialization Controller)
+    A[index.html - Structural Shell] --> B(styles.css - Design Tokens & Styles)
+    A --> C(app.js - Rendering Engine & Event Loop)
     
-    subgraph Data Layer (decoupled in content/)
-        D[profile.js]
-        E[experience.js]
-        F[skills.js]
-        G[certifications.js]
-        H[projects.js]
-        I[achievements.js]
-        J[contact.js]
+    subgraph Data Modules (content/*)
+        D[profile.js - Bio & Social Data]
+        E[experience.js - Job Timelines]
+        F[skills.js - Skills Matrix]
+        G[certifications.js - Roadmap]
+        H[projects.js - Case Studies & Diagrams]
+        I[achievements.js - SLA & Metrics]
+        J[contact.js - Testimonials & Recruiter info]
     end
 
-    Data Layer -->|Injected dynamically via script tags| A
-    C -->|Reads data| Data Layer
-    C -->|Injects templates into| A
-    C -->|Initializes| K[Background Canvas Particle Engine]
-    C -->|Initializes| L[Live Uptime SLA Ticker]
-    C -->|Initializes| M[Telemetry Logs Console Feed]
+    Data Modules -->|Injected dynamically via script tags| A
+    C -->|Parses portfolioData object| Data Modules
+    C -->|Injects elements into| A
+    C -->|Initializes| K[Background Particles Canvas]
+    C -->|Initializes| L[Dynamic SLA Ticker]
+    C -->|Initializes| M[Telemetry Logs Console]
+```
 
-
-### 1. Content Organization
-Content is isolated into modular JavaScript files under the `/content` folder. This acts as a flat-file database. Adding a project or certification simply requires modifying an array in a dedicated JavaScript file, which the core rendering loop (`app.js`) automatically parses and appends to the DOM.
-
-### 2. Layout Structure
-A responsive, two-column layout:
-*   **Operations Sidebar (`<aside>`)**: Fixed-width telemetry summary containing status checks, SRE metrics, CV downloads, social hooks, and log streams.
-*   **Main Content Area (`<main>`)**: Scrollable feature layout compiling achievements, skills, case study cards, blueprints, and the resume portal.
-
-### 3. Styling Management
-Managed purely in `styles.css`. Custom variables are declared under `:root` (default Dark Mode) and overridden in `body.light-mode` to ensure instantaneous theme switching without flashing unstyled content (FOUC). 
+### Components & Data Flow:
+*   **`index.html`**: The structural shell containing container nodes, modal portals, and structural grids. It loads external CSS, dynamic scripts, and third-party utility icons (Lucide Icons and Marked library).
+*   **`styles.css`**: The master design system. Declares CSS variables under `:root` and overrides them in `body.light-mode` to implement instantaneous theme shifting.
+*   **`app.js`**: The central controller. Responsible for DOM construction, binding event listeners, initializing the background HTML5 canvas particle engine, driving the telemetry log feed, rendering dynamically zoomed SVGs, and handling the ATS-mode plain-text switch.
+*   **Content Modules (`content/*.js`)**: Modular JavaScript data files that extend a global `portfolioData` object. This separation ensures that content is completely independent of presentation logic.
 
 ---
 
-## 📂 Folder Structure
+## 5. Folder Structure
+
+The project repository is organized as follows:
 
 ```directory
 .
-├── .git/                      # Version control history
 ├── CNAME                      # Custom domain configuration for GitHub Pages
 ├── Sudharsan_SRE.jpeg         # Profile image asset
-├── app.js                     # Core frontend controller (DOM builder, event listeners, canvas engine)
+├── app.js                     # Core frontend controller (DOM builder, event loops, canvas engine)
 ├── index.html                 # Main HTML layout skeleton
 ├── server.js                  # Native Node.js local development web server
-├── content/                   # Decoupled content modules (Database Layer)
-│   ├── achievements.js        # SLA stats and achievements config
-│   ├── certifications.js      # Accreditations and awards database
-│   ├── contact.js             # Testimonials, blogs metadata, and recruiter info
-│   ├── experience.js          # SRE & System Admin job timeline
-│   ├── profile.js             # Core biography and social links configuration
-│   ├── projects.js            # Case studies and blueprints mapping
-│   └── skills.js              # Technical skills clusters and level statistics
-└── styles.css                 # Master Design System and UI CSS definitions
+├── styles.css                 # Master CSS Design System & styles
+└── content/                   # Decoupled database layer
+    ├── achievements.js        # SLA statistics and achievements array
+    ├── certifications.js      # Accreditations and future targets
+    ├── contact.js             # Testimonials, blogs metadata, and recruiter info
+    ├── experience.js          # SRE & System Admin job timeline
+    ├── profile.js             # Personal bio, location, and social links
+    ├── projects.js            # Case studies and blueprints mapping
+    └── skills.js              # Technical skills clusters and level statistics
 ```
 
 ---
 
-## 💻 Running Locally
+## 6. Performance Optimizations
 
-### Option A: Native Node.js Server (Recommended)
-This repository includes a lightweight `server.js` file utilizing Node's native `http` and `fs` modules to host the site locally without dependency bloat:
+The application is engineered to load and render with minimal latency:
 
-```bash
-# Launch the native development server
-node server.js
-```
-The server will initialize instantly and listen on:  
-👉 **`http://localhost:8000/`**
-
-### Option B: Python SimpleHTTPServer
-If Node.js is not present on your system, execute:
-```bash
-# For Python 3.x
-python -m http.server 8000
-```
-Open your browser and navigate to:  
-👉 **`http://localhost:8000/`**
+*   **Asynchronous Viewport Intersection API:** Instead of tracking global scroll event handlers (which block the main execution thread), the page uses the browser's native `IntersectionObserver` to trigger fade-in animations and start the metrics counter counts only when blocks are visible in the viewport.
+*   **GPU Hardware Acceleration:** Animations such as slider transitions and zoom translations use 3D hardware-accelerated transforms (`transform: translate3d(0,0,0)`) and `will-change` properties. This tells the browser to isolate rendering layers on the device GPU, eliminating UI layout thrashing.
+*   **Canvas Particles Throttle:** The node particle network utilizes `requestAnimationFrame` to run coordinate recalculations, ensuring operations run smoothly in sync with the display refresh rate.
+*   **Asset-Free Blueprints:** The architecture blueprint viewer renders diagrams using inline SVG vectors, removing external HTTP requests for heavy image assets.
 
 ---
 
-## 📝 Content Management Guide
+## 7. Accessibility Considerations
 
-Future updates to the portfolio's text, projects, or credentials **do not require modifying the main layout (`index.html`) or core scripts (`app.js`)**. This structure ensures that updates can be performed safely.
+Accessibility (a11y) guidelines are embedded directly into the code:
 
-### 1. Updating Profile Biography
-Open `content/profile.js` and modify properties under `portfolioData.personalInfo`:
+*   **Semantic HTML5 markup**: Layout blocks utilize explicit `<header>`, `<main>`, `<aside>`, `<section>`, and `<footer>` elements to ensure screen-reader compatibility.
+*   **Reduced Motion Support**: Media queries automatically detect if users have configured reduced-motion options in their operating systems. If active, all sliding transitions, fade-ins, and the background canvas particle engine are disabled.
+*   **Interactive Modals Focus**: Modal overlays include semantic `aria-label` tags, and close buttons are keyboard navigable.
+*   **Color Contrast**: Hex values for text elements are checked against WCAG guidelines to guarantee reading contrast in both dark and light modes.
+
+---
+
+## 8. Responsive Design Strategy
+
+The layout is built using fluid CSS grid calculations to handle screen reflows gracefully:
+
+*   **Desktop Layout (>1024px):** A modern two-column dashboard design. The operations panel is pinned to the left sidebar, and the scrollable main content is aligned to the right.
+*   **Tablet Layout (768px - 1023px):** Grid columns reflow. The operations panel is moved to the top of the viewport as a header summary cards layout, saving space for projects side-by-side.
+*   **Mobile Layout (<767px):** Content stacks into a singular column. Metric grids collapse, interactive slider controls track touch gestures (`touchstart`/`touchend`), and CTA buttons span the full viewport width for easy thumb-tapping.
+
+---
+
+## 9. Content Management
+
+The portfolio's content can be updated seamlessly without modifying the main HTML structure or JavaScript logic:
+
+### Updating Profile Data
+To update personal stats, modify properties in [profile.js](file:///c:/Users/ragha/OneDrive/Documents/GitHub/WEB-4/sudharsan-sre/content/profile.js):
 ```javascript
 portfolioData.personalInfo = {
   name: "Sudharsan S",
   designation: "Keeping Production Systems Reliable, Observable and Resilient",
   summary: "Site Reliability Engineer specializing...",
-  bio: "Site Reliability Engineer with 3+ years...",
-  yearsOfExperience: 3,
-  coreStrengths: [
-    "Application Availability Management",
-    "Incident & Problem Management",
-    ...
-  ]
+  // Add bio paragraphs and core strengths:
+  coreStrengths: [ ... ]
 };
 ```
 
-### 2. Adding a New Case Study (Project)
-Open `content/projects.js` and append a new object to the `portfolioData.projects` array:
+### Adding Experience Timeline Events
+Append a new experience object to the array in [experience.js](file:///c:/Users/ragha/OneDrive/Documents/GitHub/WEB-4/sudharsan-sre/content/experience.js):
 ```javascript
 {
-  id: "my-new-project",
-  name: "IIS Automation Suite",
-  category: "automation", // 'observability', 'automation', 'iac'
-  description: "Automated configuration audits...",
-  businessProblem: "Manual checks were error-prone...",
-  solution: "Developed PowerShell module for IIS pool verification...",
-  tools: ["PowerShell", "IIS", "Windows"],
-  challenges: "Managing access privileges...",
-  results: "Cut manual audits to under 2 minutes.",
-  lessons: "Robust error logs are critical.",
-  github: "https://github.com/sudharsan-sre/my-project",
+  company: "Company Name",
+  role: "Engineering Position",
+  duration: "Feb 2025 – Present",
+  responsibilities: [ ... ],
+  achievements: [ ... ],
+  tools: [ ... ],
+  businessImpact: "Impact description..."
+}
+```
+
+### Modifying the Skill Matrix
+Categorized skill matrices can be modified in [skills.js](file:///c:/Users/ragha/OneDrive/Documents/GitHub/WEB-4/sudharsan-sre/content/skills.js). Icon values correspond to Lucide icons:
+```javascript
+{
+  category: "Monitoring & Observability",
+  items: [
+    { name: "Prometheus", level: 90, icon: "activity" },
+    { name: "Grafana", level: 92, icon: "layout" }
+  ]
+}
+```
+
+### Customizing Projects & Case Studies
+Projects and their related diagrams can be updated in [projects.js](file:///c:/Users/ragha/OneDrive/Documents/GitHub/WEB-4/sudharsan-sre/content/projects.js):
+```javascript
+{
+  id: "ent-monitoring",
+  name: "Enterprise Monitoring & Observability Platform",
+  category: "observability",
+  description: "Short summary...",
+  businessProblem: "Details...",
+  solution: "Details...",
+  tools: ["Prometheus", "Grafana", "Windows Exporter"],
+  challenges: "Details...",
+  results: "Details...",
+  lessons: "Details...",
+  github: "https://github.com/...",
   liveDemo: "#",
-  diagramId: "deployment-flow"
-}
-```
-
-### 3. Updating Certifications
-Open `content/certifications.js` and append a certification record:
-```javascript
-{
-  id: "cert-aws",
-  name: "AWS Certified Solutions Architect",
-  issuer: "Amazon Web Services",
-  date: "Roadmap Target",
-  icon: "cloud", // 'cloud', 'layers', 'code', 'activity', 'server'
-  imageUrl: ""    // Path to certificate image (optional)
+  diagramId: "monitoring-architecture" // Links to SVG blueprint
 }
 ```
 
 ---
 
-## 🎨 Customization Guide
+## 10. Local Development
 
-### Altering Color Schemes & Themes
-All visual styling parameters are managed by CSS custom variables in `styles.css`. To change the primary theme colors, modify the custom variables under `:root` (Dark Theme) or `body.light-mode` (Light Theme):
+To run the project locally, clone the repository and use any static web hosting server. Because it has zero dependencies, no package installation step is required.
 
-```css
-/* Customize default Dark Mode Theme (styles.css: L4) */
-:root {
-  --bg-base: #050811;          /* Deepest background navy */
-  --text-primary: #f8fafc;     /* Primary text color */
-  --accent-gradient: linear-gradient(135deg, #0284c7 0%, #06b6d4 50%, #6366f1 100%); /* Highlights gradient */
-}
+### Method 1: Node.js (Recommended)
+Launch the lightweight, native development server provided:
+```bash
+node server.js
 ```
+The server will boot instantly and listen on: `http://localhost:8000/`
 
-### Modifying Telemetry Logs Stream
-To adjust the frequency or configuration of the pseudo-live logs inside the operations board sidebar, open `app.js` and edit the console logs config:
-```javascript
-// Change log interval frequency (app.js)
-setInterval(() => {
-  appendTelemetryLogLine();
-}, 4000); // 4000ms interval
+### Method 2: Python Simple Server
+If Node is not available:
+```bash
+# Python 3.x
+python -m http.server 8000
 ```
+Open your browser and navigate to: `http://localhost:8000/`
 
 ---
 
-## 📈 Performance & Accessibility Optimizations
+## 11. Deployment Strategy
 
-Designed from the ground up to follow performance budgets matching enterprise SLA requirements:
+The application is optimized for static hosting platforms. 
 
-*   **Hardware Accelerated CSS Compositing:** Critical animations (testimonials sliding, modals, and hover scales) use `will-change: transform` and `transform: translate3d(0, 0, 0)` triggers to offload rendering to the device GPU, resulting in fluid 60FPS transitions.
-*   **Minimized Rendering Layout Thrashing:** Bypasses framework virtual DOM diffing calculations. Viewport checks run asynchronously via the native `IntersectionObserver` API.
-*   **Reduced Motion Support:** Respects user accessibility preferences. Declares standard `@media (prefers-reduced-motion: reduce)` rules that automatically disable background particles canvas renderings and transition animations if configured in client operating system settings.
-*   **Dynamic SVG Compression:** Interactive blueprint diagrams are coded as dynamic inline SVGs, keeping page resource load times low and visuals crisp at any display magnification.
+### GitHub Pages CI/CD Workflow
+Every git commit pushed to the `main` branch is validated and deployed automatically using standard GitHub Actions:
+1. Pushing commits triggers the deploy pipeline.
+2. The pipeline checks code structure, packages the static directory assets, and uploads them to GitHub's deployment runner.
+3. The live static endpoint is updated instantly with zero downtime.
 
----
-
-## 📱 Browser Compatibility
-
-| Browser | Supported Version | Notes |
-| :--- | :--- | :--- |
-| **Google Chrome** | 85+ | Full Support. |
-| **Mozilla Firefox** | 80+ | Full Support. |
-| **Apple Safari / iOS** | 14+ | Full Support. Includes forced GPU rendering optimizations to prevent flex clipping. |
-| **Microsoft Edge** | 85+ | Full Support. |
+The custom domain configuration is preserved by the `CNAME` file located in the root directory.
 
 ---
 
-## 📐 Responsive Design Support
+## 12. Future Roadmap
 
-Layout supports flexible fluid widths across:
-*   **Widescreen Desktops / TV:** >1400px viewports center-constrain content to prevent scanning exhaustion.
-*   **Standard Desktops / Laptops:** 1024px to 1400px columns resize dynamically using standard fraction spacing.
-*   **Tablets (iPad/Android):** 768px to 1023px grid sections convert sidebar panel positioning to top blocks, preserving case study grids side-by-side.
-*   **Mobile Screens:** <767px viewports stack layouts into a singular column, stretch buttons for easy thumb-tapping, and load touchscreen swipe gestures for interactive carousels.
+Planned enhancements to extend the dashboard functionality:
+
+*   **Live GitHub Integration:** Integrate the GitHub API to dynamically retrieve repository commits, contributions, and stargazers.
+*   **Operational Sandbox Widget:** Integrate a CLI parser sandbox inside the preloader modal where recruiters can execute simulated commands (like `recycle-pool -Force` or `get-service`) to repair simulated server outages.
+*   **Continuous Deployment Templates:** Provide Terraform configuration code modules to automatically launch the static portfolio inside AWS S3, Route53, and CloudFront.
+*   **Docker Containerization:** Dockerize the static server setup with an NGINX base image configuration for container environments.
 
 ---
 
-## 👤 Author Information
+## 13. Security & Privacy Statement
+
+This project is built strictly to demonstrate SRE patterns and systems experience:
+*   **No client data is published:** No production customer details or financial records are stored.
+*   **No internal infrastructures details are exposed:** Hostnames, security policies, VPN paths, and private configurations are excluded.
+*   **No production hostnames or IPs are disclosed:** Internal IP maps, subnet configurations, and system domains are simulated.
+
+All architecture diagrams, server code samples, and operational console logs are intentionally generalized to represent standard systems administration architectures for demonstration purposes.
+
+---
+
+## 14. Engineering Principles
+
+The design of the portfolio dashboard aligns with core SRE engineering principles:
+
+*   **Reliability:** The zero-dependency architecture guarantees that the site loads consistently across all modern browser configurations with 100% uptime.
+*   **Simplicity:** Keeping scripting code modular and layout stylesheets clean ensures that other developers or technical recruiters can inspect the structure easily.
+*   **Maintainability:** Decoupling content schemas from application logic ensures that modifying job experiences or skills takes only minutes.
+*   **Performance:** Constraining resource footprints, using inline vectors, and offloading animations to the GPU ensures rapid page loads and fluid interactions.
+
+---
+
+## 15. Author
 
 *   **Name:** Sudharsan S
-*   **Title:** Site Reliability Engineer | DevOps Engineer | Cloud Operations Engineer
+*   **Role:** Site Reliability Engineer | DevOps Engineer | Cloud Operations Engineer
 *   **Location:** Bangalore, Karnataka, India
 *   **Email:** [raghavsudhar07@gmail.com](mailto:raghavsudhar07@gmail.com)
 *   **LinkedIn:** [https://linkedin.com/in/sudharsan-sre/](https://linkedin.com/in/sudharsan-sre/)
 *   **GitHub:** [https://github.com/raghav-sudharsan](https://github.com/raghav-sudharsan)
-
----
-
-## 📄 License
-
-This repository is distributed under the **MIT License**. For complete terms, see the [LICENSE](#license) section or inspect licensing details in the source.
-
-```text
-Copyright (c) 2026 Sudharsan S
-
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
-```
+*   **Portfolio:** [https://raghav-sudharsan.github.io/sudharsan-sre/](https://raghav-sudharsan.github.io/sudharsan-sre/)
