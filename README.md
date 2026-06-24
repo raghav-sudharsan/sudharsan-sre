@@ -1,42 +1,40 @@
-# 🌐 SRE.PORTFOLIO // Platform Engineering & Infrastructure Dashboard
+# 🌐 SRE.PORTFOLIO // Production Reliability & Cloud Operations Dashboard
 
 [![Uptime SLA](https://img.shields.io/badge/Uptime_SLA-99.999%25-06b6d4?style=flat-square&logo=statuspage)](https://raghav-sudharsan.github.io/sudharsan-sre/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-10b981.svg?style=flat-square)](https://opensource.org/licenses/MIT)
 [![Technology Stack](https://img.shields.io/badge/Stack-HTML5%20%7C%20CSS3%20%7C%20JS%20(ES6)-blueviolet?style=flat-square)](https://raghav-sudharsan.github.io/sudharsan-sre/)
-[![DevOps Hardened](https://img.shields.io/badge/Security-tfsec%20%7C%20SonarQube-orange?style=flat-square)](#technology-stack)
 [![Maintainer](https://img.shields.io/badge/Maintainer-raghav--sudharsan-blue?style=flat-square&logo=github)](https://github.com/raghav-sudharsan)
 
-Welcome to the **SRE Portfolio Dashboard**, a high-fidelity, interactive single-page portfolio engineered specifically to reflect the professional journey, core competencies, certifications, and architectural blueprints of **Sudharsan S**, a seasoned Site Reliability Engineer and DevOps Professional.
+Welcome to the **SRE Portfolio Dashboard**, an interactive operational console engineered specifically to reflect the professional journey, core competencies, and disaster recovery validation frameworks of **Sudharsan S**, a Site Reliability Engineer and DevOps Professional with 3+ years of experience.
 
-Designed to mirror a real-time cloud operations dashboard, this project moves away from generic, template-driven designs and showcases true engineering professionalism. It incorporates live telemetry visualizations, terminal bootstrap preloaders, interactive SVG blueprints, and structured case studies directly relevant to modern enterprise infrastructure roles.
+Designed to mirror an enterprise operations command center, this project showcases real production engineering credentials, monitoring dashboards, PowerShell automation scripts, and structured case studies directly relevant to high-availability application hosting.
 
 ---
 
 ## 🚀 Live Demo
 
-The production dashboard is automatically deployed via GitHub Pages and is fully operational:
+The production dashboard is automatically deployed via GitHub Pages:
 
-👉 **Live System Control Panel:** [https://raghav-sudharsan.github.io/sudharsan-sre/](https://raghav-sudharsan.github.io/sudharsan-sre/)
+👉 **Live Operations Console:** [https://raghav-sudharsan.github.io/sudharsan-sre/](https://raghav-sudharsan.github.io/sudharsan-sre/)
 
 ---
 
 ## 🛡️ Key Features
 
-The portfolio behaves like a real-time monitoring dashboard, delivering a unique experience for recruiters and engineering managers:
+The portfolio behaves like a real-time monitoring console, delivering a premium technical experience:
 
-*   **Terminal Preloader Bootstrap Simulator:** Displays simulated initialization routines on startup (`terraform init`, `kubectl get nodes`, `sysctl` kernel variable adjustments) to set a technical theme.
-*   **Heartbeat SLA Uptime Ticker:** Header-integrated decimal status widget that dynamically fluctuates at micro-decimals (e.g., `99.99923% SLA`) in real-time, simulating live systems operational data.
-*   **Recruiter Telemetry Console Log Widget:** An active sidebar logs feed that auto-appends pseudo-live system logs (`[SYS_OK]`, `Route53 latency checks`, `Karpenter scaled down node pool`) with current local timestamps every 4 seconds.
-*   **Interactive SVG Architecture Blueprint Viewer:** Renders beautiful vector architecture blueprints (System Topology, Cloud Network VPCs, CI/CD Pipelines, Prometheus/Thanos Observability Stack, K8s Networking) with full desktop magnifier mouse zoom and mobile/tablet touch-drag/panning support.
-*   **Dynamic Case Studies Filters:** Filter project modules in real time across Observability, CI/CD, Kubernetes, Automation, and Infrastructure as Code (IaC).
-*   **Responsive Testimonials Track:** Endorsement carousel featuring hardware-accelerated animations and drag-and-swipe touch event tracking.
+*   **Terminal Preloader Bootstrap Simulator:** Displays simulated startup routines on initialization (`aws configure`, `powershell iis_health_check.ps1`, `prometheus config validation`, `sysctl` variables) to establish a technical, operational theme.
+*   **Heartbeat SLA Uptime Ticker:** Header-integrated status widget that dynamically fluctuates at micro-decimals (e.g., `99.99923% SLA`) in real-time, mimicking active service level agreement monitoring.
+*   **Recruiter Telemetry Console Log Widget:** An active sidebar log feed that auto-appends realistic system operations logs (IIS Pool health check passes, Prometheus scrapes, Grafana syncs, memory utilization alerts) with current local timestamps.
+*   **Interactive SVG Blueprint Viewer:** Renders vector architectural blueprints (Production IIS Architecture, Monitoring Architecture, Disaster Recovery Architecture, Production Deployment Flow) with full desktop magnifier mouse zoom and mobile/tablet touch-drag/panning support.
+*   **Dynamic Case Studies Filters:** Filter critical projects in real time across Observability, Automation, and Infrastructure (DR/IaC).
 *   **Dual-Theme Mode (Dark / Light):** Native theme toggling using CSS custom properties with localized storage persistence.
 
 ---
 
 ## 🛠️ Technology Stack
 
-This application is built with **zero external framework dependencies** (no React, Angular, Vue, or Tailwind CSS). This constraint was chosen deliberately to maximize performance, customize aesthetic details at a low level, and guarantee zero layout thrashing.
+This application is built with **zero external framework dependencies** (no React, Angular, Vue, or Tailwind CSS). This constraint was chosen deliberately to maximize performance and guarantee zero layout thrashing.
 
 | Technology / Pattern | Role | Selection Rationale |
 | :--- | :--- | :--- |
@@ -54,7 +52,7 @@ This application is built with **zero external framework dependencies** (no Reac
 
 The codebase follows a decoupled architectural pattern, separating raw data definitions from DOM rendering and animation engines.
 
-mermaid
+```mermaid
 graph TD
     A[index.html - Core DOM Shell] --> B(styles.css - Design System & Variables)
     A --> C(app.js - Initialization Controller)
@@ -75,23 +73,18 @@ graph TD
     C -->|Initializes| K[Background Canvas Particle Engine]
     C -->|Initializes| L[Live Uptime SLA Ticker]
     C -->|Initializes| M[Telemetry Logs Console Feed]
+```
 
 ### 1. Content Organization
 Content is isolated into modular JavaScript files under the `/content` folder. This acts as a flat-file database. Adding a project or certification simply requires modifying an array in a dedicated JavaScript file, which the core rendering loop (`app.js`) automatically parses and appends to the DOM.
 
 ### 2. Layout Structure
 A responsive, two-column layout:
-*   **Recruiter Sidebar (`<aside>`)**: Fixed-width telemetry summary containing status checks, metrics, CV downloads, social hooks, and log streams.
-*   **Main Content Area (`<main>`)**: Scrollable feature layout compiling achievements, skills, project cards, and blueprints.
+*   **Operations Sidebar (`<aside>`)**: Fixed-width telemetry summary containing status checks, SRE metrics, CV downloads, social hooks, and log streams.
+*   **Main Content Area (`<main>`)**: Scrollable feature layout compiling achievements, skills, case study cards, blueprints, and the resume portal.
 
 ### 3. Styling Management
 Managed purely in `styles.css`. Custom variables are declared under `:root` (default Dark Mode) and overridden in `body.light-mode` to ensure instantaneous theme switching without flashing unstyled content (FOUC). 
-
-### 4. Animation System
-Staggered animations are managed by applying `.reveal-on-scroll` classes in HTML and tracking viewport entry via `IntersectionObserver`. Elements are hardware-accelerated using `transform: translateZ(0)` and `backface-visibility: hidden` to prevent layout rendering dropouts under Safari/iOS WebKit.
-
-### 5. Responsiveness Handling
-Handled using CSS Grid and Flexbox with responsive columns using `minmax(0, 1fr)` to prevent expanding content from breaking viewport boundaries. Touch gesture event handlers (`touchstart`, `touchmove`, `touchend`) are bound in `app.js` to enable swipe actions for carousels and drag-to-pan functions for zoomed blueprints.
 
 ---
 
@@ -111,28 +104,9 @@ Handled using CSS Grid and Flexbox with responsive columns using `minmax(0, 1fr)
 │   ├── contact.js             # Testimonials, blogs metadata, and recruiter info
 │   ├── experience.js          # SRE & System Admin job timeline
 │   ├── profile.js             # Core biography and social links configuration
-│   ├── projects.js            # Case studies, blueprints type mapping, and tools tags
+│   ├── projects.js            # Case studies and blueprints mapping
 │   └── skills.js              # Technical skills clusters and level statistics
 └── styles.css                 # Master Design System and UI CSS definitions
-```
-
----
-
-## ⚙️ Installation Guide
-
-Follow these commands to clone the repository and set up a local development environment.
-
-### 1. Prerequisites
-Ensure you have either **Node.js** (v14+) or **Python** installed on your workstation. No `npm install` packages are required due to the zero-dependency nature of the codebase.
-
-### 2. Clone the Repository
-Open a terminal shell and execute:
-```bash
-# Clone the repository
-git clone https://github.com/raghav-sudharsan/sudharsan-sre.git
-
-# Navigate into the workspace directory
-cd sudharsan-sre
 ```
 
 ---
@@ -154,45 +128,28 @@ If Node.js is not present on your system, execute:
 ```bash
 # For Python 3.x
 python -m http.server 8000
-
-# For Python 2.x (Legacy)
-python -m SimpleHTTPServer 8000
 ```
 Open your browser and navigate to:  
 👉 **`http://localhost:8000/`**
-
-### Option C: Node.js `serve` Package (npx)
-If you prefer standard npm global static hosts:
-```bash
-# Run serve via npx (zero local configuration)
-npx serve .
-```
-This utility automatically spins up a local web server (usually on port 3000 or 5000).
-
-### Development Workflow
-Since the client parses files dynamically on load, you do not need to compile scripts. 
-1. Make changes to CSS in `styles.css` or content configs in `/content/*.js`.
-2. Hard reload your browser (`Ctrl + F5` or `Cmd + Shift + R`) to bypass cached data and view updates immediately.
 
 ---
 
 ## 📝 Content Management Guide
 
-Future updates to the portfolio's text, projects, or credentials **do not require modifying the main layout (`index.html`) or core scripts (`app.js`)**. This structure ensures that updates can be performed safely without risk of breaking styles.
+Future updates to the portfolio's text, projects, or credentials **do not require modifying the main layout (`index.html`) or core scripts (`app.js`)**. This structure ensures that updates can be performed safely.
 
 ### 1. Updating Profile Biography
 Open `content/profile.js` and modify properties under `portfolioData.personalInfo`:
 ```javascript
 portfolioData.personalInfo = {
   name: "Sudharsan S",
-  designation: "Site Reliability Engineer | DevOps Engineer | Cloud Engineer",
-  summary: "Highly skilled Site Reliability Engineer...",
-  bio: "With extensive experience managing high-throughput...",
+  designation: "Keeping Production Systems Reliable, Observable and Resilient",
+  summary: "Site Reliability Engineer specializing...",
+  bio: "Site Reliability Engineer with 3+ years...",
   yearsOfExperience: 3,
-  // Add core strengths:
   coreStrengths: [
-    "Reliability & Chaos Engineering",
-    "Multi-Cloud Architecture (AWS, Azure, GCP)",
+    "Application Availability Management",
+    "Incident & Problem Management",
     ...
   ]
 };
@@ -203,18 +160,18 @@ Open `content/projects.js` and append a new object to the `portfolioData.project
 ```javascript
 {
   id: "my-new-project",
-  name: "Automated Canary Deployments",
-  category: "cicd", // 'observability', 'cicd', 'kubernetes', 'automation', 'iac'
-  description: "Designed a canary deployment strategy...",
-  businessProblem: "Releases were manual and caused intermittent downtime...",
-  solution: "Deployed Argo Rollouts integrated with Prometheus alert metrics...",
-  tools: ["Argo Rollouts", "Prometheus", "Kubernetes", "Linkerd"],
-  challenges: "Configuring metric queries to analyze error rates dynamically...",
-  results: "Achieved zero release downtime and reduced rollback times by 95%.",
-  lessons: "Always set low analysis thresholds for initial test limits.",
-  github: "https://github.com/raghav-sudharsan/canary-deployments",
+  name: "IIS Automation Suite",
+  category: "automation", // 'observability', 'automation', 'iac'
+  description: "Automated configuration audits...",
+  businessProblem: "Manual checks were error-prone...",
+  solution: "Developed PowerShell module for IIS pool verification...",
+  tools: ["PowerShell", "IIS", "Windows"],
+  challenges: "Managing access privileges...",
+  results: "Cut manual audits to under 2 minutes.",
+  lessons: "Robust error logs are critical.",
+  github: "https://github.com/sudharsan-sre/my-project",
   liveDemo: "#",
-  diagramId: "cicd-architecture" // Link to a diagram ID defined in appState/projects
+  diagramId: "deployment-flow"
 }
 ```
 
@@ -222,32 +179,13 @@ Open `content/projects.js` and append a new object to the `portfolioData.project
 Open `content/certifications.js` and append a certification record:
 ```javascript
 {
-  id: "cert-cka",
-  name: "CKA: Certified Kubernetes Administrator",
-  issuer: "The Linux Foundation",
-  date: "2023",
-  icon: "layers", // 'cloud', 'layers', 'code', 'activity', 'terminal'
-  imageUrl: ""    // Optional path (e.g. "assets/cka-cert.png") - shows badge placeholder if empty
+  id: "cert-aws",
+  name: "AWS Certified Solutions Architect",
+  issuer: "Amazon Web Services",
+  date: "Roadmap Target",
+  icon: "cloud", // 'cloud', 'layers', 'code', 'activity', 'server'
+  imageUrl: ""    // Path to certificate image (optional)
 }
-```
-
-### 4. Replacing Dashboard Avatar Image
-1. Prepare your portrait image, crop it to a square format (ideally `400x400` pixels), and save it as a JPEG.
-2. Copy it into the root directory of the repository (e.g., as `Sudharsan_SRE.jpeg`).
-3. If using a different filename, open `content/profile.js` and update `avatarUrl`:
-   ```javascript
-   avatarUrl: "my-new-filename.jpeg"
-   ```
-
-### 5. Updating Contact, Socials, & Testimonials
-Open `content/contact.js` to modify active interview status flags, CV links, testimonials, or blogs content:
-```javascript
-portfolioData.recruiterInfo = {
-  currentRole: "Site Reliability Engineer @ Craftsilicon",
-  noticePeriod: "30 Days (Negotiable)",
-  availabilityStatus: "Actively interviewing for SRE & DevOps roles",
-  resumeDownloadUrl: "assets/Sudharsan_SRE_Resume.pdf" // Update with your actual resume path
-};
 ```
 
 ---
@@ -267,9 +205,9 @@ All visual styling parameters are managed by CSS custom variables in `styles.css
 ```
 
 ### Modifying Telemetry Logs Stream
-To adjust the frequency or configuration of the pseudo-live logs inside the recruiter hub sidebar, open `app.js` and edit the console logs config:
+To adjust the frequency or configuration of the pseudo-live logs inside the operations board sidebar, open `app.js` and edit the console logs config:
 ```javascript
-// Change log interval frequency (app.js: L1270-1300 approx)
+// Change log interval frequency (app.js)
 setInterval(() => {
   appendTelemetryLogLine();
 }, 4000); // 4000ms interval
@@ -293,7 +231,7 @@ Designed from the ground up to follow performance budgets matching enterprise SL
 | Browser | Supported Version | Notes |
 | :--- | :--- | :--- |
 | **Google Chrome** | 85+ | Full Support. |
-| **Mozilla Firefox** | 80+ | Full Support. (Enable `layout.css.backdrop-filter.enabled` in older setups if blur drops). |
+| **Mozilla Firefox** | 80+ | Full Support. |
 | **Apple Safari / iOS** | 14+ | Full Support. Includes forced GPU rendering optimizations to prevent flex clipping. |
 | **Microsoft Edge** | 85+ | Full Support. |
 
@@ -309,24 +247,14 @@ Layout supports flexible fluid widths across:
 
 ---
 
-## 🗺️ Future Enhancements Roadmap
-
-*   [ ] **Live GitHub Integrations:** Incorporate octokit API calls to fetch active repository stargazers, commit records, and contributions.
-*   [ ] **Real-time Incident Remediator simulator:** Build a miniature game inside the terminal preloader where recruiters can run "incident commands" to recover a failing cluster.
-*   [ ] **Dockerized Deployment:** Provide a `Dockerfile` and docker-compose script to deploy the server seamlessly in an NGINX container.
-*   [ ] **IaC Deployment Scripting:** Provide a Terraform stack template to host the static portfolio on AWS (S3, Route53, and CloudFront CDN) automatically.
-
----
-
 ## 👤 Author Information
 
 *   **Name:** Sudharsan S
-*   **Title:** Site Reliability Engineer | DevOps Engineer | Cloud Engineer
+*   **Title:** Site Reliability Engineer | DevOps Engineer | Cloud Operations Engineer
 *   **Location:** Bangalore, Karnataka, India
 *   **Email:** [raghavsudhar07@gmail.com](mailto:raghavsudhar07@gmail.com)
 *   **LinkedIn:** [https://linkedin.com/in/sudharsan-sre/](https://linkedin.com/in/sudharsan-sre/)
 *   **GitHub:** [https://github.com/raghav-sudharsan](https://github.com/raghav-sudharsan)
-*   **GitLab:** [https://gitlab.com/sudharsan-s](https://gitlab.com/sudharsan-s)
 
 ---
 
