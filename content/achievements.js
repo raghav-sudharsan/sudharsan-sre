@@ -32,9 +32,9 @@ portfolioData.achievements = [
 portfolioData.metrics = [
   { label: "Years Experience", value: 3, suffix: "+" },
   { label: "DR Drills Completed", value: 7, suffix: "+" },
-  { label: "Servers Managed", value: 80, suffix: "+" },
-  { label: "DR Execution Success", value: 100, suffix: "%" },
   { label: "Production Incidents Resolved", value: 50, suffix: "+" },
   { label: "Proactive Incident ", value: 50, suffix: "+" }
+  { label: "Servers Managed", value: 80, suffix: "+" },
+  { label: "DR Execution Success", value: 100, suffix: "%" },
 
 ];
