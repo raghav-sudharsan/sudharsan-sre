@@ -7,7 +7,10 @@
   <title>Sudharsan S | Site Reliability Engineer | DevOps Engineer | Cloud Operations Engineer</title>
   <meta name="description"
     content="Professional portfolio of Sudharsan S, Site Reliability Engineer | DevOps Engineer | Cloud Operations Engineer. Specialized in application availability, cloud operations, monitoring, incident response, disaster recovery validation, and operational automation.">
-  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="styles/themes.css">
+  <link rel="stylesheet" href="styles/main.css">
+  <link rel="stylesheet" href="styles/components.css">
+  <link rel="stylesheet" href="styles/animations.css">
 </head>
 
 <body>
@@ -79,7 +82,7 @@
 
         <!-- Profile Photo Box -->
         <div class="avatar-container">
-          <img id="avatar-preview-img" src="Sudharsan_SRE.jpeg" alt="Sudharsan S" class="avatar-image">
+          <img id="avatar-preview-img" src="assets/images/Sudharsan_SRE.jpeg" alt="Sudharsan S" class="avatar-image">
         </div>
 
         <!-- Name & Details -->
@@ -602,9 +605,9 @@
     </div>
   </div>
 
-  <!-- Loaded Libraries -->
-  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
-  <script src="https://unpkg.com/lucide@latest"></script>
+  <!-- Loaded Libraries (Pinned Versions for Production) -->
+  <script src="https://cdn.jsdelivr.net/npm/marked@12.0.0/marked.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/lucide@0.435.0/dist/umd/lucide.min.js"></script>
 
   <!-- Split Content Configurations -->
   <script src="content/profile.js"></script>
@@ -615,8 +618,14 @@
   <script src="content/achievements.js"></script>
   <script src="content/contact.js"></script>
 
-  <!-- Custom Portfolio Scripts -->
-  <script src="app.js"></script>
+  <!-- Custom Modular Portfolio Scripts -->
+  <script src="scripts/utils.js"></script>
+  <script src="scripts/theme.js"></script>
+  <script src="scripts/router.js"></script>
+  <script src="scripts/animations.js"></script>
+  <script src="scripts/telemetry.js"></script>
+  <script src="scripts/blueprints.js"></script>
+  <script src="scripts/app.js"></script>
 </body>
 
 </html>

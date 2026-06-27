@@ -19,7 +19,7 @@ portfolioData.personalInfo = {
     "AWS & GCP Operations",
     "Operational Automation (PowerShell / Batch)"
   ],
-  avatarUrl: "Sudharsan_SRE.jpeg",
+  avatarUrl: "assets/images/Sudharsan_SRE.jpeg",
   resumeUrl: "#",
   socialLinks: {
     linkedin: "https://linkedin.com/in/sudharsan-sre/",

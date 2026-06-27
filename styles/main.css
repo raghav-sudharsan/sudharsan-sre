@@ -1,0 +1,240 @@
+/* --- CORE APPS & CONTAINERS LAYOUT --- */
+
+.app-container {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+/* Header & Navigation Bar */
+.main-header {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  padding: 15px 30px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid var(--border-color);
+  background: rgba(9, 13, 22, 0.7);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  transition: background var(--transition-normal);
+}
+
+body.light-mode .main-header {
+  background: rgba(248, 250, 252, 0.75);
+}
+
+/* Hero Section / Banner Cover */
+.hero-wrapper {
+  position: relative;
+  padding: 40px 30px 20px 30px;
+}
+
+.hero-glass-mesh {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 30px;
+  padding: 35px;
+  border-radius: var(--radius-lg);
+  position: relative;
+  overflow: hidden;
+}
+
+.hero-glass-mesh::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(135deg, rgba(6, 182, 212, 0.05) 0%, rgba(139, 92, 246, 0.05) 100%);
+  pointer-events: none;
+}
+
+.avatar-container {
+  position: relative;
+  width: 140px;
+  height: 140px;
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--border-color);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+}
+
+.avatar-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.hero-content {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.hero-name-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.hero-name-title {
+  font-family: var(--font-heading);
+  font-weight: 700;
+  font-size: 2.25rem;
+  color: var(--text-primary);
+  padding: 2px 0px;
+  width: auto;
+}
+
+.hero-designation {
+  font-size: 1.05rem;
+  font-weight: 600;
+  background: var(--accent-gradient);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  display: inline-block;
+  word-break: break-word;
+  overflow-wrap: break-word;
+}
+
+.hero-summary {
+  font-size: 0.925rem;
+  line-height: 1.6;
+  color: var(--text-secondary);
+  max-width: 750px;
+}
+
+/* --- MAIN DASHBOARD CONTENT GRID --- */
+.dashboard-grid {
+  display: grid;
+  grid-template-columns: 320px minmax(0, 1fr);
+  gap: 30px;
+  padding: 0 30px 40px 30px;
+  align-items: start;
+}
+
+/* Left Column: Recruiter Sidebar Portal */
+.recruiter-sidebar {
+  position: sticky;
+  top: 90px;
+  padding: 25px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  min-width: 0;
+}
+
+/* Right Column: Main Content Sections */
+.main-content-area {
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
+  min-width: 0;
+}
+
+/* Section Common Styling */
+.content-section {
+  scroll-margin-top: 100px;
+}
+
+.section-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+
+.section-title {
+  font-family: var(--font-heading);
+  font-size: 1.45rem;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.section-title svg {
+  color: #3b82f6;
+}
+
+/* --- RESPONSIVE MEDIA QUERIES --- */
+@media (max-width: 1024px) {
+  .dashboard-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .recruiter-sidebar {
+    position: static;
+  }
+}
+
+@media (max-width: 768px) {
+  html {
+    font-size: 15px;
+  }
+
+  .hero-glass-mesh {
+    grid-template-columns: 1fr;
+    text-align: center;
+    justify-items: center;
+    gap: 20px;
+  }
+
+  .hero-name-row {
+    justify-content: center;
+  }
+
+  .hero-actions {
+    justify-content: center;
+    width: 100%;
+  }
+
+  .hero-actions .btn {
+    flex: 1 1 auto;
+    justify-content: center;
+    min-width: 130px;
+  }
+
+  .sidebar-socials {
+    justify-content: center;
+  }
+
+  .about-cards-grid,
+  .metrics-grid,
+  .skills-container,
+  .projects-grid,
+  .certifications-grid,
+  .blogs-grid,
+  .contact-container {
+    grid-template-columns: 1fr;
+  }
+
+  .main-header {
+    padding: 15px;
+  }
+
+  .nav-menu {
+    display: none;
+  }
+
+  .architecture-tabs-container {
+    grid-template-columns: 1fr;
+  }
+
+  .resume-body-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .footer-top {
+    grid-template-columns: 1fr;
+    gap: 30px;
+  }
+}
