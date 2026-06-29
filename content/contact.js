@@ -3,14 +3,12 @@ if (typeof portfolioData === 'undefined') {
 }
 
 portfolioData.recruiterInfo = {
-  availabilityStatus: "SYSTEM ACTIVE",
+  role: "Application Support Engineer",
   experience: "3+ Years",
-  drDrills: "7+",
-  cloudPlatforms: "AWS & GCP",
-  appsSupported: "Business Critical Enterprise Applications",
-  architectures: "Monolith + Microservices",
-  corePlatforms: "IIS | Windows | Linux",
-  availabilityFocus: "SLA / SLO Driven Operations",
+  clientExposure: "10+ Client Environments",
+  expertise: "Production Support & Cloud Operations",
+  availability: "Active & Open to Opportunities",
+  location: "Bangalore, India",
   resumeDownloadUrl: "#"
 };
 

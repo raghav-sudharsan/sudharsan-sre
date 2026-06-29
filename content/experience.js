@@ -8,20 +8,19 @@ portfolioData.experience = [
     role: "Application Support Engineer",
     duration: "Feb 2025 – Present",
     responsibilities: [
-      "Orchestrated application configurations and deployment cycles for high-availability transactional banking platforms.",
-      "Optimized web hosting environments to minimize request queuing and connection delays.",
-      "Managed virtual infrastructure provisioning across cloud environments to align with workload requirements.",
-      "Deployed centralized metrics dashboards to establish proactive system observability.",
-      "Executed automated post-release checkouts to eliminate manual validation verification errors.",
-      "Led active incident response triage and structured root-cause investigations to restore degraded services.",
-      "Written administrative playbooks and script automation to optimize routine system health audits."
+      "Managed production deployments, release validations, and rollback support for business-critical SaaS and enterprise applications.",
+      "Configured web hosting parameters across 10+ isolated client environments in Windows and Linux, securing 99.9% availability.",
+      "Collaborated with Development, QA, and Infrastructure teams to coordinate deployment checkouts and config change controls.",
+      "Deployed centralized monitoring dashboards to establish real-time host observability and trace system resource bottlenecks.",
+      "Led active incident response triage and performed root cause analysis (RCA) to restore degraded services.",
+      "Authored PowerShell and shell script automation to audit configurations and eliminate repetitive manual toil."
     ],
     achievements: [
-      "Reduced system MTTR by establishing granular telemetry metrics collection and automated alerts.",
+      "Reduced system MTTR by establishing automated alert policies and telemetry metrics dashboards.",
       "Accelerated post-deployment verification cycles using custom check scripting pipelines.",
-      "Validated disaster recovery readiness by coordinating mock failovers across multiple client environments."
+      "Validated disaster recovery readiness by coordinating active-passive failover mock drills across multiple client environments."
     ],
-    businessImpact: "Secured high service availability and regulatory compliance for critical financial platforms by implementing proactive monitoring and rapid deployment validation checks."
+    businessImpact: "Ensured high service availability, regulatory compliance, and smooth deployment cycles for business-critical SaaS and enterprise platforms by establishing proactive monitoring and cross-team collaboration."
   },
   {
     company: "Wikiprospects",

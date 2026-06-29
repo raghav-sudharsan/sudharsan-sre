@@ -64,10 +64,7 @@
         <div>
           <span class="brand-title">Sudharsan.SRE</span>
           <div class="system-status">
-            <span class="status-dot-blink"></span>
-            <span>SYSTEMS OPERATIONAL</span>
-            <span style="opacity: 0.3; margin: 0 4px;">|</span>
-            <span id="uptime-percentage-ticker" style="font-family: monospace; font-weight: 700;">99.9990% SLA</span>
+            <span style="font-weight: 600; color: var(--text-secondary); font-size: 0.8rem; letter-spacing: 0.05em;">Enterprise Applications • Cloud Operations • Automation</span>
           </div>
         </div>
       </div>
@@ -78,7 +75,7 @@
           <a href="#skills-section" class="nav-link">Skills</a>
           <a href="#experience-section" class="nav-link">Experience</a>
           <a href="#projects-section" class="nav-link">Projects</a>
-          <a href="#operational-highlights-section" class="nav-link">Operational Impact</a>
+          <a href="#engineering-contributions-section" class="nav-link">Contributions</a>
           <a href="#architecture-section" class="nav-link">Architecture</a>
           <a href="#certifications-section" class="nav-link">Highlights</a>
           <a href="#contact-section" class="nav-link">Contact</a>
@@ -133,11 +130,16 @@
 
       <!-- Left Panel: Recruiter / Availability Sidebar Hub -->
       <aside class="recruiter-sidebar glass-panel">
-        <h3 class="sidebar-title"><i data-lucide="activity"></i> Operations Board</h3>
+        <h3 class="sidebar-title"><i data-lucide="user"></i> Professional Snapshot</h3>
 
         <div class="sidebar-status-tag">
           <span class="status-dot-blink"></span>
-          <span id="recruiter-avail-status">SYSTEM ACTIVE</span>
+          <span id="recruiter-avail-status">ACTIVE</span>
+        </div>
+
+        <div class="sidebar-metric-row">
+          <span class="sidebar-metric-label">Current Role</span>
+          <span class="sidebar-metric-value" id="ops-current-role">Application Support Engineer</span>
         </div>
 
         <div class="sidebar-metric-row">
@@ -146,33 +148,23 @@
         </div>
 
         <div class="sidebar-metric-row">
-          <span class="sidebar-metric-label">DR Drills Executed</span>
-          <span class="sidebar-metric-value" id="ops-dr-drills">7+</span>
+          <span class="sidebar-metric-label">Client Exposure</span>
+          <span class="sidebar-metric-value" id="ops-client-exposure">10+ Client Environments</span>
         </div>
 
         <div class="sidebar-metric-row">
-          <span class="sidebar-metric-label">Cloud Platforms</span>
-          <span class="sidebar-metric-value" id="ops-cloud-platforms">AWS & GCP</span>
+          <span class="sidebar-metric-label">Primary Expertise</span>
+          <span class="sidebar-metric-value" id="ops-primary-expertise">Production Support & Cloud Operations</span>
         </div>
 
         <div class="sidebar-metric-row">
-          <span class="sidebar-metric-label">Applications Supported</span>
-          <span class="sidebar-metric-value" id="ops-apps-supported">Business Critical Enterprise Applications</span>
+          <span class="sidebar-metric-label">Availability</span>
+          <span class="sidebar-metric-value" id="ops-availability">Active</span>
         </div>
 
         <div class="sidebar-metric-row">
-          <span class="sidebar-metric-label">Architecture Types</span>
-          <span class="sidebar-metric-value" id="ops-architectures">Monolith + Microservices</span>
-        </div>
-
-        <div class="sidebar-metric-row">
-          <span class="sidebar-metric-label">Core Platforms</span>
-          <span class="sidebar-metric-value" id="ops-core-platforms">IIS | Windows | Linux</span>
-        </div>
-
-        <div class="sidebar-metric-row">
-          <span class="sidebar-metric-label">Availability Focus</span>
-          <span class="sidebar-metric-value" id="ops-availability-focus">SLA / SLO Driven Operations</span>
+          <span class="sidebar-metric-label">Location</span>
+          <span class="sidebar-metric-value" id="ops-location">Bangalore, India</span>
         </div>
 
         <div class="sidebar-actions">
@@ -208,16 +200,6 @@
           </a>
         </div>
 
-        <!-- Simulated SRE Live Logs -->
-        <div class="sidebar-metric-row"
-          style="margin-top: 15px; border-top: 1px solid var(--border-color); padding-top: 15px;">
-          <span class="sidebar-metric-label" style="display:flex; align-items:center; gap:6px;">
-            <i data-lucide="activity" style="width:12px; height:12px; color:#06b6d4;"></i> Telemetry Stream
-          </span>
-          <div class="telemetry-log-console" id="sidebar-telemetry-console">
-            <span class="log-line">> init telemetry link...</span>
-          </div>
-        </div>
       </aside>
 
       <!-- Right Panel: Main Scrollable SRE Portfolio Core -->
@@ -282,10 +264,10 @@
           </div>
         </section>
 
-        <!-- Operational Impact Section -->
-        <section class="content-section" id="operational-highlights-section">
+        <!-- Engineering Contributions Section -->
+        <section class="content-section" id="engineering-contributions-section">
           <div class="section-header">
-            <h2 class="section-title"><i data-lucide="trending-up"></i> Operational Impact</h2>
+            <h2 class="section-title"><i data-lucide="trending-up"></i> Engineering Contributions</h2>
           </div>
           
           <!-- SRE Metrics Grid -->
@@ -293,7 +275,7 @@
             <!-- Injected by app.js -->
           </div>
 
-          <div class="highlights-grid" id="operational-highlights-container">
+          <div class="highlights-grid" id="engineering-contributions-container">
             <!-- Injected by app.js -->
           </div>
         </section>

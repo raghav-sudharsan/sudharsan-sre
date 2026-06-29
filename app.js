@@ -37,7 +37,7 @@ function initApp() {
   renderAboutSection();
   renderMetrics();
   renderSkills();
-  renderOperationalHighlights();
+  renderEngineeringContributions();
   renderProjects("all");
   renderArchitectureTabs();
   renderTimeline();
@@ -185,14 +185,13 @@ function renderRecruiterHub() {
     const el = document.getElementById(id);
     if (el) el.innerText = val;
   };
-  setVal("recruiter-avail-status", portfolioData.recruiterInfo.availabilityStatus);
+  setVal("recruiter-avail-status", portfolioData.recruiterInfo.availability);
+  setVal("ops-current-role", portfolioData.recruiterInfo.role);
   setVal("ops-experience", portfolioData.recruiterInfo.experience);
-  setVal("ops-dr-drills", portfolioData.recruiterInfo.drDrills);
-  setVal("ops-cloud-platforms", portfolioData.recruiterInfo.cloudPlatforms);
-  setVal("ops-apps-supported", portfolioData.recruiterInfo.appsSupported);
-  setVal("ops-architectures", portfolioData.recruiterInfo.architectures);
-  setVal("ops-core-platforms", portfolioData.recruiterInfo.corePlatforms);
-  setVal("ops-availability-focus", portfolioData.recruiterInfo.availabilityFocus);
+  setVal("ops-client-exposure", portfolioData.recruiterInfo.clientExposure);
+  setVal("ops-primary-expertise", portfolioData.recruiterInfo.expertise);
+  setVal("ops-availability", portfolioData.recruiterInfo.availability);
+  setVal("ops-location", portfolioData.recruiterInfo.location);
 
   const links = portfolioData.personalInfo.socialLinks;
   const linkedinEl = document.getElementById("social-link-linkedin");
@@ -329,36 +328,65 @@ function renderSkills() {
   if (!container) return;
   container.innerHTML = "";
 
-  portfolioData.skills.forEach((cat, idx) => {
+  portfolioData.skills.forEach((domain, idx) => {
     const card = document.createElement("div");
-    const staggerClass = `reveal-stagger-${(idx % 4) + 1}`;
+    const staggerClass = `reveal-stagger-${(idx % 3) + 1}`;
     card.className = `skills-category-card glass-panel reveal-on-scroll ${staggerClass}`;
-    card.innerHTML = `
-      <h3 class="about-subtitle"><i data-lucide="tag" style="width:14px; height:14px; vertical-align:-1px; margin-right:4px;"></i> ${cat.category}</h3>
-      <div class="skills-list">
-        ${cat.items.map(item => `
-          <div class="skill-row">
-            <div class="skill-info">
-              <span class="skill-name-label"><i data-lucide="${item.icon}"></i> ${item.name}</span>
-              <span class="skill-percentage">${item.level}%</span>
-            </div>
-            <div class="skill-progress-bar-bg">
-              <div class="skill-progress-bar-fill" data-level="${item.level}"></div>
-            </div>
+    
+    const techItemsHTML = domain.technologies.map(tech => {
+      const svgLogo = getTechSVG(tech);
+      return `
+        <div class="tech-item-row" style="display:flex; align-items:center; gap:8px; margin-bottom:4px;">
+          <div class="tech-icon-wrapper" style="width:16px; height:16px; display:flex; align-items:center; justify-content:center;">
+            ${svgLogo}
           </div>
-        `).join("")}
+          <span class="tech-name-label" style="font-size:0.8rem; color:var(--text-secondary); font-weight:500;">${tech}</span>
+        </div>
+      `;
+    }).join("");
+
+    card.innerHTML = `
+      <h3 class="about-subtitle" style="display:flex; align-items:center; gap:8px; font-size:1.05rem; margin-bottom:6px; color:var(--text-primary);">
+        <i data-lucide="${domain.icon || 'layers'}" style="width:15px; height:15px; color:#38bdf8;"></i> ${domain.title}
+      </h3>
+      <p class="domain-description" style="font-size:0.75rem; color:var(--text-muted); margin-bottom:12px; line-height:1.3; min-height:32px;">${domain.description}</p>
+      <div class="tech-grid" style="display:grid; grid-template-columns:1fr 1fr; gap:4px 8px;">
+        ${techItemsHTML}
       </div>
     `;
     container.appendChild(card);
   });
+  lucide.createIcons();
+}
+
+function getTechSVG(tech) {
+  const normalized = tech.toLowerCase().trim();
+  const logoSVGs = {
+    "aws": `<svg viewBox="0 0 24 24" width="13" height="13" fill="#FF9900"><path d="M12.4 15.6c-.9.2-2.1.3-3 .3-2.6 0-3.9-1.2-3.9-2.9 0-2.3 2.2-3.4 5.9-3.4h1v-.5c0-1-.5-1.7-1.9-1.7-1.1 0-2.2.4-2.8.8l-.5-1.3c.9-.6 2.3-1 3.7-1 2.5 0 3.7 1.3 3.7 3.5v4.5c0 1.1.4 1.7.8 2.1h-2l-.2-.8zm-1-4.8c-2.2 0-3.6.5-3.6 1.8 0 1 .8 1.5 2.1 1.5.9 0 1.8-.3 2.2-.9.3-.4.3-.8.3-1.1v-1.3h-1zM22 13.9c0 2-1.7 3.7-4 3.7a6.2 6.2 0 0 1-3.6-1.1l.8-1.2c.8.6 1.8.9 2.7.9 1.4 0 2.2-.8 2.2-1.8 0-2.3-4-1.6-4-4.5 0-1.8 1.4-3.3 3.6-3.3 1.2 0 2.3.4 3 .9l-.7 1.3c-.6-.4-1.4-.7-2.2-.7-1.2 0-1.8.7-1.8 1.5 0 2.2 4 1.4 4 4.5zM1.8 15.6l5.7-8.3h1.8l-4.7 6.6 4.9 5.2H7.6l-4.2-4.6-1.6 2.1v2.5H0V4.2h1.8v11.4z"/></svg>`,
+    "google cloud platform": `<svg viewBox="0 0 24 24" width="13" height="13"><path d="M19.35 10.04C18.67 6.59 15.64 4 12 4 9.11 4 6.6 5.64 5.35 8.04 2.34 8.36 0 10.91 0 14c0 3.31 2.69 6 6 6h13c2.76 0 5-2.24 5-5 0-2.64-2.05-4.78-4.65-4.96z" fill="#4285F4"/></svg>`,
+    "windows server": `<svg viewBox="0 0 24 24" width="13" height="13" fill="#0078D7"><path d="M0 3.449L9.75 2.1v9.45H0V3.449zM0 12.45h9.75v9.45L0 20.551v-8.1zM10.8 1.95L24 0v11.55H10.8V1.95zm0 10.5H24v11.55l-13.2-1.95v-9.6z"/></svg>`,
+    "linux": `<svg viewBox="0 0 24 24" width="13" height="13" fill="#FFD43B"><path d="M12 2a5 5 0 0 0-5 5c0 1.3.5 2.5 1.3 3.4C6 11.2 4 13.4 4 16c0 2 2 3 4 3h8c2 0 4-1 4-3 0-2.6-2-4.8-4.3-5.6.8-.9 1.3-2.1 1.3-3.4a5 5 0 0 0-5-5z"/></svg>`,
+    "asp.net": `<svg viewBox="0 0 24 24" width="13" height="13" fill="#512BD4"><circle cx="12" cy="12" r="10"/><path d="M7 12h10" stroke="#ffffff" stroke-width="2"/></svg>`,
+    ".net 9": `<svg viewBox="0 0 24 24" width="13" height="13" fill="#512BD4"><circle cx="12" cy="12" r="10"/><path d="M7 12h10" stroke="#ffffff" stroke-width="2"/></svg>`,
+    "microsoft iis": `<svg viewBox="0 0 24 24" width="13" height="13" fill="#0078d4"><rect x="2" y="2" width="20" height="20" rx="4"/><rect x="5" y="6" width="14" height="3" fill="#ffffff"/><rect x="5" y="11" width="14" height="3" fill="#ffffff"/><rect x="5" y="16" width="14" height="3" fill="#ffffff"/></svg>`,
+    "java": `<svg viewBox="0 0 24 24" width="13" height="13" fill="#EA2D42"><path d="M2 19.5c0 .8 2.5 1.5 5.5 1.5s5.5-.7 5.5-1.5c0-.6-1.5-1.2-4-1.4.3-.3.6-.6.8-1 1.7-.3 3.2-1.2 3.2-2.6 0-2-2.5-2.5-3-4 .5-1 .5-2 0-3-.5 1-1.5 1.5-2 2-.5.5-1 1-1 2 0 1.2 1 2 2.5 2.5-.2.4-.5.8-.8 1.2-2 .2-3.7.8-3.7 1.8zm5.5-9.3c.4-.2.8-.5 1-.8-.2.3-.5.6-1 .8zm.2 4.3c-.7-.2-1.2-.6-1.2-1.1 0-.6.7-.9 1.5-.9.7 0 1.2.3 1.2.9 0 .5-.6.9-1.5 1.1z"/></svg>`,
+    "node.js": `<svg viewBox="0 0 24 24" width="13" height="13" fill="#339933"><path d="M12 2L2 7.7v11.6L12 22l10-2.7V7.7L12 2zm8 16.3l-8 2.2-8-2.2V8.9l8-2.2 8 2.2v9.4z"/></svg>`,
+    "golang integration": `<svg viewBox="0 0 24 24" width="13" height="13" fill="#00ADD8"><circle cx="12" cy="12" r="10"/><text x="12" y="15.5" font-family="sans-serif" font-weight="bold" font-size="10" fill="#ffffff" text-anchor="middle">Go</text></svg>`,
+    "prometheus": `<svg viewBox="0 0 24 24" width="13" height="13" fill="#e6522c"><path d="M12 2C8 6 6 9 6 12s3 6 6 6 6-3 6-6-2-6-6-10z"/></svg>`,
+    "grafana": `<svg viewBox="0 0 24 24" width="13" height="13" fill="#f47a20"><path d="M12 2L2 22h20L12 2z"/><circle cx="12" cy="14" r="4" fill="#ffffff"/></svg>`,
+    "windows exporter": `<svg viewBox="0 0 24 24" width="13" height="13"><rect x="3" y="3" width="18" height="18" rx="2" fill="none" stroke="#0078D7" stroke-width="1.5"/><line x1="9" y1="17" x2="9" y2="10" stroke="#0078D7" stroke-width="1.5"/><line x1="15" y1="17" x2="15" y2="7" stroke="#0078D7" stroke-width="1.5"/></svg>`,
+    "powershell": `<svg viewBox="0 0 24 24" width="13" height="13" fill="#5391FE"><path d="M2 18.2l7-6.2-7-6.2H7l7 6.2-7 6.2H2zm8 0h12v-2H10v2z"/></svg>`,
+    "python": `<svg viewBox="0 0 24 24" width="13" height="13" fill="#3776AB"><path d="M11.9 2c-2.7 0-4.9 2.2-4.9 4.9v1.9h9.8V6.9C16.8 4.2 14.6 2 11.9 2z"/></svg>`,
+    "bash": `<svg viewBox="0 0 24 24" width="13" height="13"><rect x="2" y="3" width="20" height="18" rx="2" fill="none" stroke="#4EAA25" stroke-width="1.5"/><path d="M8 8l4 4-4 4M15 15h3" stroke="#4EAA25" stroke-width="1.5"/></svg>`,
+    "azure devops": `<svg viewBox="0 0 24 24" width="13" height="13" fill="#0078D4"><path d="M0 8.5l6.5-6.5h7.5l-5.5 5.5 5.5 5.5h-7.5z"/></svg>`,
+    "git": `<svg viewBox="0 0 24 24" width="13" height="13" fill="#F05032"><path d="M19 13.5a2.5 2.5 0 0 0-2.06 1.09l-4.53-2.27a2.5 2.5 0 0 0 0-1.64l4.53-2.27a2.5 2.5 0 1 0-.9-.79l-4.52 2.26a2.5 2.5 0 1 0 0 3.32l4.52 2.26c.21-.49.59-.88 1.06-1.12a2.5 2.5 0 1 0 1.43-.87z"/></svg>`,
+    "github": `<svg viewBox="0 0 24 24" width="13" height="13" fill="#f0f6fc"><path d="M12 2A10 10 0 0 0 2 12c0 4.42 2.87 8.17 6.84 9.5.5.08.66-.23.66-.5v-1.69c-2.77.6-3.36-1.34-3.36-1.34-.46-1.16-1.11-1.47-1.11-1.47-.9-.62.07-.6.07-.6 1 .07 1.53 1.03 1.53 1.03.9 1.52 2.34 1.07 2.91.83.1-.65.35-1.09.63-1.34-2.22-.25-4.55-1.11-4.55-4.92 0-1.11.38-2 1.03-2.71-.1-.25-.45-1.29.1-2.64 0 0 .84-.27 2.75 1.02.79-.22 1.65-.33 2.5-.33.85 0 1.71.11 2.5.33 1.91-1.29 2.75-1.02 2.75-1.02.55 1.35.2 2.39.1 2.64.65.71 1.03 1.6 1.03 2.71 0 3.82-2.34 4.66-4.57 4.91.36.31.69.92.69 1.85V21c0 .27.16.59.67.5C19.14 20.16 22 16.42 22 12A10 10 0 0 0 12 2z"/></svg>`
+  };
+  return logoSVGs[normalized] || `<i data-lucide="check" style="width:12px; height:12px; color:var(--text-muted); flex-shrink:0;"></i>`;
 }
 
 function triggerSkillAnimations() {
-  const fills = document.querySelectorAll(".skill-progress-bar-fill");
-  fills.forEach(fill => {
-    const lvl = fill.getAttribute("data-level");
-    fill.style.width = `${lvl}%`;
-  });
+  // Progress bars removed, no operations needed.
 }
 
 function renderProjects(filterValue) {
@@ -969,26 +997,30 @@ function resetArchitectureAutoRotation() {
   initArchitectureAutoRotation();
 }
 
-function renderOperationalHighlights() {
-  const container = document.getElementById("operational-highlights-container");
+function renderEngineeringContributions() {
+  const container = document.getElementById("engineering-contributions-container");
   if (!container) return;
   container.innerHTML = "";
-  if (portfolioData.operationalHighlights) {
-    portfolioData.operationalHighlights.forEach((highlight, idx) => {
+  if (portfolioData.engineeringContributions) {
+    portfolioData.engineeringContributions.forEach((contrib, idx) => {
       const card = document.createElement("div");
-      const staggerClass = `reveal-stagger-${(idx % 4) + 1}`;
+      const staggerClass = `reveal-stagger-${(idx % 3) + 1}`;
       card.className = `highlight-card glass-panel reveal-on-scroll ${staggerClass}`;
       card.innerHTML = `
-        <div class="highlight-icon-box">
-          <i data-lucide="check-circle-2" style="color: var(--status-ok);"></i>
+        <div class="highlight-icon-box" style="display:flex; align-items:center; justify-content:center; width:36px; height:36px; border-radius:50%; background:rgba(56, 189, 248, 0.1); border:1px solid rgba(56, 189, 248, 0.2); margin-right:12px; flex-shrink:0;">
+          <i data-lucide="${contrib.icon || 'check-circle-2'}" style="width:16px; height:16px; color:#38bdf8;"></i>
         </div>
-        <div class="highlight-content">
-          <h4 class="highlight-title">${highlight.title}</h4>
-          <p class="highlight-desc">${highlight.description}</p>
+        <div class="highlight-content" style="flex:1;">
+          <h4 class="highlight-title" style="font-size:0.95rem; font-weight:600; color:var(--text-primary); margin-bottom:4px;">${contrib.title}</h4>
+          <p class="highlight-desc" style="font-size:0.8rem; color:var(--text-secondary); line-height:1.4; margin-bottom:6px;">${contrib.description}</p>
+          <div class="contrib-outcome" style="font-size:0.75rem; color:#10b981; font-weight:600; display:flex; align-items:center; gap:4px;">
+            <i data-lucide="trending-up" style="width:12px; height:12px;"></i> ${contrib.outcome}
+          </div>
         </div>
       `;
       container.appendChild(card);
     });
+    lucide.createIcons();
   }
 }
 
@@ -1431,48 +1463,10 @@ function initTelemetryParticles() {
 
 // Heartbeat uptime decimal ticker
 function initLiveUptimeTicker() {
-  const ticker = document.getElementById("uptime-percentage-ticker");
-  if (!ticker) return;
-
-  let baseUptime = 99.99923;
-  setInterval(() => {
-    const fluctuation = (Math.random() * 0.00018 - 0.00009);
-    const newUptime = Math.min(100.0, Math.max(99.99901, baseUptime + fluctuation));
-    ticker.innerText = `${newUptime.toFixed(5)}% SLA`;
-  }, 3500);
+  // Disposed - static SLA tagline in header
 }
 
 // Live telemetry log feed
 function initRecruiterHubConsole() {
-  const consoleEl = document.getElementById("sidebar-telemetry-console");
-  if (!consoleEl) return;
-
-  const mockLogs = [
-    { type: "success", text: "IIS Application Pool Health Check Passed" },
-    { type: "success", text: "Prometheus Metrics Collection Successful" },
-    { type: "info", text: "Grafana Dashboard Sync Completed" },
-    { type: "success", text: "Production Deployment Validation Successful" },
-    { type: "success", text: "DR Environment Validation Completed" },
-    { type: "warning", text: "High Memory Utilization Detected" },
-    { type: "info", text: "Windows Exporter Metrics Updated" },
-    { type: "success", text: "AWS Infrastructure Health Normal" },
-    { type: "info", text: "GCP Service Monitoring Active" }
-  ];
-
-  let logIndex = 0;
-  setInterval(() => {
-    const log = mockLogs[Math.floor(Math.random() * mockLogs.length)];
-    const time = new Date().toLocaleTimeString('en-US', { hour12: false });
-
-    const lineEl = document.createElement("span");
-    lineEl.className = `log-line log-${log.type}`;
-    lineEl.innerText = `[${time}] ${log.text}`;
-
-    consoleEl.appendChild(lineEl);
-
-    // maintain max 4 lines in logs terminal window
-    while (consoleEl.children.length > 5) {
-      consoleEl.removeChild(consoleEl.firstChild);
-    }
-  }, 4000);
+  // Disposed - SRE live logs removed
 }

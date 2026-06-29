@@ -4,12 +4,12 @@ if (typeof portfolioData === 'undefined') {
 
 portfolioData.personalInfo = {
   name: "Sudharsan S",
-  designation: "AI-powered DevOps Engineer | Site Reliability Engineer | Cloud Engineer",
-  summary: "Site Reliability Engineer specializing in production operations, application availability, monitoring, incident management, and cloud infrastructure.",
-  bio: "Site Reliability Engineer with 3+ years of experience managing production operations for business-critical banking applications. I specialize in infrastructure automation, incident management, and disaster recovery. My core expertise includes optimizing cloud operations across AWS and GCP, implementing continuous observability, and reducing mean time to resolution (MTTR) through active root cause analysis. I design automated deployment pipelines to maintain high service availability.",
-  aboutMe: "I approach system engineering with a production-first philosophy, prioritizing service availability and operational excellence. My focus is eliminating manual toil through infrastructure automation and proactive monitoring. By building comprehensive observability layers and establishing robust release management, I bridge the gap between development and operations. I believe engineering resilience relies on continuous improvement and automated feedback loops.",
+  designation: "Site Reliability Engineer | DevOps Engineer | Cloud Engineer",
+  summary: "Site Reliability Engineer specializing in production support, cloud operations, incident response, and infrastructure automation for business-critical SaaS and enterprise applications.",
+  bio: "Site Reliability Engineer with 3+ years of experience supporting critical SaaS and enterprise applications across 10+ client environments in Windows and Linux. I specialize in managing production deployments, executing release validations, and establishing rollback support. By optimizing cloud operations, I bridge gaps between Development, QA, and Infrastructure teams to maintain high service availability and drive operational excellence.",
+  aboutMe: "I approach systems engineering with a production-first mindset, focusing on reliability, automation, and continuous improvement. I collaborate across engineering teams to resolve operational bottlenecks, deploy proactive observability layers, and execute structured incident triage. My goal is to eliminate manual toil and ensure robust delivery pipelines.",
   yearsOfExperience: 3,
-  industryExpertise: "Fintech, Banking, Enterprise IT Infrastructure",
+  industryExpertise: "SaaS, Fintech, Banking, Enterprise IT Infrastructure",
   coreStrengths: [
     "Reliability",
     "Automation",
