@@ -206,23 +206,25 @@ function renderRecruiterHub() {
 }
 
 function renderAboutSection() {
-  document.getElementById("about-biography-text").innerText = portfolioData.personalInfo.bio;
+  const bioEl = document.getElementById("about-biography-text");
+  if (bioEl) bioEl.innerText = portfolioData.personalInfo.bio;
   const philEl = document.getElementById("about-philosophy-text");
-  if (philEl) {
-    philEl.innerText = portfolioData.personalInfo.aboutMe;
-  }
+  if (philEl) philEl.innerText = portfolioData.personalInfo.aboutMe;
   const strengthsContainer = document.getElementById("about-strengths-list");
-  strengthsContainer.innerHTML = "";
-  portfolioData.personalInfo.coreStrengths.forEach(str => {
-    const li = document.createElement("li");
-    li.className = "about-list-item";
-    li.innerHTML = `<i data-lucide="check-circle" class="priority-check-icon"></i><span>${str}</span>`;
-    strengthsContainer.appendChild(li);
-  });
+  if (strengthsContainer) {
+    strengthsContainer.innerHTML = "";
+    portfolioData.personalInfo.coreStrengths.forEach(str => {
+      const li = document.createElement("li");
+      li.className = "about-list-item";
+      li.innerHTML = `<i data-lucide="check-circle" class="priority-check-icon"></i><span>${str}</span>`;
+      strengthsContainer.appendChild(li);
+    });
+  }
 }
 
 function renderMetrics() {
   const container = document.getElementById("metrics-counter-container");
+  if (!container) return;
   container.innerHTML = "";
 
   portfolioData.metrics.forEach((metric, idx) => {
@@ -324,6 +326,7 @@ function formatCounterValue(val, suffix) {
 
 function renderSkills() {
   const container = document.getElementById("skills-clusters-container");
+  if (!container) return;
   container.innerHTML = "";
 
   portfolioData.skills.forEach((cat, idx) => {
@@ -360,6 +363,7 @@ function triggerSkillAnimations() {
 
 function renderProjects(filterValue) {
   const container = document.getElementById("projects-list-container");
+  if (!container) return;
   container.innerHTML = "";
 
   const filtered = filterValue === "all"
@@ -375,8 +379,8 @@ function renderProjects(filterValue) {
       <h3 class="project-title">${p.name}</h3>
       <p class="project-desc">${p.description}</p>
       <div class="project-tools-wrap">
-        ${p.tools.slice(0, 5).map(t => `<span class="project-tool-tag">${t}</span>`).join("")}
-        ${p.tools.length > 5 ? `<span class="project-tool-tag">+${p.tools.length - 5}</span>` : ""}
+        ${p.technologiesUsed.slice(0, 5).map(t => `<span class="project-tool-tag">${t}</span>`).join("")}
+        ${p.technologiesUsed.length > 5 ? `<span class="project-tool-tag">+${p.technologiesUsed.length - 5}</span>` : ""}
       </div>
       <div class="project-card-footer">
         <span class="project-card-link" onclick="openProjectModal('${p.id}')">Explore Details <i data-lucide="arrow-right" style="width: 14px; height: 14px;"></i></span>
@@ -788,6 +792,7 @@ function generateSVGDiagram(type) {
 
 function renderTimeline() {
   const container = document.getElementById("experience-timeline-container");
+  if (!container) return;
   container.innerHTML = "";
 
   portfolioData.experience.forEach((exp, idx) => {
@@ -818,10 +823,6 @@ function renderTimeline() {
         <div class="timeline-impact-card">
           <span>Enterprise Impact:</span> ${exp.businessImpact}
         </div>
-        
-        <div class="project-tools-wrap" style="margin-top:6px;">
-          ${exp.tools.map(t => `<span class="project-tool-tag">${t}</span>`).join("")}
-        </div>
       </div>
     `;
     container.appendChild(item);
@@ -830,6 +831,7 @@ function renderTimeline() {
 
 function renderAchievements() {
   const container = document.getElementById("achievements-card-scroller");
+  if (!container) return;
   container.innerHTML = "";
 
   portfolioData.achievements.forEach((ach, idx) => {
@@ -871,6 +873,7 @@ function renderCertifications() {
 
 function renderBlogs() {
   const container = document.getElementById("blogs-list-container");
+  if (!container) return;
   container.innerHTML = "";
 
   portfolioData.blogs.forEach((blog, idx) => {
@@ -1201,13 +1204,13 @@ window.openProjectModal = function (projectId) {
   document.getElementById("modal-project-title").innerText = p.name;
   document.getElementById("modal-project-description").innerText = p.description;
   document.getElementById("modal-project-problem").innerText = p.businessProblem;
-  document.getElementById("modal-project-solution").innerText = p.solution;
-  document.getElementById("modal-project-challenges").innerText = p.challenges;
-  document.getElementById("modal-project-results").innerText = p.results;
-  document.getElementById("modal-project-lessons").innerText = p.lessons;
+  document.getElementById("modal-project-solution").innerText = p.engineeringSolution;
+  document.getElementById("modal-project-challenges").innerText = p.implementation;
+  document.getElementById("modal-project-results").innerText = p.operationalOutcome;
+  document.getElementById("modal-project-lessons").innerText = p.lessonsLearned;
 
   const toolsWrap = document.getElementById("modal-project-tools");
-  toolsWrap.innerHTML = p.tools.map(t => `<span class="project-tool-tag">${t}</span>`).join("");
+  toolsWrap.innerHTML = p.technologiesUsed.map(t => `<span class="project-tool-tag">${t}</span>`).join("");
 
   document.getElementById("modal-project-github-btn").href = p.github;
   document.getElementById("modal-project-live-btn").href = p.liveDemo;

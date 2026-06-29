@@ -4,9 +4,26 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Sudharsan S | Site Reliability Engineer | DevOps Engineer | Cloud Operations Engineer</title>
+  <title>Sudharsan S | Site Reliability Engineer & DevOps Portfolio</title>
   <meta name="description"
-    content="Professional portfolio of Sudharsan S, Site Reliability Engineer | DevOps Engineer | Cloud Operations Engineer. Specialized in application availability, cloud operations, monitoring, incident response, disaster recovery validation, and operational automation.">
+    content="Professional Site Reliability Engineer and DevOps portfolio of Sudharsan S. Over 3+ years experience optimizing application availability, cloud operations, incident response, monitoring, and automated pipelines.">
+  <meta name="keywords" content="Site Reliability Engineer, DevOps Engineer, Cloud Operations, Application Support, Prometheus, Grafana, AWS, GCP, IIS, PowerShell, Automation">
+  <meta name="author" content="Sudharsan S">
+  
+  <!-- Open Graph / Facebook -->
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://github.com/raghav-sudharsan">
+  <meta property="og:title" content="Sudharsan S | Site Reliability Engineer & DevOps Portfolio">
+  <meta property="og:description" content="SRE & DevOps Engineer specialized in infrastructure automation, monitoring, incident response, and high-availability operations.">
+  <meta property="og:image" content="Sudharsan_SRE.jpeg">
+
+  <!-- Twitter -->
+  <meta property="twitter:card" content="summary_large_image">
+  <meta property="twitter:url" content="https://github.com/raghav-sudharsan">
+  <meta property="twitter:title" content="Sudharsan S | Site Reliability Engineer & DevOps Portfolio">
+  <meta property="twitter:description" content="SRE & DevOps Engineer specialized in infrastructure automation, monitoring, incident response, and high-availability operations.">
+  <meta property="twitter:image" content="Sudharsan_SRE.jpeg">
+
   <link rel="stylesheet" href="styles.css">
 </head>
 
@@ -59,10 +76,11 @@
         <nav class="nav-menu">
           <a href="#about-section" class="nav-link active">About</a>
           <a href="#skills-section" class="nav-link">Skills</a>
-          <a href="#projects-section" class="nav-link">Projects</a>
-          <a href="#architecture-section" class="nav-link">Architecture</a>
           <a href="#experience-section" class="nav-link">Experience</a>
-          <a href="#blog-section" class="nav-link">Blog</a>
+          <a href="#projects-section" class="nav-link">Projects</a>
+          <a href="#operational-highlights-section" class="nav-link">Operational Impact</a>
+          <a href="#architecture-section" class="nav-link">Architecture</a>
+          <a href="#certifications-section" class="nav-link">Highlights</a>
           <a href="#contact-section" class="nav-link">Contact</a>
         </nav>
         <button id="theme-toggle-btn" class="theme-toggle-btn" aria-label="Toggle Theme Mode">
@@ -226,14 +244,7 @@
           </div>
         </section>
 
-        <!-- KPI Performance Metrics Section -->
-        <section class="content-section" id="metrics-section">
-          <div class="metrics-grid" id="metrics-counter-container">
-            <!-- Injected by app.js -->
-          </div>
-        </section>
-
-        <!-- Categorized Skills Section -->
+        <!-- Technical Expertise Section -->
         <section class="content-section" id="skills-section">
           <div class="section-header">
             <h2 class="section-title"><i data-lucide="layers"></i> Technical Expertise</h2>
@@ -243,17 +254,17 @@
           </div>
         </section>
 
-        <!-- Operational Engineering Highlights Section -->
-        <section class="content-section" id="operational-highlights-section">
+        <!-- Professional Experience Section -->
+        <section class="content-section" id="experience-section">
           <div class="section-header">
-            <h2 class="section-title"><i data-lucide="terminal"></i> Operational Highlights</h2>
+            <h2 class="section-title"><i data-lucide="calendar"></i> Professional Experience</h2>
           </div>
-          <div class="highlights-grid" id="operational-highlights-container">
+          <div class="timeline-container" id="experience-timeline-container">
             <!-- Injected by app.js -->
           </div>
         </section>
 
-        <!-- SRE Project Portfolio Section -->
+        <!-- Engineering Projects Section -->
         <section class="content-section" id="projects-section">
           <div class="section-header">
             <h2 class="section-title"><i data-lucide="terminal"></i> Engineering Projects</h2>
@@ -271,6 +282,22 @@
           </div>
         </section>
 
+        <!-- Operational Impact Section -->
+        <section class="content-section" id="operational-highlights-section">
+          <div class="section-header">
+            <h2 class="section-title"><i data-lucide="trending-up"></i> Operational Impact</h2>
+          </div>
+          
+          <!-- SRE Metrics Grid -->
+          <div class="metrics-grid" id="metrics-counter-container" style="margin-bottom: 25px;">
+            <!-- Injected by app.js -->
+          </div>
+
+          <div class="highlights-grid" id="operational-highlights-container">
+            <!-- Injected by app.js -->
+          </div>
+        </section>
+
         <!-- Production Architectures Section -->
         <section class="content-section" id="architecture-section">
           <div class="section-header">
@@ -281,8 +308,7 @@
               <!-- Tab list injected by app.js -->
             </div>
             <div class="architecture-view-panel" id="arch-panel-view">
-              <p id="arch-description-text" class="about-text-p">Select an architecture blueprint to view flow
-                parameters.</p>
+              <p id="arch-description-text" class="about-text-p">Select an architecture blueprint to view flow parameters.</p>
 
               <div class="arch-display-container">
                 <div class="arch-canvas-wrap" id="arch-drawing-canvas">
@@ -298,39 +324,30 @@
               <div class="arch-meta-grid" id="arch-meta-grid-container"
                 style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 20px; margin-top: 20px; border-top: 1px solid var(--border-color); padding-top: 15px;">
                 <div>
-                  <h4
-                    style="font-size: 0.75rem; text-transform: uppercase; color: #38bdf8; letter-spacing: 0.05em; margin-bottom: 8px; font-weight:600;">
+                  <h4 style="font-size: 0.75rem; text-transform: uppercase; color: #38bdf8; letter-spacing: 0.05em; margin-bottom: 8px; font-weight:600;">
                     <i data-lucide="cpu" style="width:12px; height:12px; vertical-align:-2px; margin-right:4px;"></i>
                     Tech Stack
                   </h4>
                   <div id="arch-tech-stack" style="display: flex; flex-wrap: wrap; gap: 6px;"></div>
                 </div>
                 <div>
-                  <h4
-                    style="font-size: 0.75rem; text-transform: uppercase; color: #38bdf8; letter-spacing: 0.05em; margin-bottom: 8px; font-weight:600;">
+                  <h4 style="font-size: 0.75rem; text-transform: uppercase; color: #38bdf8; letter-spacing: 0.05em; margin-bottom: 8px; font-weight:600;">
                     <i data-lucide="wrench" style="width:12px; height:12px; vertical-align:-2px; margin-right:4px;"></i>
                     Key Responsibilities
                   </h4>
-                  <p id="arch-responsibilities" class="about-text-p"
-                    style="font-size: 0.8rem; line-height: 1.4; color: var(--text-secondary);"></p>
+                  <p id="arch-responsibilities" class="about-text-p" style="font-size: 0.8rem; line-height: 1.4; color: var(--text-secondary);"></p>
                 </div>
                 <div>
-                  <h4
-                    style="font-size: 0.75rem; text-transform: uppercase; color: #38bdf8; letter-spacing: 0.05em; margin-bottom: 8px; font-weight:600;">
-                    <i data-lucide="briefcase"
-                      style="width:12px; height:12px; vertical-align:-2px; margin-right:4px;"></i> Business Purpose
+                  <h4 style="font-size: 0.75rem; text-transform: uppercase; color: #38bdf8; letter-spacing: 0.05em; margin-bottom: 8px; font-weight:600;">
+                    <i data-lucide="briefcase" style="width:12px; height:12px; vertical-align:-2px; margin-right:4px;"></i> Business Purpose
                   </h4>
-                  <p id="arch-purpose" class="about-text-p"
-                    style="font-size: 0.8rem; line-height: 1.4; color: var(--text-secondary);"></p>
+                  <p id="arch-purpose" class="about-text-p" style="font-size: 0.8rem; line-height: 1.4; color: var(--text-secondary);"></p>
                 </div>
                 <div>
-                  <h4
-                    style="font-size: 0.75rem; text-transform: uppercase; color: #38bdf8; letter-spacing: 0.05em; margin-bottom: 8px; font-weight:600;">
-                    <i data-lucide="activity"
-                      style="width:12px; height:12px; vertical-align:-2px; margin-right:4px;"></i> Operational Notes
+                  <h4 style="font-size: 0.75rem; text-transform: uppercase; color: #38bdf8; letter-spacing: 0.05em; margin-bottom: 8px; font-weight:600;">
+                    <i data-lucide="activity" style="width:12px; height:12px; vertical-align:-2px; margin-right:4px;"></i> Operational Notes
                   </h4>
-                  <p id="arch-notes" class="about-text-p"
-                    style="font-size: 0.8rem; line-height: 1.4; color: var(--text-secondary);"></p>
+                  <p id="arch-notes" class="about-text-p" style="font-size: 0.8rem; line-height: 1.4; color: var(--text-secondary);"></p>
                 </div>
               </div>
 
@@ -338,54 +355,12 @@
           </div>
         </section>
 
-        <!-- Experience Timeline Section -->
-        <section class="content-section" id="experience-section">
-          <div class="section-header">
-            <h2 class="section-title"><i data-lucide="calendar"></i> Professional Experience</h2>
-          </div>
-          <div class="timeline-container" id="experience-timeline-container">
-            <!-- Injected by app.js -->
-          </div>
-        </section>
-
-        <!-- Production Achievements Section -->
-        <section class="content-section" id="achievements-section">
-          <div class="section-header">
-            <h2 class="section-title"><i data-lucide="award"></i> Engineering Impact</h2>
-          </div>
-          <div class="achievements-scroller" id="achievements-card-scroller">
-            <!-- Injected by app.js -->
-          </div>
-        </section>
-
-        <!-- Certifications Section -->
+        <!-- Professional Highlights Section -->
         <section class="content-section" id="certifications-section">
           <div class="section-header">
             <h2 class="section-title"><i data-lucide="check-square"></i> Professional Highlights</h2>
           </div>
           <div class="certifications-grid" id="certifications-list-container">
-            <!-- Injected by app.js -->
-          </div>
-        </section>
-
-        <!-- Technical Blog Section -->
-        <section class="content-section" id="blog-section">
-          <div class="section-header">
-            <h2 class="section-title"><i data-lucide="cpu"></i> Engineering Blog</h2>
-          </div>
-          <div class="blogs-grid" id="blogs-list-container">
-            <!-- Injected by app.js -->
-          </div>
-        </section>
-
-        <!-- Core Engineering Focus Section -->
-
-        <!-- Core Engineering Focus Section -->
-        <section class="content-section" id="testimonials-section">
-          <div class="section-header">
-            <h2 class="section-title"><i data-lucide="shield"></i> Core Engineering Focus</h2>
-          </div>
-          <div class="core-focus-grid" id="core-focus-container">
             <!-- Injected by app.js -->
           </div>
         </section>

@@ -8,7 +8,6 @@ portfolioData.skills = [
     items: [
       { name: "ASP.NET Applications", level: 92, icon: "code" },
       { name: ".NET Integration Services", level: 88, icon: "link" },
-      { name: "IIS", level: 95, icon: "server" },
       { name: "Java Deployment", level: 80, icon: "cpu" },
       { name: "Node.js Deployment", level: 85, icon: "code" }
     ]
@@ -26,12 +25,11 @@ portfolioData.skills = [
     category: "Containerization",
     items: [
       { name: "Docker", level: 90, icon: "layers" },
-      { name: "Golang Integration", level: 82, icon: "code" },
-      { name: "Ubuntu Linux", level: 88, icon: "terminal" }
+      { name: "Golang Integration", level: 82, icon: "code" }
     ]
   },
   {
-    category: "CI/CD",
+    category: "CI/CD & Release Engineering",
     items: [
       { name: "Azure DevOps Pipelines", level: 88, icon: "git-pull-request" },
       { name: "Deployment Validation", level: 92, icon: "check-circle" },
@@ -48,85 +46,76 @@ portfolioData.skills = [
     ]
   },
   {
-    category: "Automation",
+    category: "Automation Scripting",
     items: [
       { name: "PowerShell", level: 95, icon: "terminal" },
       { name: "Python", level: 80, icon: "code" },
-      { name: "Bash", level: 88, icon: "terminal" },
-      { name: "Batch", level: 90, icon: "terminal" }
+      { name: "Bash & Batch Scripting", level: 90, icon: "terminal" }
     ]
   },
   {
-    category: "Infrastructure",
+    category: "Infrastructure Services",
     items: [
-      { name: "Windows Server", level: 95, icon: "server" },
-      { name: "Linux", level: 85, icon: "terminal" },
+      { name: "Windows Server Administration", level: 95, icon: "server" },
+      { name: "Linux Administration", level: 88, icon: "terminal" },
       { name: "Active Directory", level: 92, icon: "users" },
-      { name: "DNS", level: 90, icon: "globe" },
-      { name: "DHCP", level: 90, icon: "link" }
+      { name: "DNS & DHCP", level: 90, icon: "globe" }
     ]
   },
   {
-    category: "Web Servers",
+    category: "Web Server Operations",
     items: [
-      { name: "IIS", level: 95, icon: "server" },
-      { name: "NGINX", level: 85, icon: "server" },
-      { name: "Apache", level: 80, icon: "server" }
-    ]
-  },
-  {
-    category: "AI-Assisted Operations",
-    items: [
-      { name: "Kiro AI Agent", level: 85, icon: "cpu" },
-      { name: "AI-assisted AWS Monitoring", level: 88, icon: "cloud" },
-      { name: "Intelligent Operational Workflows", level: 85, icon: "zap" }
+      { name: "IIS Web Server", level: 95, icon: "server" },
+      { name: "NGINX Load Balancer", level: 85, icon: "server" },
+      { name: "Apache Web Server", level: 80, icon: "server" }
     ]
   }
 ];
 
 portfolioData.operationalHighlights = [
   {
-    title: "Golang Integration Deployment",
-    description: "Orchestrated runtime deployments of custom Golang validation modules onto isolated Ubuntu Linux server systems."
+    title: "Application Deployment",
+    description: "Orchestrated runtime deployments of custom backend modules onto isolated system architectures."
   },
   {
-    title: "Docker Container Deployment",
-    description: "Created standardized Dockerfiles and docker-compose tasks to achieve consistent testing and staging deployments."
+    title: "Container Deployment",
+    description: "Configured standardized application container images to achieve consistent testing and production environment staging."
   },
   {
-    title: "Azure DevOps Pipeline Implementation",
-    description: "Designed build and deploy tasks within Azure DevOps to automate continuous release pipelines for application validation."
+    title: "Continuous Release Pipelines",
+    description: "Designed build and deploy workflows to automate continuous release verification loops."
   },
   {
-    title: "Production Debugging",
-    description: "Analyzed runtime logs and event viewer streams to trace code defects and environment config misalignments."
+    title: "Root Cause Investigation",
+    description: "Analyzed runtime systems, tracing code exceptions and configuration mismatches to prevent outage recurrence."
   },
   {
-    title: "Application Troubleshooting",
-    description: "Investigated system slowdowns and application worker pool queueing delays to restore degraded services rapidly."
+    title: "Service Degradation Recovery",
+    description: "Mitigated resource queuing and process delays to restore host operational capacity."
   },
   {
-    title: "IIS Administration",
-    description: "Managed host configurations, SSL certifications bindings, and private bytes memory recycling parameters for web applications."
+    title: "Web Server Administration",
+    description: "Managed host resource limits, SSL certificates, and application pool settings to optimize response speeds."
   },
   {
-    title: "Log Rotation",
-    description: "Established daily log rotation script scheduling to manage application logs directories and secure disk storage."
+    title: "Storage Lifecycle Management",
+    description: "Structured directory cleanup routine rules to manage log paths and maintain storage availability."
   },
   {
-    title: "Audit Log Archival",
-    description: "Programmed script tasks to filter, compress, and securely archive compliance audit logs older than six days."
+    title: "Audit Log Management",
+    description: "Implemented secure archiving routines for compliance-bound operational logs."
   },
   {
-    title: "Exception Log Management",
-    description: "Constructed targeted alerts to identify sudden spikes in exception folders, optimizing post-incident investigation speeds."
+    title: "Telemetry & Alerting",
+    description: "Established targeted thresholds to identify anomalous behavior and expedite response team engagement."
   },
   {
-    title: "Cloud VM Administration",
-    description: "Administered virtual machine scaling, security groups, and storage volumes across AWS and GCP hosting environments."
+    title: "Cloud Resource Management",
+    description: "Provisioned virtual machines, security settings, and disk scaling parameters across cloud hosting layers."
   },
   {
-    title: "Infrastructure Maintenance",
-    description: "Managed Active Directory user provisioning, DNS lookups validation, and DHCP range updates for local and cloud systems."
+    title: "Directory & Domain Operations",
+    description: "Maintained user access, network lookups validation, and configuration records across directory services."
   }
 ];
+
