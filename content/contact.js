@@ -14,26 +14,22 @@ portfolioData.recruiterInfo = {
   resumeDownloadUrl: "#"
 };
 
-portfolioData.testimonials = [
-  {
-    quote: "Sudharsan's work on automating our IIS application pools and deployment validation scripts significantly reduced our manual operations overhead. His scripting framework is robust and saved our support team hours of repetitive validation work.",
-    author: " Rajesh Kumar",
-    role: "IT Operations Lead, Craft Silicon",
-    avatar: ""
-  },
-  {
-    quote: "Sudharsan successfully built a centralized monitoring platform using Windows Exporter and Grafana for our enterprise systems. He has a keen eye for observability, creating clear and actionable dashboards that helped us detect incidents before they impacted our banking clients.",
-    author: "Sanjay Sharma",
-    role: "Production Support Manager, Craft Silicon",
-    avatar: ""
-  },
-  {
-    quote: "During our disaster recovery readiness cycles, Sudharsan executed structured DR drills across 7+ environments. His methodical verification checklists and script-driven DNS failovers ensured we met all business continuity SLAs without any hiccups.",
-    author: "Amit Patel",
-    role: "Infrastructure Director, Wikiprospects",
-    avatar: ""
-  }
-];
+portfolioData.coreFocus = {
+  applicationEngineering: [
+    "Application Deployment",
+    "Production Support",
+    "Release Validation",
+    "Application Monitoring",
+    "Incident Resolution"
+  ],
+  systemEngineering: [
+    "Windows Administration",
+    "Linux Administration",
+    "Cloud Operations",
+    "Infrastructure Monitoring",
+    "Automation"
+  ]
+};
 
 portfolioData.blogs = [
   {

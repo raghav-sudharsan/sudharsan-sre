@@ -22,6 +22,10 @@ function initApp() {
   if (nameEl) {
     nameEl.innerText = portfolioData.personalInfo.name;
   }
+  const designationEl = document.getElementById("hero-designation-label");
+  if (designationEl) {
+    designationEl.innerText = "DevOps Engineer | Cloud Operations | Platform Reliability";
+  }
   const avatarEl = document.getElementById("avatar-preview-img");
   if (avatarEl && portfolioData.personalInfo.avatarUrl) {
     avatarEl.src = portfolioData.personalInfo.avatarUrl;
@@ -33,20 +37,19 @@ function initApp() {
   renderAboutSection();
   renderMetrics();
   renderSkills();
+  renderOperationalHighlights();
   renderProjects("all");
   renderArchitectureTabs();
   renderTimeline();
   renderAchievements();
   renderCertifications();
   renderBlogs();
-  renderResume("gui"); // Default to Visual
-  renderTestimonials();
+  renderCoreFocus();
+  renderContactCards();
 
   // Setup Interactivity Listeners
   setupProjectFilters();
   setupContactForm();
-  setupResumeControls();
-  setupTestimonialsSlider();
   setupModals();
   setupScrollObserver();
   setupBlueprintZoom();
@@ -55,6 +58,8 @@ function initApp() {
   initTelemetryParticles();
   initLiveUptimeTicker();
   initRecruiterHubConsole();
+  initHeroRotator();
+  initArchitectureAutoRotation();
 
   // Run Lucide icon creation
   lucide.createIcons();
@@ -189,24 +194,29 @@ function renderRecruiterHub() {
   setVal("ops-core-platforms", portfolioData.recruiterInfo.corePlatforms);
   setVal("ops-availability-focus", portfolioData.recruiterInfo.availabilityFocus);
 
+  const links = portfolioData.personalInfo.socialLinks;
   const linkedinEl = document.getElementById("social-link-linkedin");
-  if (linkedinEl) linkedinEl.href = portfolioData.personalInfo.socialLinks.linkedin;
+  if (linkedinEl) linkedinEl.href = links.linkedin;
   const githubEl = document.getElementById("social-link-github");
-  if (githubEl) githubEl.href = portfolioData.personalInfo.socialLinks.github;
-  const gitlabEl = document.getElementById("social-link-gitlab");
-  if (gitlabEl) gitlabEl.href = portfolioData.personalInfo.socialLinks.gitlab;
-  const mediumEl = document.getElementById("social-link-medium");
-  if (mediumEl) mediumEl.href = portfolioData.personalInfo.socialLinks.medium;
+  if (githubEl) githubEl.href = links.github;
+  const emailEl = document.getElementById("social-link-email");
+  if (emailEl) emailEl.href = `mailto:${links.email}`;
+  const whatsappEl = document.getElementById("social-link-whatsapp");
+  if (whatsappEl) whatsappEl.href = links.whatsapp;
 }
 
 function renderAboutSection() {
   document.getElementById("about-biography-text").innerText = portfolioData.personalInfo.bio;
+  const philEl = document.getElementById("about-philosophy-text");
+  if (philEl) {
+    philEl.innerText = portfolioData.personalInfo.aboutMe;
+  }
   const strengthsContainer = document.getElementById("about-strengths-list");
   strengthsContainer.innerHTML = "";
   portfolioData.personalInfo.coreStrengths.forEach(str => {
     const li = document.createElement("li");
     li.className = "about-list-item";
-    li.innerHTML = `<i data-lucide="check-circle"></i><span>${str}</span>`;
+    li.innerHTML = `<i data-lucide="check-circle" class="priority-check-icon"></i><span>${str}</span>`;
     strengthsContainer.appendChild(li);
   });
 }
@@ -394,9 +404,10 @@ function setupProjectFilters() {
 }
 
 // Architecture Tab Control System
-let activeArchTab = "system-architecture";
+let activeArchTab = "iis-hosting";
 function renderArchitectureTabs() {
   const nav = document.getElementById("arch-tabs-nav");
+  if (!nav) return;
   nav.innerHTML = "";
 
   portfolioData.architectures.forEach(arch => {
@@ -408,6 +419,7 @@ function renderArchitectureTabs() {
       btn.classList.add("active");
       activeArchTab = arch.id;
       loadArchitectureView(arch);
+      resetArchitectureAutoRotation();
     });
     nav.appendChild(btn);
   });
@@ -421,165 +433,352 @@ function renderArchitectureTabs() {
 
 function loadArchitectureView(arch) {
   document.getElementById("arch-description-text").innerText = arch.description;
+
+  // Render Tech Stack
+  const stackContainer = document.getElementById("arch-tech-stack");
+  if (stackContainer) {
+    stackContainer.innerHTML = "";
+    if (arch.technologies) {
+      arch.technologies.forEach(tech => {
+        const tag = document.createElement("span");
+        tag.className = "project-tool-tag";
+        tag.innerText = tech;
+        stackContainer.appendChild(tag);
+      });
+    }
+  }
+
+  // Render Responsibilities
+  const respEl = document.getElementById("arch-responsibilities");
+  if (respEl) respEl.innerText = arch.responsibilities || "";
+
+  // Render Business Purpose
+  const purpEl = document.getElementById("arch-purpose");
+  if (purpEl) purpEl.innerText = arch.purpose || "";
+
+  // Render Operational Notes
+  const notesEl = document.getElementById("arch-notes");
+  if (notesEl) notesEl.innerText = arch.operationalNotes || "";
+
   const canvas = document.getElementById("arch-drawing-canvas");
   canvas.innerHTML = "";
 
   // Generate beautiful custom animated vector inline SVG
   const svgStr = generateSVGDiagram(arch.type);
   canvas.innerHTML = svgStr;
+  
+  lucide.createIcons();
 }
 
 // Generate animated SVGs in JS to avoid asset loading dependency
 function generateSVGDiagram(type) {
   let svg = "";
+  
+  // Official SVG Tech Logo Assets
+  const logos = {
+    nginx: `<svg viewBox="0 0 24 24" width="22" height="22"><path d="M12 2L2 12l10 10 10-10L12 2zm-1.8 14.5H8.6V9.4h1.6v7.1zm5.2 0h-1.6l-3.2-4.9v4.9H9V9.4h1.6l3.2 4.9V9.4h1.6v7.1z" fill="#009639"/></svg>`,
+    docker: `<svg viewBox="0 0 24 24" width="22" height="22"><path d="M13.983 11.078h2.119v-2.006h-2.119v2.006zm-2.817 0h2.119v-2.006h-2.119v2.006zm-2.787 0h2.119v-2.006h-2.119v2.006zm-2.817 0h2.119v-2.006h-2.119v2.006zm-2.817 0h2.12v-2.006h-2.12v2.006zm11.238-2.684h2.119V6.388h-2.119v2.006zm-2.817 0h2.119V6.388h-2.119v2.006zm-2.787 0h2.119V6.388h-2.119v2.006zm-2.817 0h2.119V6.388h-2.119v2.006zm14.025.678c-.287.054-.537.156-.75.309a4.83 4.83 0 0 0-.256-.474 4.545 4.545 0 0 0-.585-.77c-.506-.525-1.127-.852-1.85-.975v-.868H2.186v6.02h18.232c.594-.21 1.053-.559 1.378-1.045.326-.486.488-1.07.488-1.75 0-.295-.084-.664-.251-1.106-.168-.442-.429-.691-.784-.747z" fill="#2496ED"/></svg>`,
+    iis: `<svg viewBox="0 0 24 24" width="22" height="22"><rect x="2" y="2" width="20" height="20" rx="4" fill="#0078d4" opacity="0.85"/><rect x="5" y="6" width="14" height="3" fill="#ffffff"/><rect x="5" y="11" width="14" height="3" fill="#ffffff"/><rect x="5" y="16" width="14" height="3" fill="#ffffff"/></svg>`,
+    dotnet: `<svg viewBox="0 0 24 24" width="22" height="22"><circle cx="12" cy="12" r="10" fill="#512bd4"/><path d="M7 12h10" stroke="#ffffff" stroke-width="2"/></svg>`,
+    prometheus: `<svg viewBox="0 0 24 24" width="22" height="22"><path d="M12 2C8 6 6 9 6 12s3 6 6 6 6-3 6-6-2-6-6-10z" fill="#e6522c"/></svg>`,
+    grafana: `<svg viewBox="0 0 24 24" width="22" height="22"><path d="M12 2L2 22h20L12 2z" fill="#f47a20"/><circle cx="12" cy="14" r="4" fill="#ffffff"/></svg>`,
+    git: `<svg viewBox="0 0 24 24" width="22" height="22"><path d="M19 13.5a2.5 2.5 0 0 0-2.06 1.09l-4.53-2.27a2.5 2.5 0 0 0 0-1.64l4.53-2.27a2.5 2.5 0 1 0-.9-.79l-4.52 2.26a2.5 2.5 0 1 0 0 3.32l4.52 2.26c.21-.49.59-.88 1.06-1.12a2.5 2.5 0 1 0 1.43-.87z" fill="#F05032"/></svg>`,
+    github: `<svg viewBox="0 0 24 24" width="22" height="22"><path d="M12 2A10 10 0 0 0 2 12c0 4.42 2.87 8.17 6.84 9.5.5.08.66-.23.66-.5v-1.69c-2.77.6-3.36-1.34-3.36-1.34-.46-1.16-1.11-1.47-1.11-1.47-.9-.62.07-.6.07-.6 1 .07 1.53 1.03 1.53 1.03.9 1.52 2.34 1.07 2.91.83.1-.65.35-1.09.63-1.34-2.22-.25-4.55-1.11-4.55-4.92 0-1.11.38-2 1.03-2.71-.1-.25-.45-1.29.1-2.64 0 0 .84-.27 2.75 1.02.79-.22 1.65-.33 2.5-.33.85 0 1.71.11 2.5.33 1.91-1.29 2.75-1.02 2.75-1.02.55 1.35.2 2.39.1 2.64.65.71 1.03 1.6 1.03 2.71 0 3.82-2.34 4.66-4.57 4.91.36.31.69.92.69 1.85V21c0 .27.16.59.67.5C19.14 20.16 22 16.42 22 12A10 10 0 0 0 12 2z" fill="#f0f6fc"/></svg>`,
+    azure: `<svg viewBox="0 0 24 24" width="22" height="22"><path d="M0 8.5l6.5-6.5h7.5l-5.5 5.5 5.5 5.5h-7.5z" fill="#0078D4"/></svg>`,
+    ubuntu: `<svg viewBox="0 0 24 24" width="22" height="22"><circle cx="12" cy="12" r="10" fill="#e95420"/><circle cx="12" cy="12" r="5" fill="#ffffff"/><circle cx="12" cy="6" r="2" fill="#e95420"/><circle cx="6" cy="15" r="2" fill="#e95420"/><circle cx="18" cy="15" r="2" fill="#e95420"/></svg>`,
+    golang: `<svg viewBox="0 0 24 24" width="22" height="22"><circle cx="12" cy="12" r="10" fill="#00ADD8"/><text x="12" y="16" font-family="sans-serif" font-weight="bold" font-size="11" fill="#ffffff" text-anchor="middle">Go</text></svg>`,
+    db: `<svg viewBox="0 0 24 24" width="22" height="22"><path d="M12 2C6.5 2 2 4 2 6.5s4.5 4.5 10 4.5 10-2 10-4.5S17.5 2 12 2zm0 6c-5 0-8-1.5-8-2.5s3-2.5 8-2.5 8 1.5 8 2.5-3 2.5-8 2.5z" fill="#00a2ed"/><path d="M2 6.5v5c0 2.5 4.5 4.5 10 4.5s10-2 10-4.5v-5" fill="none" stroke="#00a2ed" stroke-width="1.5"/><path d="M2 11.5v5c0 2.5 4.5 4.5 10 4.5s10-2 10-4.5v-5" fill="none" stroke="#00a2ed" stroke-width="1.5"/></svg>`,
+    client: `<svg viewBox="0 0 24 24" width="22" height="22"><rect x="2" y="3" width="20" height="13" rx="2" fill="none" stroke="#06b6d4" stroke-width="2"/><path d="M12 16v4M8 20h8" stroke="#06b6d4" stroke-width="2"/></svg>`
+  };
+
   if (type === "iis") {
     svg = `
-    <svg viewBox="0 0 500 250" width="100%" height="100%">
+    <svg viewBox="0 0 720 220" width="100%" height="100%">
       <defs>
         <marker id="arrow" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
           <path d="M 0 2 L 10 5 L 0 8 z" fill="#64748b"/>
         </marker>
       </defs>
       
-      <!-- Paths with packet flows -->
-      <path d="M 55 125 L 110 125" fill="none" stroke="#64748b" stroke-width="2" marker-end="url(#arrow)" class="packet-flow"/>
-      <path d="M 170 125 L 220 125" fill="none" stroke="#64748b" stroke-width="2" marker-end="url(#arrow)" class="packet-flow"/>
-      <path d="M 280 125 L 330 125" fill="none" stroke="#64748b" stroke-width="2" marker-end="url(#arrow)" class="packet-flow"/>
-      <path d="M 390 125 L 430 125" fill="none" stroke="#64748b" stroke-width="2" marker-end="url(#arrow)"/>
+      <!-- Connectors with flows -->
+      <path d="M 85 110 L 105 110" fill="none" stroke="#64748b" stroke-width="2" marker-end="url(#arrow)" class="packet-flow"/>
+      <path d="M 190 110 L 210 110" fill="none" stroke="#64748b" stroke-width="2" marker-end="url(#arrow)" class="packet-flow"/>
+      <path d="M 295 110 L 315 110" fill="none" stroke="#64748b" stroke-width="2" marker-end="url(#arrow)" class="packet-flow"/>
+      <path d="M 400 110 L 420 110" fill="none" stroke="#64748b" stroke-width="2" marker-end="url(#arrow)" class="packet-flow"/>
+      <path d="M 505 110 L 525 110" fill="none" stroke="#64748b" stroke-width="2" marker-end="url(#arrow)" class="packet-flow"/>
+      <path d="M 610 110 L 630 110" fill="none" stroke="#64748b" stroke-width="2" marker-end="url(#arrow)" class="packet-flow"/>
       
       <!-- Nodes -->
       <g class="node-group">
-        <circle cx="35" cy="125" r="20" fill="rgba(6, 182, 212, 0.15)" stroke="#06b6d4" stroke-width="2" class="node-circle"/>
-        <text x="35" y="128" text-anchor="middle" class="node-label">Users</text>
+        <rect x="5" y="80" width="80" height="60" rx="6" fill="rgba(30, 41, 59, 0.6)" stroke="rgba(255,255,255,0.08)" stroke-width="1.5"/>
+        <foreignObject x="34" y="86" width="22" height="22">${logos.client}</foreignObject>
+        <text x="45" y="125" text-anchor="middle" font-size="7" fill="#f8fafc" font-weight="bold">Users</text>
+        <text x="45" y="133" text-anchor="middle" font-size="5.5" fill="#94a3b8">Ingress Source</text>
       </g>
       
       <g class="node-group">
-        <rect x="110" y="100" width="60" height="50" rx="6" fill="rgba(59, 130, 246, 0.15)" stroke="#3b82f6" stroke-width="2" class="node-circle"/>
-        <text x="140" y="128" text-anchor="middle" class="node-label">LB</text>
+        <rect x="105" y="80" width="85" height="60" rx="6" fill="rgba(30, 41, 59, 0.6)" stroke="rgba(255,255,255,0.08)" stroke-width="1.5"/>
+        <foreignObject x="136" y="86" width="22" height="22">${logos.nginx}</foreignObject>
+        <text x="147" y="125" text-anchor="middle" font-size="7" fill="#f8fafc" font-weight="bold">NGINX</text>
+        <text x="147" y="133" text-anchor="middle" font-size="5.5" fill="#94a3b8">Load Balancer</text>
+      </g>
+      
+      <g class="node-group">
+        <rect x="210" y="80" width="85" height="60" rx="6" fill="rgba(30, 41, 59, 0.6)" stroke="rgba(255,255,255,0.08)" stroke-width="1.5"/>
+        <foreignObject x="241" y="86" width="22" height="22">${logos.nginx}</foreignObject>
+        <text x="252" y="125" text-anchor="middle" font-size="7" fill="#f8fafc" font-weight="bold">Rev Proxy</text>
+        <text x="252" y="133" text-anchor="middle" font-size="5.5" fill="#94a3b8">Routing Edge</text>
+      </g>
+      
+      <g class="node-group">
+        <rect x="315" y="80" width="85" height="60" rx="6" fill="rgba(30, 41, 59, 0.6)" stroke="rgba(255,255,255,0.08)" stroke-width="1.5"/>
+        <foreignObject x="346" y="86" width="22" height="22">${logos.iis}</foreignObject>
+        <text x="357" y="125" text-anchor="middle" font-size="7" fill="#f8fafc" font-weight="bold">IIS Server</text>
+        <text x="357" y="133" text-anchor="middle" font-size="5.5" fill="#94a3b8">Web Host</text>
+      </g>
+      
+      <g class="node-group">
+        <rect x="420" y="80" width="85" height="60" rx="6" fill="rgba(30, 41, 59, 0.6)" stroke="rgba(255,255,255,0.08)" stroke-width="1.5"/>
+        <foreignObject x="451" y="86" width="22" height="22">${logos.dotnet}</foreignObject>
+        <text x="462" y="125" text-anchor="middle" font-size="7" fill="#f8fafc" font-weight="bold">ASP.NET</text>
+        <text x="462" y="133" text-anchor="middle" font-size="5.5" fill="#94a3b8">Application</text>
+      </g>
+      
+      <g class="node-group">
+        <rect x="525" y="80" width="85" height="60" rx="6" fill="rgba(30, 41, 59, 0.6)" stroke="rgba(255,255,255,0.08)" stroke-width="1.5"/>
+        <foreignObject x="556" y="86" width="22" height="22">${logos.db}</foreignObject>
+        <text x="567" y="125" text-anchor="middle" font-size="7" fill="#f8fafc" font-weight="bold">SQL DB</text>
+        <text x="567" y="133" text-anchor="middle" font-size="5.5" fill="#94a3b8">Database</text>
       </g>
 
       <g class="node-group">
-        <rect x="220" y="100" width="60" height="50" rx="6" fill="rgba(139, 92, 246, 0.15)" stroke="#8b5cf6" stroke-width="2" class="node-circle"/>
-        <text x="250" y="128" text-anchor="middle" class="node-label">IIS Server</text>
+        <rect x="630" y="80" width="85" height="60" rx="6" fill="rgba(30, 41, 59, 0.6)" stroke="rgba(255,255,255,0.08)" stroke-width="1.5"/>
+        <foreignObject x="661" y="86" width="22" height="22">${logos.prometheus}</foreignObject>
+        <text x="672" y="125" text-anchor="middle" font-size="7" fill="#f8fafc" font-weight="bold">Prometheus</text>
+        <text x="672" y="133" text-anchor="middle" font-size="5.5" fill="#94a3b8">Metrics Collector</text>
       </g>
-
+    </svg>
+    `;
+  } else if (type === "docker") {
+    svg = `
+    <svg viewBox="0 0 620 220" width="100%" height="100%">
+      <defs>
+        <marker id="arrow" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+          <path d="M 0 2 L 10 5 L 0 8 z" fill="#64748b"/>
+        </marker>
+      </defs>
+      
+      <!-- Connectors -->
+      <path d="M 85 110 L 105 110" fill="none" stroke="#64748b" stroke-width="2" marker-end="url(#arrow)" class="packet-flow"/>
+      <path d="M 190 110 L 210 110" fill="none" stroke="#64748b" stroke-width="2" marker-end="url(#arrow)" class="packet-flow"/>
+      <path d="M 295 110 L 315 110" fill="none" stroke="#64748b" stroke-width="2" marker-end="url(#arrow)" class="packet-flow"/>
+      <path d="M 400 110 L 420 110" fill="none" stroke="#64748b" stroke-width="2" marker-end="url(#arrow)" class="packet-flow"/>
+      <path d="M 505 110 L 525 110" fill="none" stroke="#64748b" stroke-width="2" marker-end="url(#arrow)" class="packet-flow"/>
+      
+      <!-- Nodes -->
       <g class="node-group">
-        <rect x="330" y="100" width="60" height="50" rx="6" fill="rgba(20, 184, 166, 0.15)" stroke="#14b8a6" stroke-width="2" class="node-circle"/>
-        <text x="360" y="128" text-anchor="middle" class="node-label">.NET App</text>
+        <rect x="5" y="80" width="80" height="60" rx="6" fill="rgba(30, 41, 59, 0.6)" stroke="rgba(255,255,255,0.08)" stroke-width="1.5"/>
+        <foreignObject x="33" y="86" width="22" height="22">${logos.client}</foreignObject>
+        <text x="45" y="125" text-anchor="middle" font-size="7" fill="#f8fafc" font-weight="bold">Client</text>
+        <text x="45" y="133" text-anchor="middle" font-size="5.5" fill="#94a3b8">Request Source</text>
       </g>
-
+      
       <g class="node-group">
-        <circle cx="450" cy="125" r="20" fill="rgba(100, 116, 139, 0.15)" stroke="#64748b" stroke-width="2" class="node-circle"/>
-        <text x="450" y="128" text-anchor="middle" class="node-label">Database</text>
+        <rect x="105" y="80" width="85" height="60" rx="6" fill="rgba(30, 41, 59, 0.6)" stroke="rgba(255,255,255,0.08)" stroke-width="1.5"/>
+        <foreignObject x="136" y="86" width="22" height="22">${logos.nginx}</foreignObject>
+        <text x="147" y="125" text-anchor="middle" font-size="7" fill="#f8fafc" font-weight="bold">NGINX</text>
+        <text x="147" y="133" text-anchor="middle" font-size="5.5" fill="#94a3b8">Ingress Proxy</text>
+      </g>
+      
+      <g class="node-group">
+        <rect x="210" y="80" width="85" height="60" rx="6" fill="rgba(30, 41, 59, 0.6)" stroke="rgba(255,255,255,0.08)" stroke-width="1.5"/>
+        <foreignObject x="241" y="86" width="22" height="22">${logos.docker}</foreignObject>
+        <text x="252" y="125" text-anchor="middle" font-size="7" fill="#f8fafc" font-weight="bold">Docker</text>
+        <text x="252" y="133" text-anchor="middle" font-size="5.5" fill="#94a3b8">API Container</text>
+      </g>
+      
+      <g class="node-group">
+        <rect x="315" y="80" width="85" height="60" rx="6" fill="rgba(30, 41, 59, 0.6)" stroke="rgba(255,255,255,0.08)" stroke-width="1.5"/>
+        <foreignObject x="346" y="86" width="22" height="22">${logos.ubuntu}</foreignObject>
+        <text x="357" y="125" text-anchor="middle" font-size="7" fill="#f8fafc" font-weight="bold">Ubuntu</text>
+        <text x="357" y="133" text-anchor="middle" font-size="5.5" fill="#94a3b8">Host Platform</text>
+      </g>
+      
+      <g class="node-group">
+        <rect x="420" y="80" width="85" height="60" rx="6" fill="rgba(30, 41, 59, 0.6)" stroke="rgba(255,255,255,0.08)" stroke-width="1.5"/>
+        <foreignObject x="451" y="86" width="22" height="22">${logos.golang}</foreignObject>
+        <text x="462" y="125" text-anchor="middle" font-size="7" fill="#f8fafc" font-weight="bold">Go Service</text>
+        <text x="462" y="133" text-anchor="middle" font-size="5.5" fill="#94a3b8">Integration Hub</text>
+      </g>
+      
+      <g class="node-group">
+        <rect x="525" y="80" width="90" height="60" rx="6" fill="rgba(30, 41, 59, 0.6)" stroke="rgba(255,255,255,0.08)" stroke-width="1.5"/>
+        <foreignObject x="559" y="86" width="22" height="22">${logos.client}</foreignObject>
+        <text x="570" y="125" text-anchor="middle" font-size="7" fill="#f8fafc" font-weight="bold">External APIs</text>
+        <text x="570" y="133" text-anchor="middle" font-size="5.5" fill="#94a3b8">Endpoints</text>
       </g>
     </svg>
     `;
   } else if (type === "monitoring") {
     svg = `
-    <svg viewBox="0 0 500 250" width="100%" height="100%">
+    <svg viewBox="0 0 520 220" width="100%" height="100%">
       <defs>
         <marker id="arrow" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
           <path d="M 0 2 L 10 5 L 0 8 z" fill="#64748b"/>
         </marker>
       </defs>
       
-      <!-- Paths -->
-      <path d="M 95 125 L 150 125" fill="none" stroke="#64748b" stroke-width="2" marker-end="url(#arrow)" class="packet-flow"/>
-      <path d="M 215 125 L 270 125" fill="none" stroke="#64748b" stroke-width="2" marker-end="url(#arrow)" class="packet-flow"/>
-      <path d="M 335 125 L 395 125" fill="none" stroke="#64748b" stroke-width="2" marker-end="url(#arrow)" class="packet-flow"/>
-      <path d="M 215 110 Q 307 75 400 112" fill="none" stroke="#ef4444" stroke-dasharray="4,4" stroke-width="1.5" marker-end="url(#arrow)"/>
-
+      <!-- Connectors -->
+      <path d="M 85 110 L 105 110" fill="none" stroke="#64748b" stroke-width="2" marker-end="url(#arrow)" class="packet-flow"/>
+      <path d="M 190 110 L 210 110" fill="none" stroke="#64748b" stroke-width="2" marker-end="url(#arrow)" class="packet-flow"/>
+      <path d="M 295 110 L 315 110" fill="none" stroke="#64748b" stroke-width="2" marker-end="url(#arrow)" class="packet-flow"/>
+      <path d="M 400 110 L 420 110" fill="none" stroke="#64748b" stroke-width="2" marker-end="url(#arrow)" class="packet-flow"/>
+      
       <!-- Nodes -->
       <g class="node-group">
-        <rect x="25" y="100" width="70" height="50" rx="6" fill="rgba(6, 182, 212, 0.15)" stroke="#06b6d4" stroke-width="2" class="node-circle"/>
-        <text x="60" y="128" text-anchor="middle" class="node-label">Win Exporter</text>
+        <rect x="5" y="80" width="80" height="60" rx="6" fill="rgba(30, 41, 59, 0.6)" stroke="rgba(255,255,255,0.08)" stroke-width="1.5"/>
+        <foreignObject x="34" y="86" width="22" height="22">${logos.iis}</foreignObject>
+        <text x="45" y="125" text-anchor="middle" font-size="7" fill="#f8fafc" font-weight="bold">Win Exporter</text>
+        <text x="45" y="133" text-anchor="middle" font-size="5.5" fill="#94a3b8">Host Metrics</text>
       </g>
       
       <g class="node-group">
-        <rect x="150" y="100" width="65" height="50" rx="6" fill="rgba(59, 130, 246, 0.15)" stroke="#3b82f6" stroke-width="2" class="node-circle"/>
-        <text x="182" y="128" text-anchor="middle" class="node-label">Prometheus</text>
+        <rect x="105" y="80" width="85" height="60" rx="6" fill="rgba(30, 41, 59, 0.6)" stroke="rgba(255,255,255,0.08)" stroke-width="1.5"/>
+        <foreignObject x="136" y="86" width="22" height="22">${logos.prometheus}</foreignObject>
+        <text x="147" y="125" text-anchor="middle" font-size="7" fill="#f8fafc" font-weight="bold">Prometheus</text>
+        <text x="147" y="133" text-anchor="middle" font-size="5.5" fill="#94a3b8">Database</text>
       </g>
-
+      
       <g class="node-group">
-        <rect x="270" y="100" width="65" height="50" rx="6" fill="rgba(139, 92, 246, 0.15)" stroke="#8b5cf6" stroke-width="2" class="node-circle"/>
-        <text x="302" y="128" text-anchor="middle" class="node-label">Grafana</text>
+        <rect x="210" y="80" width="85" height="60" rx="6" fill="rgba(30, 41, 59, 0.6)" stroke="rgba(255,255,255,0.08)" stroke-width="1.5"/>
+        <foreignObject x="241" y="86" width="22" height="22">${logos.grafana}</foreignObject>
+        <text x="252" y="125" text-anchor="middle" font-size="7" fill="#f8fafc" font-weight="bold">Grafana</text>
+        <text x="252" y="133" text-anchor="middle" font-size="5.5" fill="#94a3b8">Observability Panel</text>
       </g>
-
+      
       <g class="node-group">
-        <circle cx="420" cy="125" r="20" fill="rgba(245, 158, 11, 0.15)" stroke="#f59e0b" stroke-width="2" class="node-circle"/>
-        <text x="420" y="128" text-anchor="middle" class="node-label">Alerting</text>
+        <rect x="315" y="80" width="85" height="60" rx="6" fill="rgba(30, 41, 59, 0.6)" stroke="rgba(255,255,255,0.08)" stroke-width="1.5"/>
+        <foreignObject x="346" y="86" width="22" height="22">${logos.prometheus}</foreignObject>
+        <text x="357" y="125" text-anchor="middle" font-size="7" fill="#f8fafc" font-weight="bold">Alert Manager</text>
+        <text x="357" y="133" text-anchor="middle" font-size="5.5" fill="#94a3b8">Incident Dispatch</text>
+      </g>
+      
+      <g class="node-group">
+        <rect x="420" y="80" width="95" height="60" rx="6" fill="rgba(30, 41, 59, 0.6)" stroke="rgba(255,255,255,0.08)" stroke-width="1.5"/>
+        <foreignObject x="456" y="86" width="22" height="22">${logos.client}</foreignObject>
+        <text x="467" y="125" text-anchor="middle" font-size="7" fill="#f8fafc" font-weight="bold">Ops Team</text>
+        <text x="467" y="133" text-anchor="middle" font-size="5.5" fill="#94a3b8">Active Responders</text>
       </g>
     </svg>
     `;
-  } else if (type === "dr") {
+  } else if (type === "pipeline") {
     svg = `
-    <svg viewBox="0 0 500 250" width="100%" height="100%">
+    <svg viewBox="0 0 650 300" width="100%" height="100%">
       <defs>
         <marker id="arrow" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
           <path d="M 0 2 L 10 5 L 0 8 z" fill="#64748b"/>
         </marker>
       </defs>
+      
+      <!-- Connectors Row 1 -->
+      <path d="M 125 55 L 165 55" fill="none" stroke="#64748b" stroke-width="2" marker-end="url(#arrow)" class="packet-flow"/>
+      <path d="M 265 55 L 305 55" fill="none" stroke="#64748b" stroke-width="2" marker-end="url(#arrow)" class="packet-flow"/>
+      <path d="M 405 55 L 445 55" fill="none" stroke="#64748b" stroke-width="2" marker-end="url(#arrow)" class="packet-flow"/>
+      
+      <!-- Serpentine connector down to Row 2 -->
+      <path d="M 500 80 L 500 115" fill="none" stroke="#64748b" stroke-width="2" marker-end="url(#arrow)" class="packet-flow"/>
+      
+      <!-- Connectors Row 2 -->
+      <path d="M 445 140 L 405 140" fill="none" stroke="#64748b" stroke-width="2" marker-end="url(#arrow)" class="packet-flow"/>
+      <path d="M 305 140 L 265 140" fill="none" stroke="#64748b" stroke-width="2" marker-end="url(#arrow)" class="packet-flow"/>
+      <path d="M 165 140 L 125 140" fill="none" stroke="#64748b" stroke-width="2" marker-end="url(#arrow)" class="packet-flow"/>
+      
+      <!-- Serpentine connector down to Row 3 -->
+      <path d="M 75 165 L 75 200" fill="none" stroke="#64748b" stroke-width="2" marker-end="url(#arrow)" class="packet-flow"/>
+      
+      <!-- Connectors Row 3 -->
+      <path d="M 125 225 L 165 225" fill="none" stroke="#64748b" stroke-width="2" marker-end="url(#arrow)" class="packet-flow"/>
+      <path d="M 265 225 L 305 225" fill="none" stroke="#64748b" stroke-width="2" marker-end="url(#arrow)" class="packet-flow"/>
+      <path d="M 405 225 L 445 225" fill="none" stroke="#64748b" stroke-width="2" marker-end="url(#arrow)" class="packet-flow"/>
+      
+      <!-- Layer Labels -->
+      <text x="25" y="20" font-size="7" fill="#38bdf8" font-weight="bold" font-family="monospace">DEVELOPMENT STAGE</text>
+      <text x="530" y="110" font-size="7" fill="#38bdf8" font-weight="bold" font-family="monospace">CI/CD BUILD</text>
+      <text x="25" y="195" font-size="7" fill="#38bdf8" font-weight="bold" font-family="monospace">PROD ROLLOUT</text>
 
-      <!-- Boundary Boxes for regions -->
-      <rect x="20" y="50" width="170" height="150" rx="10" fill="none" stroke="#06b6d4" stroke-width="1.5" stroke-dasharray="5,5"/>
-      <text x="30" y="66" fill="#06b6d4" font-size="9" font-family="monospace">Primary Env</text>
-
-      <rect x="310" y="50" width="170" height="150" rx="10" fill="none" stroke="#f59e0b" stroke-width="1.5" stroke-dasharray="5,5"/>
-      <text x="320" y="66" fill="#f59e0b" font-size="9" font-family="monospace">DR Env</text>
-
-      <!-- Replication path -->
-      <path d="M 190 125 L 310 125" fill="none" stroke="#10b981" stroke-width="2.5" stroke-dasharray="6,4" marker-end="url(#arrow)" class="packet-flow"/>
-      <text x="250" y="115" fill="#10b981" font-size="8" font-family="monospace" text-anchor="middle">Replication</text>
-
-      <!-- Nodes -->
+      <!-- Row 1 Nodes -->
       <g class="node-group">
-        <rect x="50" y="100" width="80" height="50" rx="6" fill="rgba(59, 130, 246, 0.15)" stroke="#3b82f6" stroke-width="2" class="node-circle"/>
-        <text x="90" y="128" text-anchor="middle" class="node-label">Production</text>
+        <rect x="25" y="30" width="100" height="50" rx="6" fill="rgba(30, 41, 59, 0.6)" stroke="rgba(255,255,255,0.08)" stroke-width="1.5"/>
+        <foreignObject x="64" y="36" width="22" height="22">${logos.client}</foreignObject>
+        <text x="75" y="71" text-anchor="middle" font-size="7" fill="#f8fafc" font-weight="bold">Developer</text>
+      </g>
+      
+      <g class="node-group">
+        <rect x="165" y="30" width="100" height="50" rx="6" fill="rgba(30, 41, 59, 0.6)" stroke="rgba(255,255,255,0.08)" stroke-width="1.5"/>
+        <foreignObject x="204" y="36" width="22" height="22">${logos.git}</foreignObject>
+        <text x="215" y="71" text-anchor="middle" font-size="7" fill="#f8fafc" font-weight="bold">Git Commit</text>
+      </g>
+      
+      <g class="node-group">
+        <rect x="305" y="30" width="100" height="50" rx="6" fill="rgba(30, 41, 59, 0.6)" stroke="rgba(255,255,255,0.08)" stroke-width="1.5"/>
+        <foreignObject x="344" y="36" width="22" height="22">${logos.github}</foreignObject>
+        <text x="355" y="71" text-anchor="middle" font-size="7" fill="#f8fafc" font-weight="bold">GitHub Repo</text>
+      </g>
+      
+      <g class="node-group">
+        <rect x="445" y="30" width="110" height="50" rx="6" fill="rgba(30, 41, 59, 0.6)" stroke="rgba(255,255,255,0.08)" stroke-width="1.5"/>
+        <foreignObject x="489" y="36" width="22" height="22">${logos.azure}</foreignObject>
+        <text x="500" y="71" text-anchor="middle" font-size="7" fill="#f8fafc" font-weight="bold">Azure Pipelines</text>
       </g>
 
+      <!-- Row 2 Nodes -->
       <g class="node-group">
-        <rect x="340" y="100" width="80" height="50" rx="6" fill="rgba(139, 92, 246, 0.15)" stroke="#8b5cf6" stroke-width="2" class="node-circle"/>
-        <text x="380" y="128" text-anchor="middle" class="node-label">Recovery Node</text>
+        <rect x="445" y="115" width="110" height="50" rx="6" fill="rgba(30, 41, 59, 0.6)" stroke="rgba(255,255,255,0.08)" stroke-width="1.5"/>
+        <foreignObject x="489" y="121" width="22" height="22">${logos.dotnet}</foreignObject>
+        <text x="500" y="156" text-anchor="middle" font-size="7" fill="#f8fafc" font-weight="bold">Dotnet Build</text>
       </g>
-    </svg>
-    `;
-  } else if (type === "deployment") {
-    svg = `
-    <svg viewBox="0 0 500 250" width="100%" height="100%">
-      <defs>
-        <marker id="arrow" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
-          <path d="M 0 2 L 10 5 L 0 8 z" fill="#64748b"/>
-        </marker>
-      </defs>
-
-      <!-- Paths -->
-      <path d="M 65 125 L 120 125" fill="none" stroke="#64748b" stroke-width="2" marker-end="url(#arrow)" class="packet-flow"/>
-      <path d="M 180 125 L 240 125" fill="none" stroke="#64748b" stroke-width="2" marker-end="url(#arrow)" class="packet-flow"/>
-      <path d="M 300 125 L 360 125" fill="none" stroke="#64748b" stroke-width="2" marker-end="url(#arrow)" class="packet-flow"/>
-      <path d="M 420 125 L 440 125" fill="none" stroke="#64748b" stroke-width="2" marker-end="url(#arrow)"/>
-      <!-- Feedback Loop -->
-      <path d="M 430 105 C 430 40, 30 40, 30 105" fill="none" stroke="#06b6d4" stroke-dasharray="5,5" stroke-width="1.5" marker-end="url(#arrow)"/>
-      <text x="230" y="55" fill="#06b6d4" font-size="8" font-family="monospace" text-anchor="middle">Continuous Feedback</text>
-
-      <!-- Nodes -->
+      
       <g class="node-group">
-        <circle cx="35" cy="125" r="20" fill="rgba(6, 182, 212, 0.15)" stroke="#06b6d4" stroke-width="2" class="node-circle"/>
-        <text x="35" y="128" text-anchor="middle" class="node-label">Dev</text>
+        <rect x="305" y="115" width="100" height="50" rx="6" fill="rgba(30, 41, 59, 0.6)" stroke="rgba(255,255,255,0.08)" stroke-width="1.5"/>
+        <foreignObject x="344" y="121" width="22" height="22">${logos.dotnet}</foreignObject>
+        <text x="355" y="156" text-anchor="middle" font-size="7" fill="#f8fafc" font-weight="bold">Code Validation</text>
+      </g>
+      
+      <g class="node-group">
+        <rect x="165" y="115" width="100" height="50" rx="6" fill="rgba(30, 41, 59, 0.6)" stroke="rgba(255,255,255,0.08)" stroke-width="1.5"/>
+        <foreignObject x="204" y="121" width="22" height="22">${logos.db}</foreignObject>
+        <text x="215" y="156" text-anchor="middle" font-size="7" fill="#f8fafc" font-weight="bold">Build Artifact</text>
+      </g>
+      
+      <g class="node-group">
+        <rect x="25" y="115" width="100" height="50" rx="6" fill="rgba(30, 41, 59, 0.6)" stroke="rgba(255,255,255,0.08)" stroke-width="1.5"/>
+        <foreignObject x="64" y="121" width="22" height="22">${logos.azure}</foreignObject>
+        <text x="75" y="156" text-anchor="middle" font-size="7" fill="#f8fafc" font-weight="bold">Deployment</text>
       </g>
 
+      <!-- Row 3 Nodes -->
       <g class="node-group">
-        <rect x="120" y="100" width="60" height="50" rx="6" fill="rgba(59, 130, 246, 0.15)" stroke="#3b82f6" stroke-width="2" class="node-circle"/>
-        <text x="150" y="128" text-anchor="middle" class="node-label">QA</text>
+        <rect x="25" y="200" width="100" height="50" rx="6" fill="rgba(30, 41, 59, 0.6)" stroke="rgba(255,255,255,0.08)" stroke-width="1.5"/>
+        <foreignObject x="64" y="206" width="22" height="22">${logos.iis}</foreignObject>
+        <text x="75" y="241" text-anchor="middle" font-size="7" fill="#f8fafc" font-weight="bold">IIS Server</text>
       </g>
-
+      
       <g class="node-group">
-        <rect x="240" y="100" width="60" height="50" rx="6" fill="rgba(139, 92, 246, 0.15)" stroke="#8b5cf6" stroke-width="2" class="node-circle"/>
-        <text x="270" y="128" text-anchor="middle" class="node-label">UAT</text>
+        <rect x="165" y="200" width="100" height="50" rx="6" fill="rgba(30, 41, 59, 0.6)" stroke="rgba(255,255,255,0.08)" stroke-width="1.5"/>
+        <foreignObject x="204" y="206" width="22" height="22">${logos.iis}</foreignObject>
+        <text x="215" y="241" text-anchor="middle" font-size="7" fill="#f8fafc" font-weight="bold">Production Web</text>
       </g>
-
+      
       <g class="node-group">
-        <rect x="360" y="100" width="60" height="50" rx="6" fill="rgba(16, 185, 129, 0.15)" stroke="#10b981" stroke-width="2" class="node-circle"/>
-        <text x="390" y="128" text-anchor="middle" class="node-label">Prod</text>
+        <rect x="305" y="200" width="100" height="50" rx="6" fill="rgba(30, 41, 59, 0.6)" stroke="rgba(255,255,255,0.08)" stroke-width="1.5"/>
+        <foreignObject x="344" y="206" width="22" height="22">${logos.prometheus}</foreignObject>
+        <text x="355" y="241" text-anchor="middle" font-size="7" fill="#f8fafc" font-weight="bold">Prom Metrics</text>
+      </g>
+      
+      <g class="node-group">
+        <rect x="445" y="200" width="110" height="50" rx="6" fill="rgba(30, 41, 59, 0.6)" stroke="rgba(255,255,255,0.08)" stroke-width="1.5"/>
+        <foreignObject x="489" y="206" width="22" height="22">${logos.grafana}</foreignObject>
+        <text x="500" y="241" text-anchor="middle" font-size="7" fill="#f8fafc" font-weight="bold">Grafana Monitor</text>
       </g>
     </svg>
     `;
@@ -611,7 +810,7 @@ function renderTimeline() {
           ${exp.responsibilities.map(r => `<li>${r}</li>`).join("")}
         </ul>
 
-        <h4 class="timeline-section-title">Telemetry Uptime Outcomes</h4>
+        <h4 class="timeline-section-title">Operational Impact</h4>
         <ul class="timeline-bullets">
           ${exp.achievements.map(a => `<li>${a}</li>`).join("")}
         </ul>
@@ -651,6 +850,7 @@ function renderAchievements() {
 
 function renderCertifications() {
   const container = document.getElementById("certifications-list-container");
+  if (!container) return;
   container.innerHTML = "";
 
   portfolioData.certifications.forEach((cert, idx) => {
@@ -662,16 +862,11 @@ function renderCertifications() {
       <div class="cert-icon-container"><i data-lucide="${cert.icon}"></i></div>
       <div class="cert-details">
         <h3 class="cert-name">${cert.name}</h3>
-        <span class="cert-meta">${cert.issuer} &bull; Verified in ${cert.date}</span>
-        <div class="cert-upload-controls">
-          <span class="cert-view-btn" onclick="openCertModal('${cert.id}')">View Accreditation <i data-lucide="external-link" style="width:10px; height:10px; vertical-align:middle;"></i></span>
-        </div>
+        <span class="cert-meta">${cert.issuer}</span>
       </div>
     `;
     container.appendChild(card);
   });
-
-  lucide.createIcons();
 }
 
 function renderBlogs() {
@@ -698,234 +893,201 @@ function renderBlogs() {
   lucide.createIcons();
 }
 
-function renderResume(mode) {
-  const resumeBox = document.getElementById("resume-view-box");
-  resumeBox.innerHTML = "";
+/* Resume sections removed completely */
 
-  if (mode === "ats") {
-    resumeBox.classList.add("ats-view-mode");
+// Hero, Highlights, Core Focus, and Contact Cards rotators and builders
+function initHeroRotator() {
+  const summaryEl = document.getElementById("hero-summary-label");
+  if (!summaryEl) return;
+  const terms = [
+    "Production Engineering",
+    "DevOps",
+    "Site Reliability",
+    "Cloud Operations",
+    "Monitoring",
+    "Observability",
+    "Automation",
+    "CI/CD",
+    "Containerization",
+    "Application Engineering"
+  ];
+  let termIndex = 0;
+  summaryEl.style.transition = "opacity 0.4s ease-in-out";
+  setInterval(() => {
+    summaryEl.style.opacity = 0;
+    setTimeout(() => {
+      summaryEl.innerText = terms[termIndex];
+      summaryEl.style.opacity = 1;
+      termIndex = (termIndex + 1) % terms.length;
+    }, 400);
+  }, 3000);
+  summaryEl.innerText = terms[0];
+}
 
-    const plainText = `
-SUDHARSAN S
-Site Reliability Engineer | DevOps Engineer | Cloud Operations Engineer
-Bangalore, Karnataka, India | raghavsudhar07@gmail.com
-
-PROFESSIONAL SUMMARY
-Site Reliability Engineer with 3+ years of experience supporting enterprise production applications across cloud and on-premises environments. Experienced in application reliability, incident management, root cause analysis, disaster recovery validation, IIS/.NET operations, monitoring & observability, AWS/GCP operations, production deployments, service availability management, and operational automation. Proven track record working with both monolithic and microservices-based architectures.
-
-EXPERIENCE
-Application Support Engineer | Craft Silicon | Feb 2025 – Present
-- Support business-critical banking applications.
-- Oversee IIS and .NET application operations and production deployments.
-- Manage incident response, root cause analysis, and AWS & GCP operations.
-- Implement Prometheus and Grafana monitoring stacks to improve observability.
-- Perform release validation, change implementation, and execute DR drills for 7+ client environments.
-
-IT Administrator | Wikiprospects | May 2023 – Jan 2025
-- Managed IT infrastructure supporting 150+ users.
-- Handled Active Directory, DNS, and DHCP administration.
-- Administered network operations, VPN management, and backup/recovery processes.
-- Provided end-user support and automated system validation tasks using PowerShell and Batch scripting.
-
-CORE SKILLS
-Cloud Platforms: AWS, Google Cloud Platform (GCP)
-Monitoring & Observability: Prometheus, Grafana, Windows Exporter, Infrastructure Monitoring, Alerting, Dashboard Development
-Application Operations: IIS, .NET Hosting, Application Reliability, Performance Monitoring
-Automation: PowerShell, Batch Scripting, Python
-Reliability Engineering: Incident Management, Problem Management, RCA, SLA Management, SLO Monitoring, DR Validation
-Operating Systems: Windows Server, Linux
-
-CERTIFICATIONS (Roadmap Targets / In Progress)
-- AWS Certified Solutions Architect (Planned / In Progress)
-- Google Cloud Certifications (Planned / In Progress)
-- Certified Kubernetes Administrator (CKA) (Planned / In Progress)
-- HashiCorp Certified: Terraform Associate (Planned / In Progress)
-- Microsoft Certifications (Planned / In Progress)
-`;
-    resumeBox.innerHTML = `<pre style="white-space: pre-wrap; font-family: monospace; font-size: 0.85rem; line-height: 1.5; color: inherit;">${plainText}</pre>`;
-  } else {
-    resumeBox.classList.remove("ats-view-mode");
-
-    // GUI Visual Dashboard Layout
-    resumeBox.innerHTML = `
-      <div class="resume-header">
-        <h1>${portfolioData.personalInfo.name}</h1>
-        <div class="resume-contact-info">
-          <span><i data-lucide="map-pin" style="width:12px; height:12px; vertical-align:middle;"></i> ${portfolioData.personalInfo.socialLinks.location}</span>
-          <span><i data-lucide="mail" style="width:12px; height:12px; vertical-align:middle;"></i> ${portfolioData.personalInfo.socialLinks.email}</span>
-          <span><i data-lucide="briefcase" style="width:12px; height:12px; vertical-align:middle;"></i> Experience: ${portfolioData.personalInfo.yearsOfExperience}+ Years</span>
-        </div>
-      </div>
-      
-      <div class="resume-body-grid">
-        <div class="resume-col-left">
-          <div class="resume-section">
-            <h3 class="resume-subsection-title">Professional Profile</h3>
-            <p class="about-text-p" style="font-size:0.8rem; line-height:1.5;">${portfolioData.personalInfo.bio}</p>
-          </div>
-          
-          <div class="resume-section" style="margin-top: 15px;">
-            <h3 class="resume-subsection-title">Career Operations</h3>
-            ${portfolioData.experience.map(exp => `
-              <div class="resume-item" style="margin-bottom:12px;">
-                <div class="resume-item-title-row">
-                  <strong>${exp.role}</strong>
-                  <span>${exp.duration}</span>
-                </div>
-                <div style="font-size:0.75rem; color:#3b82f6; font-weight:600; margin-bottom:4px;">${exp.company}</div>
-                <p class="resume-item-details">${exp.responsibilities.slice(0, 2).join(". ")}.</p>
-              </div>
-            `).join("")}
-          </div>
-        </div>
-        
-        <div class="resume-col-right">
-          <div class="resume-section">
-            <h3 class="resume-subsection-title">Uptime Skills</h3>
-            <div style="display:flex; flex-wrap:wrap; gap:6px;">
-              ${portfolioData.skills.flatMap(cat => cat.items.map(i => i.name)).slice(0, 14).map(s => `
-                <span class="project-tool-tag" style="font-size:0.7rem; border-color:#3b82f6;">${s}</span>
-              `).join("")}
-            </div>
-          </div>
-          
-          <div class="resume-section" style="margin-top: 15px;">
-            <h3 class="resume-subsection-title">Accreditations</h3>
-            <ul style="list-style:none; padding:0; display:flex; flex-direction:column; gap:8px;">
-              ${portfolioData.certifications.slice(0, 4).map(c => `
-                <li style="font-size:0.75rem; color:var(--text-secondary);">
-                  <strong style="color:var(--text-primary); font-size:0.75rem;">${c.name}</strong><br>
-                  ${c.issuer} (${c.date})
-                </li>
-              `).join("")}
-            </ul>
-          </div>
-        </div>
-      </div>
-    `;
+let archRotationTimer = null;
+let isArchHovered = false;
+function initArchitectureAutoRotation() {
+  if (archRotationTimer) clearInterval(archRotationTimer);
+  
+  // Attach hover listeners to pause/resume auto rotation
+  const containerEl = document.querySelector(".architecture-tabs-container");
+  if (containerEl && !containerEl.dataset.hoverBound) {
+    containerEl.dataset.hoverBound = "true";
+    containerEl.addEventListener("mouseenter", () => {
+      isArchHovered = true;
+    });
+    containerEl.addEventListener("mouseleave", () => {
+      isArchHovered = false;
+    });
   }
 
-  lucide.createIcons();
+  archRotationTimer = setInterval(() => {
+    if (isArchHovered) return; // Pause while hovered
+    const architectures = portfolioData.architectures;
+    if (!architectures || architectures.length === 0) return;
+    const currentIndex = architectures.findIndex(a => a.id === activeArchTab);
+    const nextIndex = (currentIndex + 1) % architectures.length;
+    const nextArch = architectures[nextIndex];
+    activeArchTab = nextArch.id;
+    
+    const buttons = document.querySelectorAll(".arch-tab-btn");
+    buttons.forEach((btn, idx) => {
+      if (idx === nextIndex) {
+        btn.classList.add("active");
+      } else {
+        btn.classList.remove("active");
+      }
+    });
+    loadArchitectureView(nextArch);
+  }, 7000); // Rotate every 7 seconds
 }
 
-function setupResumeControls() {
-  const guiBtn = document.getElementById("resume-view-gui-btn");
-  const atsBtn = document.getElementById("resume-view-ats-btn");
-  const printBtn = document.getElementById("resume-print-btn");
-  const dlBtn = document.getElementById("resume-download-btn");
-  const heroDlBtn = document.getElementById("hero-download-resume-btn");
-  const sidebarDlBtn = document.getElementById("sidebar-download-resume-btn");
-
-  guiBtn.addEventListener("click", () => {
-    guiBtn.classList.add("active");
-    atsBtn.classList.remove("active");
-    renderResume("gui");
-  });
-
-  atsBtn.addEventListener("click", () => {
-    atsBtn.classList.add("active");
-    guiBtn.classList.remove("active");
-    renderResume("ats");
-  });
-
-  const triggerPrint = () => {
-    window.print();
-  };
-
-  printBtn.addEventListener("click", triggerPrint);
-  dlBtn.addEventListener("click", triggerPrint);
-  heroDlBtn.addEventListener("click", triggerPrint);
-  sidebarDlBtn.addEventListener("click", triggerPrint);
+function resetArchitectureAutoRotation() {
+  initArchitectureAutoRotation();
 }
 
-// Testimonials Slideshow
-let activeTestimonialIndex = 0;
-function renderTestimonials() {
-  const track = document.getElementById("testimonials-carousel-track");
-  track.innerHTML = "";
-
-  portfolioData.testimonials.forEach(t => {
-    const slide = document.createElement("div");
-    slide.className = "testimonial-slide";
-
-    // Default avatar abbreviation
-    const initials = t.author.split(" ").map(n => n[0]).join("");
-
-    slide.innerHTML = `
-      <div class="testimonial-card glass-panel">
-        <p class="testimonial-quote">"${t.quote}"</p>
-        <div class="testimonial-author-row">
-          <div class="testimonial-author-avatar">${initials}</div>
-          <div class="testimonial-author-info">
-            <span class="testimonial-author-name">${t.author}</span>
-            <span class="testimonial-author-role">${t.role}</span>
-          </div>
+function renderOperationalHighlights() {
+  const container = document.getElementById("operational-highlights-container");
+  if (!container) return;
+  container.innerHTML = "";
+  if (portfolioData.operationalHighlights) {
+    portfolioData.operationalHighlights.forEach((highlight, idx) => {
+      const card = document.createElement("div");
+      const staggerClass = `reveal-stagger-${(idx % 4) + 1}`;
+      card.className = `highlight-card glass-panel reveal-on-scroll ${staggerClass}`;
+      card.innerHTML = `
+        <div class="highlight-icon-box">
+          <i data-lucide="check-circle-2" style="color: var(--status-ok);"></i>
         </div>
+        <div class="highlight-content">
+          <h4 class="highlight-title">${highlight.title}</h4>
+          <p class="highlight-desc">${highlight.description}</p>
+        </div>
+      `;
+      container.appendChild(card);
+    });
+  }
+}
+
+function renderCoreFocus() {
+  const container = document.getElementById("core-focus-container");
+  if (!container) return;
+  container.innerHTML = "";
+
+  const focusData = portfolioData.coreFocus;
+  if (!focusData) return;
+
+  const appCard = document.createElement("div");
+  appCard.className = "core-focus-card glass-panel reveal-on-scroll reveal-stagger-1";
+  appCard.innerHTML = `
+    <h3 class="about-subtitle"><i data-lucide="server" style="color: #06b6d4; vertical-align:middle; margin-right:6px;"></i> Application Engineering</h3>
+    <ul class="focus-list" style="list-style:none; padding:0; margin-top:15px; display:flex; flex-direction:column; gap:10px;">
+      ${focusData.applicationEngineering.map(item => `
+        <li style="display:flex; align-items:center; gap:8px; font-size:0.9rem; color:var(--text-secondary);">
+          <i data-lucide="check" style="width:16px; height:16px; color:#10b981;"></i> <span>${item}</span>
+        </li>
+      `).join("")}
+    </ul>
+  `;
+  container.appendChild(appCard);
+
+  const sysCard = document.createElement("div");
+  sysCard.className = "core-focus-card glass-panel reveal-on-scroll reveal-stagger-2";
+  sysCard.innerHTML = `
+    <h3 class="about-subtitle"><i data-lucide="cpu" style="color: #6366f1; vertical-align:middle; margin-right:6px;"></i> System Engineering</h3>
+    <ul class="focus-list" style="list-style:none; padding:0; margin-top:15px; display:flex; flex-direction:column; gap:10px;">
+      ${focusData.systemEngineering.map(item => `
+        <li style="display:flex; align-items:center; gap:8px; font-size:0.9rem; color:var(--text-secondary);">
+          <i data-lucide="check" style="width:16px; height:16px; color:#10b981;"></i> <span>${item}</span>
+        </li>
+      `).join("")}
+    </ul>
+  `;
+  container.appendChild(sysCard);
+}
+
+function renderContactCards() {
+  const container = document.getElementById("contact-cards-container");
+  if (!container) return;
+  container.innerHTML = "";
+
+  const links = portfolioData.personalInfo.socialLinks;
+  const contacts = [
+    {
+      name: "LinkedIn",
+      desc: "Professional Network",
+      sub: "Connect professionally",
+      url: links.linkedin,
+      icon: `<svg viewBox="0 0 24 24" class="contact-svg-icon" fill="currentColor" style="width:28px; height:28px;"><path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.779-1.75-1.75s.784-1.75 1.75-1.75 1.75.779 1.75 1.75-.784 1.75-1.75 1.75zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/></svg>`
+    },
+    {
+      name: "GitHub",
+      desc: "Code Repositories",
+      sub: "Explore technical contributions",
+      url: links.github,
+      icon: `<svg viewBox="0 0 24 24" class="contact-svg-icon" fill="currentColor" style="width:28px; height:28px;"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>`
+    },
+    {
+      name: "Email",
+      desc: "Direct Communication",
+      sub: "Send an email inquiry",
+      url: `mailto:${links.email}`,
+      icon: `<svg viewBox="0 0 24 24" class="contact-svg-icon" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:28px; height:28px;"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>`
+    },
+    {
+      name: "WhatsApp",
+      desc: "Instant Messaging",
+      sub: "Chat directly in real-time",
+      url: links.whatsapp,
+      icon: `<svg viewBox="0 0 24 24" class="contact-svg-icon" fill="currentColor" style="width:28px; height:28px;"><path d="M12.004 0c-6.627 0-12 5.373-12 12 0 2.115.549 4.102 1.511 5.838l-1.603 5.854 5.998-1.573c1.7.925 3.633 1.45 5.681 1.45 6.627 0 12-5.373 12-12 0-6.627-5.373-12-12-12zm6.757 16.915c-.256.721-1.5 1.411-2.072 1.503-.497.08-1.149.141-3.23-.718-2.663-1.098-4.341-3.803-4.475-3.982-.132-.178-1.077-1.431-1.077-2.729 0-1.298.675-1.936.916-2.195.242-.259.525-.325.7-.325.176 0 .351.001.504.009.162.008.38-.06.593.456.219.531.751 1.834.815 1.967.065.132.108.286.02.46-.088.176-.132.285-.263.438-.131.152-.276.34-.393.456-.132.128-.27.268-.117.531.152.263.676 1.114 1.45 1.804.996.889 1.835 1.164 2.098 1.296.263.132.416.11.57-.066.154-.176.658-.767.834-1.029.176-.263.351-.219.593-.131.242.088 1.534.723 1.798.855.263.132.438.197.504.307.066.11.066.635-.19 1.356z"/></svg>`
+    }
+  ];
+
+  contacts.forEach((c, idx) => {
+    const card = document.createElement("a");
+    card.href = c.url;
+    card.target = "_blank";
+    const staggerClass = `reveal-stagger-${(idx % 4) + 1}`;
+    card.className = `contact-glass-card glass-panel reveal-on-scroll ${staggerClass}`;
+    card.innerHTML = `
+      <div>
+        <div class="contact-card-icon" style="color: #38bdf8; margin-bottom: 16px; display: inline-block;">${c.icon}</div>
+        <h3 class="contact-card-name" style="font-size: 1.1rem; font-weight: 600; color: var(--text-primary); margin-bottom: 4px;">${c.name}</h3>
+        <p class="contact-card-desc" style="font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 8px;">${c.desc}</p>
+        <span class="contact-card-value" style="font-size: 0.8rem; color: var(--text-muted); display: block; margin-bottom: 16px;">${c.sub}</span>
+      </div>
+      <div style="display: flex; align-items: center; justify-content: flex-end; color: #38bdf8; font-weight: 600; font-size: 1.1rem;">
+        <span>→</span>
       </div>
     `;
-    track.appendChild(slide);
+    container.appendChild(card);
   });
-}
-
-function setupTestimonialsSlider() {
-  const prevBtn = document.getElementById("testimonials-prev-btn");
-  const nextBtn = document.getElementById("testimonials-next-btn");
-  const track = document.getElementById("testimonials-carousel-track");
-  const container = document.querySelector(".testimonials-slider-container");
-
-  if (!track || !prevBtn || !nextBtn || !container) return;
-
-  const updateSlidePosition = () => {
-    track.style.transform = `translateX(-${activeTestimonialIndex * 100}%)`;
-  };
-
-  prevBtn.addEventListener("click", () => {
-    if (activeTestimonialIndex > 0) {
-      activeTestimonialIndex--;
-    } else {
-      activeTestimonialIndex = portfolioData.testimonials.length - 1;
-    }
-    updateSlidePosition();
-  });
-
-  nextBtn.addEventListener("click", () => {
-    if (activeTestimonialIndex < portfolioData.testimonials.length - 1) {
-      activeTestimonialIndex++;
-    } else {
-      activeTestimonialIndex = 0;
-    }
-    updateSlidePosition();
-  });
-
-  // Touch swipe support for testimonials slider
-  let touchStartX = 0;
-  let touchEndX = 0;
-
-  container.addEventListener("touchstart", (e) => {
-    touchStartX = e.changedTouches[0].clientX;
-  }, { passive: true });
-
-  container.addEventListener("touchend", (e) => {
-    touchEndX = e.changedTouches[0].clientX;
-    const swipeThreshold = 50; // min swipe distance in px
-    if (touchStartX - touchEndX > swipeThreshold) {
-      // Swiped left -> load next testimonial
-      nextBtn.click();
-    } else if (touchEndX - touchStartX > swipeThreshold) {
-      // Swiped right -> load previous testimonial
-      prevBtn.click();
-    }
-  }, { passive: true });
-
-  // Auto rotate testimonials slider every 10 seconds
-  setInterval(() => {
-    nextBtn.click();
-  }, 10000);
 }
 
 // Contact form validators
 function setupContactForm() {
   const form = document.getElementById("contact-form");
+  if (!form) return;
 
   form.addEventListener("submit", (e) => {
     e.preventDefault();
@@ -1016,12 +1178,6 @@ function setupModals() {
     blogOverlay.classList.remove("open");
   });
 
-  const closeCert = document.getElementById("cert-modal-close");
-  const certOverlay = document.getElementById("cert-modal");
-  closeCert.addEventListener("click", () => {
-    certOverlay.classList.remove("open");
-  });
-
   const closeZoom = document.getElementById("zoom-modal-close");
   const zoomOverlay = document.getElementById("zoom-modal");
   closeZoom.addEventListener("click", () => {
@@ -1032,7 +1188,6 @@ function setupModals() {
   window.addEventListener("click", (e) => {
     if (e.target === projectOverlay) projectOverlay.classList.remove("open");
     if (e.target === blogOverlay) blogOverlay.classList.remove("open");
-    if (e.target === certOverlay) certOverlay.classList.remove("open");
     if (e.target === zoomOverlay) zoomOverlay.classList.remove("open");
   });
 }
@@ -1081,28 +1236,7 @@ window.openBlogModal = function (blogId) {
   document.getElementById("blog-modal").classList.add("open");
 };
 
-// Open and load Certification Modal Overlay
-window.openCertModal = function (certId) {
-  const c = portfolioData.certifications.find(cert => cert.id === certId);
-  if (!c) return;
-
-  document.getElementById("modal-cert-title").innerText = c.name;
-  document.getElementById("modal-cert-issuer").innerText = `Issued by ${c.issuer} \u2022 Verified ${c.date}`;
-
-  const imgElem = document.getElementById("modal-cert-image-elem");
-  const placeholderEl = document.getElementById("modal-cert-placeholder-img");
-
-  if (c.imageUrl) {
-    imgElem.src = c.imageUrl;
-    imgElem.style.display = "block";
-    placeholderEl.style.display = "none";
-  } else {
-    imgElem.style.display = "none";
-    placeholderEl.style.display = "flex";
-  }
-
-  document.getElementById("cert-modal").classList.add("open");
-};
+/* openCertModal removed */;
 
 // Setup Blueprint Zoom triggers
 function setupBlueprintZoom() {

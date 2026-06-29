@@ -4,28 +4,26 @@ if (typeof portfolioData === 'undefined') {
 
 portfolioData.personalInfo = {
   name: "Sudharsan S",
-  designation: "Site Reliability Engineer | DevOps Engineer | Cloud Operations Engineer",
-  summary: "Site Reliability Engineer specializing in application availability, cloud operations, monitoring, incident response, disaster recovery validation and operational automation.",
-  bio: "Site Reliability Engineer with 3+ years of experience supporting enterprise production applications across cloud and on-premises environments. Experienced in application reliability, incident management, root cause analysis, disaster recovery validation, IIS/.NET operations, monitoring & observability, AWS/GCP operations, production deployments, service availability management, and operational automation. Worked with both monolithic and microservices-based architectures.",
+  designation: "AI-powered DevOps Engineer | Site Reliability Engineer | Cloud Engineer",
+  summary: "Site Reliability Engineer specializing in production operations, application availability, monitoring, incident management, and cloud infrastructure.",
+  bio: "Sudharsan is a dedicated Site Reliability Engineer and DevOps professional with over 3 years of experience orchestrating resilience for enterprise-grade, business-critical applications, including transactional banking systems. Highly skilled in active incident response, root cause analysis, and disaster recovery validation across AWS and GCP, he consistently bridges the gap between development and operations. With a strong production-first mindset, Sudharsan is driven to eliminate toil through infrastructure automation and continuous observability, helping teams shift towards self-healing, reliable cloud operations.",
+  aboutMe: "I am a production-first systems engineer who views code and infrastructure through the lens of reliability and operational excellence. My approach is centered on continuous improvement—tackling operational complexity, automating repetitive tasks, and building observability layers that capture issues before they impact customers. I believe that engineering resilience requires both robust code and a collaborative, DevOps-focused operational culture.",
   yearsOfExperience: 3,
   industryExpertise: "Fintech, Banking, Enterprise IT Infrastructure",
   coreStrengths: [
-    "Application Availability Management",
-    "Incident & Problem Management",
-    "Root Cause Analysis (RCA)",
-    "Disaster Recovery (DR) Validation",
-    "IIS & .NET Hosting Operations",
-    "Monitoring & Observability Stack",
-    "AWS & GCP Operations",
-    "Operational Automation (PowerShell / Batch)"
+    "Reliability",
+    "Automation",
+    "Observability",
+    "Performance",
+    "Availability",
+    "Continuous Improvement",
+    "Operational Excellence"
   ],
   avatarUrl: "Sudharsan_SRE.jpeg",
-  resumeUrl: "#",
   socialLinks: {
     linkedin: "https://linkedin.com/in/sudharsan-sre/",
     github: "https://github.com/raghav-sudharsan",
-    gitlab: "https://gitlab.com/sudharsan-s",
-    medium: "https://medium.com/@sudharsan-s",
+    whatsapp: "https://wa.me/919000000000",
     email: "raghavsudhar07@gmail.com",
     location: "Bangalore, Karnataka, India"
   }
