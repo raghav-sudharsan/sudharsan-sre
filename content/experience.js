@@ -5,7 +5,7 @@ if (typeof portfolioData === 'undefined') {
 portfolioData.experience = [
   {
     company: "Craft Silicon",
-    role: "Application Support Engineer",
+    role: "Site Reliability Engineer",
     duration: "Feb 2025 – Present",
     responsibilities: [
       "Managed production deployments, release validations, and rollback support for business-critical SaaS and enterprise applications.",
