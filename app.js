@@ -24,7 +24,11 @@ function initApp() {
   }
   const designationEl = document.getElementById("hero-designation-label");
   if (designationEl) {
-    designationEl.innerText = "DevOps Engineer | Cloud Operations | Platform Reliability";
+    designationEl.innerText = "AWS | Azure DevOps | Linux | Windows | Docker | Monitoring";
+  }
+  const valuePropEl = document.getElementById("hero-value-prop-label");
+  if (valuePropEl && portfolioData.personalInfo && portfolioData.personalInfo.summary) {
+    valuePropEl.innerText = portfolioData.personalInfo.summary;
   }
   const avatarEl = document.getElementById("avatar-preview-img");
   if (avatarEl && portfolioData.personalInfo.avatarUrl) {
@@ -292,6 +296,10 @@ function setupScrollObserver() {
 }
 
 function animateCounter(element, target, suffix) {
+  if (target === 0) {
+    element.innerText = formatCounterValue(0, suffix);
+    return;
+  }
   let count = 0;
   const duration = 1200; // ms
   const frameRate = 1000 / 60; // 60 FPS
@@ -314,13 +322,14 @@ function animateCounter(element, target, suffix) {
 }
 
 function formatCounterValue(val, suffix) {
-  if (suffix === "%") {
-    return val.toFixed(3) + suffix;
+  const suf = suffix || "";
+  if (suf === "%") {
+    return val.toFixed(3) + suf;
   }
   if (val >= 1000) {
-    return Math.floor(val / 1000) + "k" + suffix;
+    return Math.floor(val / 1000) + "k" + suf;
   }
-  return Math.floor(val) + suffix;
+  return Math.floor(val) + suf;
 }
 
 function renderSkills() {
@@ -361,28 +370,56 @@ function renderSkills() {
 
 function getTechSVG(tech) {
   const normalized = tech.toLowerCase().trim();
+  const awsSvg = `<svg viewBox="0 0 24 24" width="13" height="13" fill="#FF9900"><path d="M12.4 15.6c-.9.2-2.1.3-3 .3-2.6 0-3.9-1.2-3.9-2.9 0-2.3 2.2-3.4 5.9-3.4h1v-.5c0-1-.5-1.7-1.9-1.7-1.1 0-2.2.4-2.8.8l-.5-1.3c.9-.6 2.3-1 3.7-1 2.5 0 3.7 1.3 3.7 3.5v4.5c0 1.1.4 1.7.8 2.1h-2l-.2-.8zm-1-4.8c-2.2 0-3.6.5-3.6 1.8 0 1 .8 1.5 2.1 1.5.9 0 1.8-.3 2.2-.9.3-.4.3-.8.3-1.1v-1.3h-1zM22 13.9c0 2-1.7 3.7-4 3.7a6.2 6.2 0 0 1-3.6-1.1l.8-1.2c.8.6 1.8.9 2.7.9 1.4 0 2.2-.8 2.2-1.8 0-2.3-4-1.6-4-4.5 0-1.8 1.4-3.3 3.6-3.3 1.2 0 2.3.4 3 .9l-.7 1.3c-.6-.4-1.4-.7-2.2-.7-1.2 0-1.8.7-1.8 1.5 0 2.2 4 1.4 4 4.5zM1.8 15.6l5.7-8.3h1.8l-4.7 6.6 4.9 5.2H7.6l-4.2-4.6-1.6 2.1v2.5H0V4.2h1.8v11.4z"/></svg>`;
+  const gcpSvg = `<svg viewBox="0 0 24 24" width="13" height="13"><path d="M19.35 10.04C18.67 6.59 15.64 4 12 4 9.11 4 6.6 5.64 5.35 8.04 2.34 8.36 0 10.91 0 14c0 3.31 2.69 6 6 6h13c2.76 0 5-2.24 5-5 0-2.64-2.05-4.78-4.65-4.96z" fill="#4285F4"/></svg>`;
+  const dockerSvg = `<svg viewBox="0 0 24 24" width="13" height="13" fill="#2496ED"><path d="M13.983 11.078h2.119v-2.006h-2.119v2.006zm-2.817 0h2.119v-2.006h-2.119v2.006zm-2.787 0h2.119v-2.006h-2.119v2.006zm-2.817 0h2.119v-2.006h-2.119v2.006zm-2.817 0h2.12v-2.006h-2.12v2.006zm11.238-2.684h2.119V6.388h-2.119v2.006zm-2.817 0h2.119V6.388h-2.119v2.006zm-2.787 0h2.119V6.388h-2.119v2.006zm-2.817 0h2.119V6.388h-2.119v2.006zm14.025.678c-.287.054-.537.156-.75.309a4.83 4.83 0 0 0-.256-.474 4.545 4.545 0 0 0-.585-.77c-.506-.525-1.127-.852-1.85-.975v-.868H2.186v6.02h18.232c.594-.21 1.053-.559 1.378-1.045.326-.486.488-1.07.488-1.75 0-.295-.084-.664-.251-1.106-.168-.442-.429-.691-.784-.747z"/></svg>`;
+  const nginxSvg = `<svg viewBox="0 0 24 24" width="13" height="13" fill="#009639"><path d="M12 2L2 12l10 10 10-10L12 2zm-1.8 14.5H8.6V9.4h1.6v7.1zm5.2 0h-1.6l-3.2-4.9v4.9H9V9.4h1.6l3.2 4.9V9.4h1.6v7.1z"/></svg>`;
+  const promSvg = `<svg viewBox="0 0 24 24" width="13" height="13" fill="#e6522c"><path d="M12 2C8 6 6 9 6 12s3 6 6 6 6-3 6-6-2-6-6-10z"/></svg>`;
+  const grafanaSvg = `<svg viewBox="0 0 24 24" width="13" height="13" fill="#f47a20"><path d="M12 2L2 22h20L12 2z"/><circle cx="12" cy="14" r="4" fill="#ffffff"/></svg>`;
+  const azureSvg = `<svg viewBox="0 0 24 24" width="13" height="13" fill="#0078D4"><path d="M0 8.5l6.5-6.5h7.5l-5.5 5.5 5.5 5.5h-7.5z"/></svg>`;
+  const gitSvg = `<svg viewBox="0 0 24 24" width="13" height="13" fill="#F05032"><path d="M19 13.5a2.5 2.5 0 0 0-2.06 1.09l-4.53-2.27a2.5 2.5 0 0 0 0-1.64l4.53-2.27a2.5 2.5 0 1 0-.9-.79l-4.52 2.26a2.5 2.5 0 1 0 0 3.32l4.52 2.26c.21-.49.59-.88 1.06-1.12a2.5 2.5 0 1 0 1.43-.87z"/></svg>`;
+  const githubSvg = `<svg viewBox="0 0 24 24" width="13" height="13" fill="#f0f6fc"><path d="M12 2A10 10 0 0 0 2 12c0 4.42 2.87 8.17 6.84 9.5.5.08.66-.23.66-.5v-1.69c-2.77.6-3.36-1.34-3.36-1.34-.46-1.16-1.11-1.47-1.11-1.47-.9-.62.07-.6.07-.6 1 .07 1.53 1.03 1.53 1.03.9 1.52 2.34 1.07 2.91.83.1-.65.35-1.09.63-1.34-2.22-.25-4.55-1.11-4.55-4.92 0-1.11.38-2 1.03-2.71-.1-.25-.45-1.29.1-2.64 0 0 .84-.27 2.75 1.02.79-.22 1.65-.33 2.5-.33.85 0 1.71.11 2.5.33 1.91-1.29 2.75-1.02 2.75-1.02.55 1.35.2 2.39.1 2.64.65.71 1.03 1.6 1.03 2.71 0 3.82-2.34 4.66-4.57 4.91.36.31.69.92.69 1.85V21c0 .27.16.59.67.5C19.14 20.16 22 16.42 22 12A10 10 0 0 0 12 2z"/></svg>`;
+
   const logoSVGs = {
-    "aws": `<svg viewBox="0 0 24 24" width="13" height="13" fill="#FF9900"><path d="M12.4 15.6c-.9.2-2.1.3-3 .3-2.6 0-3.9-1.2-3.9-2.9 0-2.3 2.2-3.4 5.9-3.4h1v-.5c0-1-.5-1.7-1.9-1.7-1.1 0-2.2.4-2.8.8l-.5-1.3c.9-.6 2.3-1 3.7-1 2.5 0 3.7 1.3 3.7 3.5v4.5c0 1.1.4 1.7.8 2.1h-2l-.2-.8zm-1-4.8c-2.2 0-3.6.5-3.6 1.8 0 1 .8 1.5 2.1 1.5.9 0 1.8-.3 2.2-.9.3-.4.3-.8.3-1.1v-1.3h-1zM22 13.9c0 2-1.7 3.7-4 3.7a6.2 6.2 0 0 1-3.6-1.1l.8-1.2c.8.6 1.8.9 2.7.9 1.4 0 2.2-.8 2.2-1.8 0-2.3-4-1.6-4-4.5 0-1.8 1.4-3.3 3.6-3.3 1.2 0 2.3.4 3 .9l-.7 1.3c-.6-.4-1.4-.7-2.2-.7-1.2 0-1.8.7-1.8 1.5 0 2.2 4 1.4 4 4.5zM1.8 15.6l5.7-8.3h1.8l-4.7 6.6 4.9 5.2H7.6l-4.2-4.6-1.6 2.1v2.5H0V4.2h1.8v11.4z"/></svg>`,
-    "google cloud platform": `<svg viewBox="0 0 24 24" width="13" height="13"><path d="M19.35 10.04C18.67 6.59 15.64 4 12 4 9.11 4 6.6 5.64 5.35 8.04 2.34 8.36 0 10.91 0 14c0 3.31 2.69 6 6 6h13c2.76 0 5-2.24 5-5 0-2.64-2.05-4.78-4.65-4.96z" fill="#4285F4"/></svg>`,
+    "aws": awsSvg,
+    "aws cli": awsSvg,
+    "ec2": awsSvg,
+    "gcp": gcpSvg,
+    "google cloud platform": gcpSvg,
     "windows server": `<svg viewBox="0 0 24 24" width="13" height="13" fill="#0078D7"><path d="M0 3.449L9.75 2.1v9.45H0V3.449zM0 12.45h9.75v9.45L0 20.551v-8.1zM10.8 1.95L24 0v11.55H10.8V1.95zm0 10.5H24v11.55l-13.2-1.95v-9.6z"/></svg>`,
     "linux": `<svg viewBox="0 0 24 24" width="13" height="13" fill="#FFD43B"><path d="M12 2a5 5 0 0 0-5 5c0 1.3.5 2.5 1.3 3.4C6 11.2 4 13.4 4 16c0 2 2 3 4 3h8c2 0 4-1 4-3 0-2.6-2-4.8-4.3-5.6.8-.9 1.3-2.1 1.3-3.4a5 5 0 0 0-5-5z"/></svg>`,
+    "ubuntu/linux": `<svg viewBox="0 0 24 24" width="13" height="13" fill="#e95420"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="5" fill="#ffffff"/></svg>`,
+    "docker": dockerSvg,
+    "docker compose": dockerSvg,
+    "nginx": nginxSvg,
+    "reverse proxy": nginxSvg,
     "asp.net": `<svg viewBox="0 0 24 24" width="13" height="13" fill="#512BD4"><circle cx="12" cy="12" r="10"/><path d="M7 12h10" stroke="#ffffff" stroke-width="2"/></svg>`,
-    ".net 9": `<svg viewBox="0 0 24 24" width="13" height="13" fill="#512BD4"><circle cx="12" cy="12" r="10"/><path d="M7 12h10" stroke="#ffffff" stroke-width="2"/></svg>`,
+    "asp.net/.net framework": `<svg viewBox="0 0 24 24" width="13" height="13" fill="#512BD4"><circle cx="12" cy="12" r="10"/><path d="M7 12h10" stroke="#ffffff" stroke-width="2"/></svg>`,
+    ".net": `<svg viewBox="0 0 24 24" width="13" height="13" fill="#512BD4"><circle cx="12" cy="12" r="10"/><path d="M7 12h10" stroke="#ffffff" stroke-width="2"/></svg>`,
+    "iis": `<svg viewBox="0 0 24 24" width="13" height="13" fill="#0078d4"><rect x="2" y="2" width="20" height="20" rx="4"/><rect x="5" y="6" width="14" height="3" fill="#ffffff"/><rect x="5" y="11" width="14" height="3" fill="#ffffff"/><rect x="5" y="16" width="14" height="3" fill="#ffffff"/></svg>`,
     "microsoft iis": `<svg viewBox="0 0 24 24" width="13" height="13" fill="#0078d4"><rect x="2" y="2" width="20" height="20" rx="4"/><rect x="5" y="6" width="14" height="3" fill="#ffffff"/><rect x="5" y="11" width="14" height="3" fill="#ffffff"/><rect x="5" y="16" width="14" height="3" fill="#ffffff"/></svg>`,
     "java": `<svg viewBox="0 0 24 24" width="13" height="13" fill="#EA2D42"><path d="M2 19.5c0 .8 2.5 1.5 5.5 1.5s5.5-.7 5.5-1.5c0-.6-1.5-1.2-4-1.4.3-.3.6-.6.8-1 1.7-.3 3.2-1.2 3.2-2.6 0-2-2.5-2.5-3-4 .5-1 .5-2 0-3-.5 1-1.5 1.5-2 2-.5.5-1 1-1 2 0 1.2 1 2 2.5 2.5-.2.4-.5.8-.8 1.2-2 .2-3.7.8-3.7 1.8zm5.5-9.3c.4-.2.8-.5 1-.8-.2.3-.5.6-1 .8zm.2 4.3c-.7-.2-1.2-.6-1.2-1.1 0-.6.7-.9 1.5-.9.7 0 1.2.3 1.2.9 0 .5-.6.9-1.5 1.1z"/></svg>`,
-    "node.js": `<svg viewBox="0 0 24 24" width="13" height="13" fill="#339933"><path d="M12 2L2 7.7v11.6L12 22l10-2.7V7.7L12 2zm8 16.3l-8 2.2-8-2.2V8.9l8-2.2 8 2.2v9.4z"/></svg>`,
-    "golang integration": `<svg viewBox="0 0 24 24" width="13" height="13" fill="#00ADD8"><circle cx="12" cy="12" r="10"/><text x="12" y="15.5" font-family="sans-serif" font-weight="bold" font-size="10" fill="#ffffff" text-anchor="middle">Go</text></svg>`,
-    "prometheus": `<svg viewBox="0 0 24 24" width="13" height="13" fill="#e6522c"><path d="M12 2C8 6 6 9 6 12s3 6 6 6 6-3 6-6-2-6-6-10z"/></svg>`,
-    "grafana": `<svg viewBox="0 0 24 24" width="13" height="13" fill="#f47a20"><path d="M12 2L2 22h20L12 2z"/><circle cx="12" cy="14" r="4" fill="#ffffff"/></svg>`,
-    "windows exporter": `<svg viewBox="0 0 24 24" width="13" height="13"><rect x="3" y="3" width="18" height="18" rx="2" fill="none" stroke="#0078D7" stroke-width="1.5"/><line x1="9" y1="17" x2="9" y2="10" stroke="#0078D7" stroke-width="1.5"/><line x1="15" y1="17" x2="15" y2="7" stroke="#0078D7" stroke-width="1.5"/></svg>`,
+    "golang": `<svg viewBox="0 0 24 24" width="13" height="13" fill="#00ADD8"><circle cx="12" cy="12" r="10"/><text x="12" y="15.5" font-family="sans-serif" font-weight="bold" font-size="10" fill="#ffffff" text-anchor="middle">Go</text></svg>`,
+    "react": `<svg viewBox="0 0 24 24" width="13" height="13" fill="#61DAFB"><circle cx="12" cy="12" r="2.5"/><ellipse cx="12" cy="12" rx="10" ry="4" fill="none" stroke="#61DAFB" stroke-width="1.2"/><ellipse cx="12" cy="12" rx="10" ry="4" transform="rotate(60 12 12)" fill="none" stroke="#61DAFB" stroke-width="1.2"/><ellipse cx="12" cy="12" rx="10" ry="4" transform="rotate(120 12 12)" fill="none" stroke="#61DAFB" stroke-width="1.2"/></svg>`,
+    "vite": `<svg viewBox="0 0 24 24" width="13" height="13" fill="#646CFF"><path d="M21.5 3.5L12 22 2.5 3.5h19z"/></svg>`,
+    "sql server": `<svg viewBox="0 0 24 24" width="13" height="13" fill="#CC292B"><rect x="3" y="3" width="18" height="18" rx="3"/><path d="M7 8h10M7 12h10M7 16h10" stroke="#ffffff" stroke-width="1.5"/></svg>`,
+    "prometheus": promSvg,
+    "promql": promSvg,
+    "node_exporter": promSvg,
+    "windows_exporter": promSvg,
+    "grafana": grafanaSvg,
     "powershell": `<svg viewBox="0 0 24 24" width="13" height="13" fill="#5391FE"><path d="M2 18.2l7-6.2-7-6.2H7l7 6.2-7 6.2H2zm8 0h12v-2H10v2z"/></svg>`,
-    "python": `<svg viewBox="0 0 24 24" width="13" height="13" fill="#3776AB"><path d="M11.9 2c-2.7 0-4.9 2.2-4.9 4.9v1.9h9.8V6.9C16.8 4.2 14.6 2 11.9 2z"/></svg>`,
     "bash": `<svg viewBox="0 0 24 24" width="13" height="13"><rect x="2" y="3" width="20" height="18" rx="2" fill="none" stroke="#4EAA25" stroke-width="1.5"/><path d="M8 8l4 4-4 4M15 15h3" stroke="#4EAA25" stroke-width="1.5"/></svg>`,
-    "azure devops": `<svg viewBox="0 0 24 24" width="13" height="13" fill="#0078D4"><path d="M0 8.5l6.5-6.5h7.5l-5.5 5.5 5.5 5.5h-7.5z"/></svg>`,
-    "git": `<svg viewBox="0 0 24 24" width="13" height="13" fill="#F05032"><path d="M19 13.5a2.5 2.5 0 0 0-2.06 1.09l-4.53-2.27a2.5 2.5 0 0 0 0-1.64l4.53-2.27a2.5 2.5 0 1 0-.9-.79l-4.52 2.26a2.5 2.5 0 1 0 0 3.32l4.52 2.26c.21-.49.59-.88 1.06-1.12a2.5 2.5 0 1 0 1.43-.87z"/></svg>`,
-    "github": `<svg viewBox="0 0 24 24" width="13" height="13" fill="#f0f6fc"><path d="M12 2A10 10 0 0 0 2 12c0 4.42 2.87 8.17 6.84 9.5.5.08.66-.23.66-.5v-1.69c-2.77.6-3.36-1.34-3.36-1.34-.46-1.16-1.11-1.47-1.11-1.47-.9-.62.07-.6.07-.6 1 .07 1.53 1.03 1.53 1.03.9 1.52 2.34 1.07 2.91.83.1-.65.35-1.09.63-1.34-2.22-.25-4.55-1.11-4.55-4.92 0-1.11.38-2 1.03-2.71-.1-.25-.45-1.29.1-2.64 0 0 .84-.27 2.75 1.02.79-.22 1.65-.33 2.5-.33.85 0 1.71.11 2.5.33 1.91-1.29 2.75-1.02 2.75-1.02.55 1.35.2 2.39.1 2.64.65.71 1.03 1.6 1.03 2.71 0 3.82-2.34 4.66-4.57 4.91.36.31.69.92.69 1.85V21c0 .27.16.59.67.5C19.14 20.16 22 16.42 22 12A10 10 0 0 0 12 2z"/></svg>`
+    "shell scripting": `<svg viewBox="0 0 24 24" width="13" height="13"><rect x="2" y="3" width="20" height="18" rx="2" fill="none" stroke="#4EAA25" stroke-width="1.5"/><path d="M8 8l4 4-4 4M15 15h3" stroke="#4EAA25" stroke-width="1.5"/></svg>`,
+    "azure devops": azureSvg,
+    "tfs": azureSvg,
+    "git": gitSvg,
+    "github": githubSvg,
+    "github actions": githubSvg,
+    "gitlab": `<svg viewBox="0 0 24 24" width="13" height="13" fill="#FC6D26"><path d="m23.6 9.6-1.5-4.6c-.2-.5-.8-.7-1.3-.4l-1.4 1-3.6-11c-.2-.6-.9-.6-1.1 0l-3.6 11-6.1-4.4c-.5-.3-1.1-.1-1.3.4L.4 9.6c-.3.8 0 1.7.7 2.2l10.9 8c.5.4 1.1.4 1.6 0l10.9-8c.7-.5 1-1.4.7-2.2z"/></svg>`,
+    "jenkins": `<svg viewBox="0 0 24 24" width="13" height="13" fill="#D24939"><circle cx="12" cy="12" r="10"/><path d="M7 13h10v2H7z" fill="#ffffff"/></svg>`
   };
-  return logoSVGs[normalized] || `<i data-lucide="check" style="width:12px; height:12px; color:var(--text-muted); flex-shrink:0;"></i>`;
+  return logoSVGs[normalized] || `<i data-lucide="check-circle" style="width:12px; height:12px; color:var(--text-muted); flex-shrink:0;"></i>`;
 }
 
 function triggerSkillAnimations() {
@@ -931,16 +968,16 @@ function initHeroRotator() {
   const summaryEl = document.getElementById("hero-summary-label");
   if (!summaryEl) return;
   const terms = [
-    "Production Engineering",
-    "DevOps",
+    "DevOps Engineer",
     "Site Reliability",
-    "Cloud Operations",
-    "Monitoring",
-    "Observability",
-    "Automation",
-    "CI/CD",
-    "Containerization",
-    "Application Engineering"
+    "Production Operations",
+    "Cloud Infrastructure",
+    "Monitoring & Observability",
+    "Prometheus & Grafana",
+    "Docker Containers",
+    "IIS & Nginx Routing",
+    "Operational Automation",
+    "Disaster Recovery"
   ];
   let termIndex = 0;
   summaryEl.style.transition = "opacity 0.4s ease-in-out";

@@ -3,29 +3,29 @@ if (typeof portfolioData === 'undefined') {
 }
 
 portfolioData.recruiterInfo = {
-  role: "Application Support Engineer",
+  role: "DevOps Engineer | Site Reliability Engineer",
   experience: "3+ Years",
   clientExposure: "10+ Client Environments",
-  expertise: "Production Support & Cloud Operations",
+  expertise: "Production Operations & Cloud Infrastructure",
   availability: "Active & Open to Opportunities",
   location: "Bangalore, India",
-  resumeDownloadUrl: "#"
+  resumeDownloadUrl: "assets/documents/Sudharsan_S_DevOps_SRE_Resume.pdf"
 };
 
 portfolioData.coreFocus = {
   applicationEngineering: [
+    "Production Operations",
     "Application Deployment",
-    "Production Support",
     "Release Validation",
-    "Application Monitoring",
-    "Incident Resolution"
+    "Incident Management & RCA",
+    "IIS & Nginx Reverse Proxy"
   ],
   systemEngineering: [
-    "Windows Administration",
-    "Linux Administration",
-    "Cloud Operations",
-    "Infrastructure Monitoring",
-    "Automation"
+    "Windows & Linux Administration",
+    "AWS & GCP Cloud Operations",
+    "Prometheus & Grafana Observability",
+    "PowerShell & Bash Automation",
+    "Disaster Recovery Drills"
   ]
 };
 
@@ -37,32 +37,36 @@ portfolioData.blogs = [
     date: "June 10, 2026",
     readTime: "7 min read",
     summary: "A practical guide to configuring IIS recycling limits and validating application pool health during high-traffic banking periods.",
-    content: `## The Challenge of Uncontrolled Memory Growth in .NET Applications
+    content: `## Managing Application Availability in Production IIS Environments
 
-In enterprise IIS environments, legacy .NET applications can suffer from memory fragmentation and leaks. Left unmonitored, this causes high system pagefile usage, request queuing, and eventual 503 Service Unavailable errors.
+In enterprise IIS environments, monolithic .NET Framework applications can experience memory growth and thread locking during high transaction intervals. Left unmonitored, this causes high system pagefile usage, request queuing, and eventual HTTP 503 errors.
 
 ### Configuring Optimal IIS Recycling Rules
 
-Rather than relying on the default 29-hour interval, which can occur during peak business hours, we implemented a scheduled pool recycling strategy combined with PowerShell monitoring scripts:
+Rather than relying on default intervals which can trigger recycles during peak business activity, we implement structured pool recycling policies paired with PowerShell health diagnostics:
 
 \`\`\`powershell
-# Recycle IIS Application Pool dynamically if private memory limits are exceeded
+# Check memory thresholds and validate IIS application pool state
 Import-Module WebAdministration
-$poolName = "BankingServicesPool"
+$poolName = "FintechAppPool"
 $limitKB = 2097152 # 2GB Limit
 
-$privateMem = (Get-Process -Id (Get-WmiObject -Query "SELECT * FROM Win32_Process WHERE Name='w3p.exe' AND CommandLine LIKE '*$poolName*'").ProcessId).PrivateMemorySize64 / 1024
+$workerProcess = Get-CimInstance Win32_Process -Filter "Name='w3wp.exe'" | 
+    Where-Object { $_.CommandLine -like "*$poolName*" }
 
-if ($privateMem -gt $limitKB) {
-    Write-Output "Memory threshold exceeded ($privateMem KB). Recycling application pool..."
-    Restart-WebAppPool -Name $poolName
+if ($workerProcess) {
+    $privateMem = $workerProcess.WorkingSetSize / 1KB
+    if ($privateMem -gt $limitKB) {
+        Write-Output "Memory threshold exceeded ($privateMem KB). Recycling application pool..."
+        Restart-WebAppPool -Name $poolName
+    }
 }
 \`\`\`
 
 #### Key Takeaways:
-1. **Never recycle during peak hours:** Align scheduled recycles with low-activity intervals.
-2. **Monitor Private Bytes:** Set alerts at 80% of host RAM capacity.
-3. **Log recycling events:** Ensure IIS log configuration includes recycle reasons for post-incident analysis.`
+1. **Recycle Window Discipline:** Schedule maintenance recycles strictly during low-volume maintenance windows.
+2. **Monitor Private Bytes:** Set Prometheus alerts when worker pool memory usage approaches 80% threshold.
+3. **Analyze HTTP Sub-status Codes:** Use IIS W3C logs to distinguish between thread starvation (503.2) and pool shutdowns (503.0).`
   },
   {
     id: "blog-windows-observability",
@@ -70,64 +74,71 @@ if ($privateMem -gt $limitKB) {
     category: "Observability",
     date: "May 22, 2026",
     readTime: "6 min read",
-    summary: "Learn how to collect local OS metrics, event logs, and IIS pool status into a unified Grafana console for SRE teams.",
+    summary: "Collecting OS metrics, event logs, and IIS application pool telemetry into a unified Grafana console.",
     content: `## Bridging the Observability Gap on Windows Server
 
-While Prometheus has native collectors for Linux (node_exporter), Windows environments require specialized metrics collection. The Prometheus community's **windows_exporter** extracts OS, CPU, memory, network, and IIS web metrics.
+While node_exporter serves as the standard for Linux environments, Windows servers require windows_exporter to capture CPU, memory, network, and IIS web metrics.
 
 ### Step-by-Step Configuration
 
-1. **Install windows_exporter as a Service:** Deployed on hosts using PowerShell with the IIS collector enabled:
+1. **Install windows_exporter Service:** Deploy on target hosts with required collectors enabled:
 
 \`\`\`powershell
-# Install Windows Exporter with IIS enabled
-msiexec.exe /i windows_exporter-0.22.0-amd64.msi ENABLED_COLLECTORS="cpu,memory,net,os,iis"
+# Install Windows Exporter with IIS and OS collectors enabled
+msiexec.exe /i windows_exporter-0.22.0-amd64.msi ENABLED_COLLECTORS="cpu,memory,net,os,iis,logical_disk"
 \`\`\`
 
 2. **Scrape target in prometheus.yml:**
 
 \`\`\`yaml
 scrape_configs:
-  - job_name: 'windows-servers'
+  - job_name: 'windows-infrastructure'
+    scrape_interval: 15s
     static_configs:
       - targets: ['10.10.1.25:9182']
+        labels:
+          environment: 'production'
+          tier: 'web'
 \`\`\`
 
-#### Essential Metrics to Alert On:
-- \`windows_iis_requests_total\`: Monitors active load.
-- \`windows_cpu_time_total\`: Tracks overall CPU utilization.
-- \`windows_logical_disk_free_bytes\`: Triggers critical alerts when storage falls below 15%.`
+#### Essential PromQL Queries to Alert On:
+- \`windows_iis_requests_total\`: Tracks request throughput and volume spikes.
+- \`100 - (avg by (instance) (rate(windows_cpu_time_total{mode="idle"}[2m])) * 100)\`: Real-time host CPU utilization.
+- \`windows_logical_disk_free_bytes / windows_logical_disk_size_bytes * 100 < 15\`: Storage warning threshold.`
   },
   {
     id: "blog-disaster-recovery",
-    title: "Designing a Structured Disaster Recovery Validation Playbook",
+    title: "Executing Structured Disaster Recovery Drills with Zero Critical Deviations",
     category: "Reliability",
     date: "April 15, 2026",
     readTime: "8 min read",
-    summary: "Best practices for planning, executing, and documenting DR drills across cloud environments with zero transaction failures.",
-    content: `## Business Continuity is Not an Option
+    summary: "Operational practices for planning, coordinating, and validating DR drills across cloud and hybrid environments.",
+    content: `## Operational Discipline in Business Continuity
 
-For critical applications, a disaster recovery (DR) strategy is only as good as its last successful drill. Many organizations fail to replicate stateful resources, leading to data loss during actual incidents.
+For business-critical fintech platforms, Disaster Recovery readiness requires regular, structured drills to validate that recovery time objectives (RTO) and recovery point objectives (RPO) hold in practice.
 
-### Key Pillars of DR Validation:
+### Key Pillars of Successful DR Drills:
 
-1. **Structured Drills:** Set up active-passive replication to a standby region.
-2. **Connectivity Validation:** Verify VPN tunnels, DNS latency routing, and firewall rules between clients and the recovery nodes.
-3. **Automated Sanity Testing:** Run PowerShell checkbooks to verify service health immediately after database failover.
+1. **Structured Scenario Planning:** Define active-passive failover sequences across AWS, GCP, and on-premises environments.
+2. **Connectivity & DNS Validation:** Verify VPN tunnels, routing policies, and firewall configurations between clients and recovery sites.
+3. **Automated Sanity Testing:** Execute automated validation scripts to test database connectivity, application endpoint responses, and service health immediately following switchover.
 
 \`\`\`powershell
-# Validate backend DB replication status and database connectivity
-$connectionString = "Server=dr-db-server;Database=BankingProd;User Id=sre_monitor;Password=secure_pass;"
-$connection = New-Object System.Data.SqlClient.SqlConnection($connectionString)
+# Automated post-failover connectivity check for target database
+$dbServer = "dr-db-replica.internal"
+$database = "FintechCore"
+$connString = "Server=$dbServer;Database=$database;Integrated Security=True;Connection Timeout=10;"
+$conn = New-Object System.Data.SqlClient.SqlConnection($connString)
+
 try {
-    $connection.Open()
+    $conn.Open()
     Write-Output "DR Database connectivity: SUCCESS"
-    $connection.Close()
+    $conn.Close()
 } catch {
-    Write-Error "DR Database connectivity: FAILED. Check replication logs."
+    Write-Error "DR Database connectivity FAILED: $($_.Exception.Message)"
 }
 \`\`\`
 
-By standardizing these validation scripts, we executed successful DR drills across 7+ client setups with zero data loss or service execution errors.`
+By applying standard validation checklists and automated checks, we executed 10+ DR drills across client setups with zero critical deviations.`
   }
 ];

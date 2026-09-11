@@ -6,55 +6,55 @@ portfolioData.certifications = [
   {
     id: "highlight-prod-eng",
     name: "Production Engineering",
-    issuer: "Maintained 99.99% application availability by executing automated release checkouts.",
-    icon: "git-pull-request"
-  },
-  {
-    id: "highlight-app-reliability",
-    name: "Application Reliability",
-    issuer: "Optimized server resource parameters, reducing worker pool crashes and response latency.",
-    icon: "shield"
-  },
-  {
-    id: "highlight-monitoring",
-    name: "Monitoring & Observability",
-    issuer: "Established telemetry alerts and status dashboards to identify system anomalies proactively.",
-    icon: "activity"
-  },
-  {
-    id: "highlight-automation",
-    name: "Infrastructure Automation",
-    issuer: "Reduced administrative overhead by writing scripts for resource auditing and storage cleanup.",
-    icon: "terminal"
-  },
-  {
-    id: "highlight-cloud-ops",
-    name: "Cloud Operations",
-    issuer: "Managed virtual machines, firewall rules, and cloud scaling to optimize host configurations.",
-    icon: "cloud"
-  },
-  {
-    id: "highlight-incident-mgmt",
-    name: "Incident Management",
-    issuer: "Led active incident response triage and executed structured root cause analysis.",
-    icon: "alert-triangle"
-  },
-  {
-    id: "highlight-service-availability",
-    name: "Service Availability",
-    issuer: "Maintained platform SLA metrics through proactive health audits and performance tuning.",
-    icon: "check-circle"
+    issuer: "Engineered and maintained monolithic ASP.NET applications on IIS 10 and Windows Server.",
+    icon: "server"
   },
   {
     id: "highlight-dr",
     name: "Disaster Recovery",
-    issuer: "Validated business continuity compliance by executing mock failover drills.",
+    issuer: "Executed 10+ DR drills across SaaS and enterprise apps with zero critical deviations.",
     icon: "refresh-cw"
   },
   {
+    id: "highlight-observability",
+    name: "Observability & PromQL",
+    issuer: "Built Prometheus and Grafana dashboards with custom exporters and PromQL queries.",
+    icon: "activity"
+  },
+  {
+    id: "highlight-automation",
+    name: "Operational Automation",
+    issuer: "Automated application and process-management tasks using PowerShell and Bash scripts.",
+    icon: "terminal"
+  },
+  {
+    id: "highlight-cloud-ops",
+    name: "Multi-Cloud Infrastructure",
+    issuer: "Managed regional client compute, networking, and environments across AWS and GCP.",
+    icon: "cloud"
+  },
+  {
+    id: "highlight-reverse-proxy",
+    name: "Reverse Proxy & Security",
+    issuer: "Designed IIS deployment routing with Nginx, WAF/ModSecurity, and HTTPS/TLS.",
+    icon: "shield"
+  },
+  {
+    id: "highlight-incident-mgmt",
+    name: "Incident Triage & RCA",
+    issuer: "Conducted root cause analysis on application, SQL Server, and networking incidents.",
+    icon: "alert-triangle"
+  },
+  {
     id: "highlight-release-eng",
-    name: "Release Engineering",
-    issuer: "Standardized deployment release cycles, eliminating manual verification checks.",
-    icon: "settings"
+    name: "Release Management",
+    issuer: "Managed application deployment verification and release workflows across environments.",
+    icon: "git-pull-request"
+  },
+  {
+    id: "highlight-dual-os",
+    name: "Linux & Windows Systems",
+    issuer: "Administered heterogeneous server fleets, services, and log analysis for fintech platforms.",
+    icon: "cpu"
   }
 ];

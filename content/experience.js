@@ -5,37 +5,40 @@ if (typeof portfolioData === 'undefined') {
 portfolioData.experience = [
   {
     company: "Craft Silicon",
-    role: "Site Reliability Engineer",
+    role: "System Administrator E2",
     duration: "Feb 2025 – Present",
     responsibilities: [
-      "Managed production deployments, release validations, and rollback support for business-critical SaaS and enterprise applications.",
-      "Configured web hosting parameters across 10+ isolated client environments in Windows and Linux, securing 99.9% availability.",
-      "Collaborated with Development, QA, and Infrastructure teams to coordinate deployment checkouts and config change controls.",
-      "Deployed centralized monitoring dashboards to establish real-time host observability and trace system resource bottlenecks.",
-      "Led active incident response triage and performed root cause analysis (RCA) to restore degraded services.",
-      "Authored PowerShell and shell script automation to audit configurations and eliminate repetitive manual toil."
+      "Engineer and maintain production application environments, including deployments, configuration, monitoring, and availability for monolithic ASP.NET/.NET Framework applications.",
+      "Manage IIS 10 and Windows Server including application pools, runtime configuration, deployment validation, HTTP troubleshooting, and application health.",
+      "Execute Disaster Recovery drills across SaaS and enterprise applications, validating infrastructure recovery, application availability, failover procedures, and service restoration.",
+      "Manage regional client infrastructure across AWS and GCP, including compute, networking, connectivity, and environment-specific configuration.",
+      "Design and maintain Prometheus/Grafana monitoring for Windows and Linux infrastructure using exporters and PromQL.",
+      "Design and maintain IIS deployment architecture using Nginx as a reverse proxy for request routing, web-tier security, and application traffic management.",
+      "Troubleshoot Nginx, WAF/ModSecurity, load balancing, DNS, HTTPS/TLS, SQL Server, application, and infrastructure issues.",
+      "Automate application and process-management tasks using PowerShell and Bash."
     ],
     achievements: [
-      "Reduced system MTTR by establishing automated alert policies and telemetry metrics dashboards.",
-      "Accelerated post-deployment verification cycles using custom check scripting pipelines.",
-      "Validated disaster recovery readiness by coordinating active-passive failover mock drills across multiple client environments."
+      "Executed 10+ Disaster Recovery drills across SaaS and enterprise applications with zero critical deviations during recovery validation.",
+      "Engineered Prometheus and Grafana monitoring covering Windows and Linux infrastructure with custom exporters and PromQL queries.",
+      "Automated application configuration audits and routine operational tasks using PowerShell and Bash scripts."
     ],
-    businessImpact: "Ensured high service availability, regulatory compliance, and smooth deployment cycles for business-critical SaaS and enterprise platforms by establishing proactive monitoring and cross-team collaboration."
+    businessImpact: "Ensured high availability, deployment integrity, and disaster recovery readiness for business-critical fintech and SaaS platforms across on-premises, AWS, and GCP environments."
   },
   {
     company: "Wikiprospects",
-    role: "IT Administrator",
+    role: "System Administrator",
     duration: "May 2023 – Jan 2025",
     responsibilities: [
-      "Designed and administered directory and core network services to support enterprise host connectivity.",
-      "Configured secure network topologies, remote access tunnels, and firewall parameters.",
-      "Automated system backup routines and data archival procedures to maintain compliance."
+      "Supported Linux and Windows server environments, performing system administration, health monitoring, and server operations.",
+      "Handled application and server troubleshooting, incident diagnosis, log analysis, and root cause investigation.",
+      "Administered core network infrastructure, user permissions, and scheduled system backup routines.",
+      "Developed Bash and PowerShell scripts to automate recurring operational and administrative tasks."
     ],
     achievements: [
-      "Maintained network operations and authentication services to meet availability SLAs.",
-      "Optimized employee access provisioning to accelerate onboarding workflows.",
-      "Reduced manual operational overhead by establishing task scheduling automation."
+      "Maintained server uptime and infrastructure stability across dual-OS environments through active system monitoring and log triage.",
+      "Reduced manual administrative overhead by creating scheduled PowerShell and Bash automation scripts.",
+      "Resolved server and network connectivity incidents through structured root-cause troubleshooting."
     ],
-    businessImpact: "Built a highly performant and secure network topology, ensuring operational continuity and reducing helpdesk ticket volume."
+    businessImpact: "Supported Linux and Windows server environments, performing system administration, health monitoring, troubleshooting, log analysis, application/server operations, and recurring operational automation using Bash and PowerShell."
   }
 ];

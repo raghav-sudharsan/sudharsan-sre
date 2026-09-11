@@ -4,20 +4,21 @@ if (typeof portfolioData === 'undefined') {
 
 portfolioData.personalInfo = {
   name: "Sudharsan S",
-  designation: "Site Reliability Engineer | DevOps Engineer | Cloud Engineer",
-  summary: "Site Reliability Engineer specializing in production support, cloud operations, incident response, and infrastructure automation for business-critical SaaS and enterprise applications.",
-  bio: "Site Reliability Engineer with 3+ years of experience supporting critical SaaS and enterprise applications across 10+ client environments in Windows and Linux. I specialize in managing production deployments, executing release validations, and establishing rollback support. By optimizing cloud operations, I bridge gaps between Development, QA, and Infrastructure teams to maintain high service availability and drive operational excellence.",
-  aboutMe: "I approach systems engineering with a production-first mindset, focusing on reliability, automation, and continuous improvement. I collaborate across engineering teams to resolve operational bottlenecks, deploy proactive observability layers, and execute structured incident triage. My goal is to eliminate manual toil and ensure robust delivery pipelines.",
+  designation: "DevOps Engineer | Site Reliability Engineer",
+  summary: "DevOps/SRE-focused engineer with 3+ years of experience supporting business-critical fintech applications across production, infrastructure, deployment, monitoring, and cloud environments.",
+  bio: "I work at the intersection of application operations, infrastructure, and reliability. My experience includes supporting business-critical fintech applications across Windows and Linux environments, managing production deployments, troubleshooting application and infrastructure issues, monitoring system health, and improving operational consistency through automation.",
+  aboutMe: "My current focus is DevOps and Site Reliability Engineering, with hands-on experience across IIS, .NET, Linux, Nginx, Docker, Prometheus, Grafana, AWS, GCP, Azure DevOps, PowerShell, and Bash. I approach systems engineering with a production-first mindset, focusing on reliability, deployment integrity, and proactive observability.",
   yearsOfExperience: 3,
-  industryExpertise: "SaaS, Fintech, Banking, Enterprise IT Infrastructure",
+  industryExpertise: "Fintech, SaaS, Multi-Cloud & Enterprise Systems",
   coreStrengths: [
-    "Reliability",
-    "Automation",
-    "Observability",
-    "Performance",
-    "Availability",
-    "Continuous Improvement",
-    "Operational Excellence"
+    "Production Operations",
+    "Reliability & DR",
+    "Application Deployment",
+    "Infrastructure Operations",
+    "Monitoring & Observability",
+    "Incident Troubleshooting & RCA",
+    "Release Management",
+    "Operational Automation"
   ],
   avatarUrl: "Sudharsan_SRE.jpeg",
   socialLinks: {

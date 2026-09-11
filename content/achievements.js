@@ -4,38 +4,33 @@ if (typeof portfolioData === 'undefined') {
 
 portfolioData.achievements = [
   {
-    title: "Production Engineering",
-    description: "Supported high-availability platforms, managing release engineering rollouts and deployment validations.",
-    icon: "git-pull-request",
-    metric: "Deployments"
+    title: "Production Operations",
+    description: "Supported high-availability fintech platforms, managing IIS 10, ASP.NET application pools, runtime configurations, and deployment validations.",
+    icon: "server",
+    metric: "Production Ops"
   },
   {
-    title: "Application Reliability",
-    description: "Ensured service availability for banking workloads through automated checks and IIS recycle setups.",
-    icon: "shield",
-    metric: "Availability"
+    title: "Reliability & DR",
+    description: "Executed Disaster Recovery drills across SaaS and enterprise applications, validating infrastructure recovery, failovers, and service restoration.",
+    icon: "refresh-cw",
+    metric: "Disaster Recovery"
   },
   {
-    title: "Monitoring & Observability",
-    description: "Established comprehensive alerts and Prometheus dashboard layers across enterprise nodes.",
+    title: "Observability & Alerting",
+    description: "Engineered Prometheus and Grafana monitoring layers across Windows and Linux servers using exporters and PromQL queries for resource visibility.",
     icon: "activity",
-    metric: "Monitoring"
+    metric: "Observability"
   },
   {
-    title: "Incident Management",
-    description: "Led incident response operations, performing root cause investigations to reduce MTTR.",
-    icon: "alert-triangle",
-    metric: "Incident Triage"
+    title: "Operational Automation",
+    description: "Automated recurring system tasks, configuration audits, and process management routines using PowerShell and Bash scripts.",
+    icon: "terminal",
+    metric: "Automation"
   }
 ];
 
 portfolioData.metrics = [
-  { label: "Production Deployments", value: 80, suffix: "+" },
-  { label: "Incident Resolution", value: 50, suffix: "+" },
-  { label: "Applications Supported", value: 5, suffix: "+" },
-  { label: "Cloud Environments Managed", value: 4, suffix: "+" },
-  { label: "Monitoring Coverage", value: 100, suffix: "%" },
-  { label: "Automation Tasks", value: 15, suffix: "+" },
-  { label: "Disaster Recovery drills", value: 7, suffix: "+" },
-  { label: "Operational Improvements", value: 10, suffix: "+" }
+  { label: "Years of IT Experience", value: 3, suffix: "+" },
+  { label: "Disaster Recovery Drills", value: 10, suffix: "+" },
+  { label: "Critical Deviations During DR Validation", value: 0, suffix: "" }
 ];
