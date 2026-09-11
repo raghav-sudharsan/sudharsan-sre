@@ -4,16 +4,17 @@ if (typeof portfolioData === 'undefined') {
 
 portfolioData.projects = [
   {
-    id: "connect-i",
-    name: "Connect-i — Integration Platform",
+    id: "integration-platform",
+    name: "Integration Platform",
+    subtitle: "Containerized Application Deployment & Runtime Operations",
     category: "containerization",
     description: "Engineered deployment and runtime operations for a containerized integration platform consisting of a React frontend and Golang services running on Linux.",
     businessProblem: "Deploying multi-service integration components across varying environments caused runtime inconsistencies, port conflicts, and routing configuration errors.",
     engineeringSolution: "Implemented Docker Compose for multi-service application orchestration and configured Nginx reverse proxy with HTTPS routing and SSL/TLS termination.",
-    implementation: "Managed container networking, environment variables, and service lifecycle. Troubleshot service, database, SSL/TLS, CORS, HTTP 4xx/5xx, and container issues using application and container logs.",
-    operationalOutcome: "Standardized container runtime deployments on Linux, establishing clean service isolation, reliable API routing, and efficient operational troubleshooting.",
+    implementation: "Managed container networking, environment configuration, and service lifecycle. Configured Nginx reverse proxy and HTTPS for frontend/API routing. Troubleshot service, database, SSL/TLS, CORS, HTTP 4xx/5xx, and container issues using application and container logs.",
+    operationalOutcome: "Standardized multi-service container deployments across Linux hosts, ensuring reliable service communication, secure external access, and streamlined operational troubleshooting.",
     technologiesUsed: ["Docker", "Docker Compose", "Linux", "Nginx", "Golang", "React", "HTTPS"],
-    lessonsLearned: "Defining clear container network bridges and consolidating routing through an Nginx reverse proxy significantly simplifies operational troubleshooting and SSL certificate management.",
+    lessonsLearned: "Defining clear container network bridges and consolidating ingress through an Nginx reverse proxy simplifies service lifecycle management and cross-service debugging.",
     github: "https://github.com/raghav-sudharsan",
     liveDemo: "#",
     diagramId: "docker-architecture"
@@ -21,6 +22,7 @@ portfolioData.projects = [
   {
     id: "msme-app",
     name: "MSME — Fintech Application Deployment",
+    subtitle: "Java Application Deployment & Operations",
     category: "application",
     description: "Engineered application deployment workflows for a Java-based fintech application running on Linux, covering build artifacts, deployment, service management, and validation.",
     businessProblem: "Manual artifact handling and unstandardized release procedures led to deployment delays and runtime inconsistencies across staging and production hosts.",
@@ -36,6 +38,7 @@ portfolioData.projects = [
   {
     id: "prometheus-grafana",
     name: "Prometheus & Grafana Monitoring",
+    subtitle: "Infrastructure Observability",
     category: "observability",
     description: "Built a monitoring environment using Prometheus and Grafana for Linux and Windows infrastructure metrics.",
     businessProblem: "Heterogeneous server environments lacked centralized visibility, making it difficult to detect CPU spikes, memory leaks, and disk space exhaustion before service disruption.",
@@ -51,6 +54,7 @@ portfolioData.projects = [
   {
     id: "aws-resource-tracker",
     name: "AWS Resource Tracker",
+    subtitle: "Cloud Operations Automation",
     category: "automation",
     description: "Developed a Bash-based utility using AWS CLI to collect AWS resource information and generate operational reports.",
     businessProblem: "Manual inventory tracking of regional cloud compute, storage, and networking resources across active AWS accounts was tedious and error-prone.",
@@ -66,6 +70,7 @@ portfolioData.projects = [
   {
     id: "dr-validation",
     name: "Disaster Recovery & Failover Validation",
+    subtitle: "Enterprise Disaster Recovery & Business Continuity",
     category: "reliability",
     description: "Executed and validated Disaster Recovery drills across SaaS and enterprise applications, confirming infrastructure recovery, application availability, and failover procedures.",
     businessProblem: "Validating business continuity across enterprise client setups required structured failover execution, network verification, and zero transaction data loss.",
@@ -83,42 +88,62 @@ portfolioData.projects = [
 portfolioData.architectures = [
   {
     id: "iis-hosting",
-    title: "Enterprise Application Hosting (IIS & Nginx)",
+    title: "IIS / .NET Production Application",
     type: "iis",
-    purpose: "Provides high-availability application hosting with Nginx reverse proxying and IIS application pool lifecycle management.",
-    description: "Production IIS architecture utilizing Nginx as a reverse proxy for request routing, SSL/TLS termination, and application traffic management to monolithic ASP.NET applications.",
-    technologies: ["Nginx", "IIS 10", "ASP.NET", "Windows Server", "SQL Server", "Prometheus"],
+    tag: "Enterprise Web Tier",
+    flowSummary: "Client → Nginx (WAF & TLS) → IIS Web Tier → ASP.NET / .NET Framework → SQL Server",
+    purpose: "Delivers resilient, secure web application hosting using Nginx reverse proxying, WAF inspection, and IIS application pool lifecycle management.",
+    description: "Production IIS architecture utilizing Nginx as a reverse proxy for request routing, SSL/TLS termination, and application traffic management to monolithic ASP.NET applications on Windows Server.",
+    technologies: ["Nginx", "WAF/ModSecurity", "IIS 10", "ASP.NET", ".NET Framework", "Windows Server", "SQL Server", "Prometheus"],
     responsibilities: "Configure Nginx reverse proxy routes, manage IIS application pools and worker limits, and troubleshoot HTTP/TLS, WAF, and database connectivity.",
-    operationalNotes: "Proactive recycling limit tuning and Prometheus monitoring prevent worker process thread exhaustion during transactional spikes."
+    operationalNotes: "Proactive recycling limit tuning and Prometheus monitoring prevent worker process thread exhaustion during transactional spikes.",
+    nodes: [
+      { id: "client", label: "Client Ingress", role: "External Request Source", details: "Public clients initiating HTTPS requests over TLS 1.3." },
+      { id: "nginx", label: "Nginx & WAF", role: "Reverse Proxy & Load Balancer", details: "Terminates TLS, filters malicious payloads via ModSecurity/WAF, and balances traffic across web tiers." },
+      { id: "iis", label: "IIS 10 Web Tier", role: "Application Server Host", details: "Manages dedicated application pools, worker process recycling rules, and HTTP request pipelines." },
+      { id: "dotnet", label: "ASP.NET Framework", role: "Application Runtime", details: "Executes core fintech business logic, session handling, and backend service communication." },
+      { id: "db", label: "SQL Server", role: "Database Persistence", details: "Transactional database tier with replication and automated backup verification." },
+      { id: "prom", label: "Prometheus & Exporter", role: "Observability Layer", details: "windows_exporter captures CPU, memory, thread pool, and IIS request rates for PromQL alerting." }
+    ]
   },
   {
-    id: "golang-integration",
-    title: "Containerized Integration Platform (Connect-i)",
+    id: "docker-platform",
+    title: "Containerized Integration Platform",
     type: "docker",
+    tag: "Multi-Service Container Runtime",
+    flowSummary: "Client → HTTPS → Nginx Ingress → React Frontend → Golang Services → Database / APIs",
     purpose: "Standardizes multi-service deployment boundaries, service lifecycle management, and ingress routing.",
-    description: "Multi-service containerized architecture orchestrated via Docker Compose, running React frontend and Golang backend services behind an Nginx reverse proxy.",
-    technologies: ["Docker", "Docker Compose", "Nginx", "Linux", "Golang", "HTTPS"],
+    description: "Multi-service containerized architecture orchestrated via Docker Compose, running React frontend and Golang backend services behind an Nginx reverse proxy on Linux.",
+    technologies: ["Docker", "Docker Compose", "Linux", "Nginx", "Golang", "React", "HTTPS"],
     responsibilities: "Manage Docker Compose configurations, bridge container networks, configure Nginx reverse proxy with HTTPS, and triage container and service logs.",
-    operationalNotes: "Container restart policies and structured logging allow fast diagnosis of 4xx/5xx responses and connection bottlenecks."
+    operationalNotes: "Container restart policies and structured logging allow fast diagnosis of 4xx/5xx responses and connection bottlenecks.",
+    nodes: [
+      { id: "client", label: "Client Ingress", role: "Request Source", details: "Client browsers accessing web interface and external systems invoking integration endpoints." },
+      { id: "nginx", label: "Nginx Ingress", role: "Reverse Proxy & Router", details: "Directs web requests to React container and API requests to Golang backend with SSL/TLS termination." },
+      { id: "react", label: "React Frontend", role: "UI Container", details: "Containerized Single Page Application served with static caching and health check endpoints." },
+      { id: "golang", label: "Golang Services", role: "Integration Engine", details: "Lightweight compiled service container handling data translation and external endpoint orchestration." },
+      { id: "linux", label: "Linux Host & Docker", role: "Container Runtime Platform", details: "Docker Compose manages bridge networking, volume mounts, environment variables, and restart policies." },
+      { id: "endpoints", label: "Database / APIs", role: "Upstream Dependencies", details: "Target database storage and third-party fintech API endpoints." }
+    ]
   },
   {
-    id: "monitoring-observability",
-    title: "Heterogeneous Observability Pipeline",
-    type: "monitoring",
-    purpose: "Provides real-time visibility into Windows and Linux server health, resource utilization, and threshold alerting.",
-    description: "Prometheus and Grafana monitoring platform scraping Windows and Linux metrics via dedicated exporters, analyzed with custom PromQL queries.",
-    technologies: ["Prometheus", "Grafana", "node_exporter", "windows_exporter", "PromQL", "Alertmanager"],
-    responsibilities: "Deploy and configure node_exporter and windows_exporter, write PromQL queries, create Grafana dashboards, and tune alerting rules.",
-    operationalNotes: "Alert thresholds are tuned to host baseline parameters to prevent notification fatigue while catching resource leaks early."
-  },
-  {
-    id: "cicd-pipeline",
-    title: "Azure DevOps CI/CD & Deployment Flow",
+    id: "java-devops",
+    title: "Java / Linux CI/CD & Deployment Flow",
     type: "pipeline",
+    tag: "Automated Deployment Pipeline",
+    flowSummary: "Azure DevOps / TFS → Build Artifact → Linux Server (systemd) → Java App → Validation → Monitoring",
     purpose: "Coordinates application build artifacts, release pipelines, and automated environment promotion.",
-    description: "End-to-end deployment workflow promoting application builds from source repositories through Azure DevOps/TFS pipelines to IIS and Linux production nodes.",
-    technologies: ["Azure DevOps", "TFS", "Git", "PowerShell", "Bash", "CI/CD"],
-    responsibilities: "Manage build artifacts, configure pipeline release stages, author validation scripts in PowerShell/Bash, and execute deployment validation.",
-    operationalNotes: "Automated pre-flight and post-deployment validation scripts verify endpoint status and database connectivity before traffic switchover."
+    description: "End-to-end deployment workflow promoting application builds from source repositories through Azure DevOps/TFS pipelines to Linux production nodes with automated health validation.",
+    technologies: ["Azure DevOps", "TFS", "Git", "Bash", "Java", "Linux", "Prometheus"],
+    responsibilities: "Manage build artifacts, configure pipeline release stages, author validation scripts in Bash, and execute post-deployment validation.",
+    operationalNotes: "Automated pre-flight and post-deployment validation scripts verify endpoint status and database connectivity before traffic switchover.",
+    nodes: [
+      { id: "git", label: "Git Repository", role: "Source Control", details: "Version controlled source repository tracking changes and release tags." },
+      { id: "cicd", label: "Azure DevOps / TFS", role: "Build & Release Pipeline", details: "Automated build execution, compilation verification, and package generation." },
+      { id: "artifact", label: "Build Artifact", role: "Versioned Package", details: "Immutable JAR/WAR deployment package published to artifact repository." },
+      { id: "linux", label: "Linux Deployment", role: "Target Environment", details: "Automated deployment via shell scripts, systemd service lifecycle control, and configuration injection." },
+      { id: "java", label: "Java Application", role: "Fintech Service Tier", details: "Running application instance with JVM monitoring, thread configuration, and structured logging." },
+      { id: "verify", label: "Health & Telemetry", role: "Validation & Observability", details: "Automated health checks probe endpoints; node_exporter reports host metrics to Prometheus." }
+    ]
   }
 ];

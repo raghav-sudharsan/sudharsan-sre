@@ -39,8 +39,9 @@ function initApp() {
   // Render Dynamic Content Components
   renderRecruiterHub();
   renderAboutSection();
+  renderWorkflowPipeline();
   renderMetrics();
-  renderSkills();
+  renderSkills("all");
   renderEngineeringContributions();
   renderProjects("all");
   renderArchitectureTabs();
@@ -53,6 +54,7 @@ function initApp() {
 
   // Setup Interactivity Listeners
   setupProjectFilters();
+  setupSkillsLensFilters();
   setupContactForm();
   setupModals();
   setupScrollObserver();
@@ -225,6 +227,34 @@ function renderAboutSection() {
   }
 }
 
+function renderWorkflowPipeline() {
+  const container = document.getElementById("workflow-steps-container");
+  if (!container || !portfolioData.workflowStages) return;
+  container.innerHTML = "";
+
+  portfolioData.workflowStages.forEach((stage, idx) => {
+    const tile = document.createElement("div");
+    const staggerClass = `reveal-stagger-${(idx % 3) + 1}`;
+    tile.className = `workflow-step-tile glass-panel reveal-on-scroll ${staggerClass}`;
+    tile.innerHTML = `
+      <div class="workflow-tile-top">
+        <span class="workflow-num-badge">${stage.step}</span>
+        <div class="workflow-icon-box">
+          <i data-lucide="${stage.icon}"></i>
+        </div>
+      </div>
+      <div class="workflow-step-name">${stage.title}</div>
+      <div class="workflow-step-sub">${stage.subtitle}</div>
+      <div class="workflow-step-desc">${stage.description}</div>
+      <div class="workflow-step-tags">
+        ${stage.tags.map(t => `<span class="workflow-tag">${t}</span>`).join("")}
+      </div>
+    `;
+    container.appendChild(tile);
+  });
+  lucide.createIcons();
+}
+
 function renderMetrics() {
   const container = document.getElementById("metrics-counter-container");
   if (!container) return;
@@ -332,12 +362,19 @@ function formatCounterValue(val, suffix) {
   return Math.floor(val) + suf;
 }
 
-function renderSkills() {
+function renderSkills(lensFilter = "all") {
   const container = document.getElementById("skills-clusters-container");
-  if (!container) return;
+  if (!container || !portfolioData.skills) return;
   container.innerHTML = "";
 
-  portfolioData.skills.forEach((domain, idx) => {
+  const filtered = (!lensFilter || lensFilter === "all")
+    ? portfolioData.skills
+    : portfolioData.skills.filter(domain => {
+        if (!domain.domainLens) return false;
+        return domain.domainLens.toLowerCase().includes(lensFilter.toLowerCase());
+      });
+
+  filtered.forEach((domain, idx) => {
     const card = document.createElement("div");
     const staggerClass = `reveal-stagger-${(idx % 3) + 1}`;
     card.className = `skills-category-card glass-panel reveal-on-scroll ${staggerClass}`;
@@ -355,9 +392,12 @@ function renderSkills() {
     }).join("");
 
     card.innerHTML = `
-      <h3 class="about-subtitle" style="display:flex; align-items:center; gap:8px; font-size:1.05rem; margin-bottom:6px; color:var(--text-primary);">
-        <i data-lucide="${domain.icon || 'layers'}" style="width:15px; height:15px; color:#38bdf8;"></i> ${domain.title}
-      </h3>
+      <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:6px;">
+        <h3 class="about-subtitle" style="display:flex; align-items:center; gap:8px; font-size:1.05rem; margin:0; color:var(--text-primary);">
+          <i data-lucide="${domain.icon || 'layers'}" style="width:15px; height:15px; color:#38bdf8;"></i> ${domain.title}
+        </h3>
+        ${domain.domainLens ? `<span class="domain-lens-pill">${domain.domainLens}</span>` : ""}
+      </div>
       <p class="domain-description" style="font-size:0.75rem; color:var(--text-muted); margin-bottom:12px; line-height:1.3; min-height:32px;">${domain.description}</p>
       <div class="tech-grid" style="display:grid; grid-template-columns:1fr 1fr; gap:4px 8px;">
         ${techItemsHTML}
@@ -366,6 +406,23 @@ function renderSkills() {
     container.appendChild(card);
   });
   lucide.createIcons();
+  if (typeof initScrollReveal === "function") {
+    initScrollReveal();
+  }
+}
+
+function setupSkillsLensFilters() {
+  const wrap = document.getElementById("skills-lens-filters-wrap");
+  if (!wrap) return;
+  const buttons = wrap.querySelectorAll(".lens-btn");
+  buttons.forEach(btn => {
+    btn.addEventListener("click", () => {
+      buttons.forEach(b => b.classList.remove("active"));
+      btn.classList.add("active");
+      const lens = btn.getAttribute("data-lens");
+      renderSkills(lens);
+    });
+  });
 }
 
 function getTechSVG(tech) {
@@ -501,7 +558,11 @@ function renderArchitectureTabs() {
 }
 
 function loadArchitectureView(arch) {
-  document.getElementById("arch-description-text").innerText = arch.description;
+  const descEl = document.getElementById("arch-description-text");
+  if (descEl) descEl.innerText = arch.description;
+
+  const flowEl = document.getElementById("arch-flow-summary-text");
+  if (flowEl) flowEl.innerText = arch.flowSummary || "";
 
   // Render Tech Stack
   const stackContainer = document.getElementById("arch-tech-stack");
@@ -530,20 +591,59 @@ function loadArchitectureView(arch) {
   if (notesEl) notesEl.innerText = arch.operationalNotes || "";
 
   const canvas = document.getElementById("arch-drawing-canvas");
-  canvas.innerHTML = "";
+  if (canvas) {
+    canvas.innerHTML = generateSVGDiagram(arch.type);
+    setupArchitectureNodeInspector(arch);
+  }
 
-  // Generate beautiful custom animated vector inline SVG
-  const svgStr = generateSVGDiagram(arch.type);
-  canvas.innerHTML = svgStr;
-  
   lucide.createIcons();
 }
 
-// Generate animated SVGs in JS to avoid asset loading dependency
+function setupArchitectureNodeInspector(arch) {
+  const canvas = document.getElementById("arch-drawing-canvas");
+  if (!canvas || !arch.nodes) return;
+
+  const nodeGroups = canvas.querySelectorAll(".node-group");
+  const titleEl = document.getElementById("inspector-node-title");
+  const roleEl = document.getElementById("inspector-node-role");
+  const detailsEl = document.getElementById("inspector-node-details");
+
+  const updateInspector = (nodeData) => {
+    if (!nodeData) return;
+    if (titleEl) {
+      titleEl.innerHTML = `<i data-lucide="check-circle" style="width:14px; height:14px; vertical-align:-2px; color:#38bdf8;"></i> ${nodeData.label}`;
+    }
+    if (roleEl) roleEl.innerText = nodeData.role;
+    if (detailsEl) detailsEl.innerText = nodeData.details;
+    lucide.createIcons();
+  };
+
+  // Set default initial inspection node (Node 2, e.g. Nginx or Azure DevOps, if available)
+  if (arch.nodes.length > 1) {
+    updateInspector(arch.nodes[1]);
+    const firstActive = canvas.querySelector(`.node-group[data-node-id="${arch.nodes[1].id}"]`);
+    if (firstActive) firstActive.classList.add("active-node");
+  } else if (arch.nodes.length > 0) {
+    updateInspector(arch.nodes[0]);
+  }
+
+  nodeGroups.forEach(group => {
+    const nodeId = group.getAttribute("data-node-id");
+    const nodeData = arch.nodes.find(n => n.id === nodeId);
+
+    const activate = () => {
+      nodeGroups.forEach(g => g.classList.remove("active-node"));
+      group.classList.add("active-node");
+      updateInspector(nodeData);
+    };
+
+    group.addEventListener("mouseenter", activate);
+    group.addEventListener("click", activate);
+  });
+}
+
+// Generate interactive vector architecture diagrams
 function generateSVGDiagram(type) {
-  let svg = "";
-  
-  // Official SVG Tech Logo Assets
   const logos = {
     nginx: `<svg viewBox="0 0 24 24" width="22" height="22"><path d="M12 2L2 12l10 10 10-10L12 2zm-1.8 14.5H8.6V9.4h1.6v7.1zm5.2 0h-1.6l-3.2-4.9v4.9H9V9.4h1.6l3.2 4.9V9.4h1.6v7.1z" fill="#009639"/></svg>`,
     docker: `<svg viewBox="0 0 24 24" width="22" height="22"><path d="M13.983 11.078h2.119v-2.006h-2.119v2.006zm-2.817 0h2.119v-2.006h-2.119v2.006zm-2.787 0h2.119v-2.006h-2.119v2.006zm-2.817 0h2.119v-2.006h-2.119v2.006zm-2.817 0h2.12v-2.006h-2.12v2.006zm11.238-2.684h2.119V6.388h-2.119v2.006zm-2.817 0h2.119V6.388h-2.119v2.006zm-2.787 0h2.119V6.388h-2.119v2.006zm-2.817 0h2.119V6.388h-2.119v2.006zm14.025.678c-.287.054-.537.156-.75.309a4.83 4.83 0 0 0-.256-.474 4.545 4.545 0 0 0-.585-.77c-.506-.525-1.127-.852-1.85-.975v-.868H2.186v6.02h18.232c.594-.21 1.053-.559 1.378-1.045.326-.486.488-1.07.488-1.75 0-.295-.084-.664-.251-1.106-.168-.442-.429-.691-.784-.747z" fill="#2496ED"/></svg>`,
@@ -552,307 +652,208 @@ function generateSVGDiagram(type) {
     prometheus: `<svg viewBox="0 0 24 24" width="22" height="22"><path d="M12 2C8 6 6 9 6 12s3 6 6 6 6-3 6-6-2-6-6-10z" fill="#e6522c"/></svg>`,
     grafana: `<svg viewBox="0 0 24 24" width="22" height="22"><path d="M12 2L2 22h20L12 2z" fill="#f47a20"/><circle cx="12" cy="14" r="4" fill="#ffffff"/></svg>`,
     git: `<svg viewBox="0 0 24 24" width="22" height="22"><path d="M19 13.5a2.5 2.5 0 0 0-2.06 1.09l-4.53-2.27a2.5 2.5 0 0 0 0-1.64l4.53-2.27a2.5 2.5 0 1 0-.9-.79l-4.52 2.26a2.5 2.5 0 1 0 0 3.32l4.52 2.26c.21-.49.59-.88 1.06-1.12a2.5 2.5 0 1 0 1.43-.87z" fill="#F05032"/></svg>`,
-    github: `<svg viewBox="0 0 24 24" width="22" height="22"><path d="M12 2A10 10 0 0 0 2 12c0 4.42 2.87 8.17 6.84 9.5.5.08.66-.23.66-.5v-1.69c-2.77.6-3.36-1.34-3.36-1.34-.46-1.16-1.11-1.47-1.11-1.47-.9-.62.07-.6.07-.6 1 .07 1.53 1.03 1.53 1.03.9 1.52 2.34 1.07 2.91.83.1-.65.35-1.09.63-1.34-2.22-.25-4.55-1.11-4.55-4.92 0-1.11.38-2 1.03-2.71-.1-.25-.45-1.29.1-2.64 0 0 .84-.27 2.75 1.02.79-.22 1.65-.33 2.5-.33.85 0 1.71.11 2.5.33 1.91-1.29 2.75-1.02 2.75-1.02.55 1.35.2 2.39.1 2.64.65.71 1.03 1.6 1.03 2.71 0 3.82-2.34 4.66-4.57 4.91.36.31.69.92.69 1.85V21c0 .27.16.59.67.5C19.14 20.16 22 16.42 22 12A10 10 0 0 0 12 2z" fill="#f0f6fc"/></svg>`,
     azure: `<svg viewBox="0 0 24 24" width="22" height="22"><path d="M0 8.5l6.5-6.5h7.5l-5.5 5.5 5.5 5.5h-7.5z" fill="#0078D4"/></svg>`,
     ubuntu: `<svg viewBox="0 0 24 24" width="22" height="22"><circle cx="12" cy="12" r="10" fill="#e95420"/><circle cx="12" cy="12" r="5" fill="#ffffff"/><circle cx="12" cy="6" r="2" fill="#e95420"/><circle cx="6" cy="15" r="2" fill="#e95420"/><circle cx="18" cy="15" r="2" fill="#e95420"/></svg>`,
     golang: `<svg viewBox="0 0 24 24" width="22" height="22"><circle cx="12" cy="12" r="10" fill="#00ADD8"/><text x="12" y="16" font-family="sans-serif" font-weight="bold" font-size="11" fill="#ffffff" text-anchor="middle">Go</text></svg>`,
+    react: `<svg viewBox="0 0 24 24" width="22" height="22" fill="#61DAFB"><circle cx="12" cy="12" r="2.5"/><ellipse cx="12" cy="12" rx="10" ry="4" fill="none" stroke="#61DAFB" stroke-width="1.2"/><ellipse cx="12" cy="12" rx="10" ry="4" transform="rotate(60 12 12)" fill="none" stroke="#61DAFB" stroke-width="1.2"/><ellipse cx="12" cy="12" rx="10" ry="4" transform="rotate(120 12 12)" fill="none" stroke="#61DAFB" stroke-width="1.2"/></svg>`,
+    java: `<svg viewBox="0 0 24 24" width="22" height="22"><path d="M2 19.5c0 .8 2.5 1.5 5.5 1.5s5.5-.7 5.5-1.5c0-.6-1.5-1.2-4-1.4.3-.3.6-.6.8-1 1.7-.3 3.2-1.2 3.2-2.6 0-2-2.5-2.5-3-4 .5-1 .5-2 0-3-.5 1-1.5 1.5-2 2-.5.5-1 1-1 2 0 1.2 1 2 2.5 2.5-.2.4-.5.8-.8 1.2-2 .2-3.7.8-3.7 1.8zm5.5-9.3c.4-.2.8-.5 1-.8-.2.3-.5.6-1 .8zm.2 4.3c-.7-.2-1.2-.6-1.2-1.1 0-.6.7-.9 1.5-.9.7 0 1.2.3 1.2.9 0 .5-.6.9-1.5 1.1z" fill="#EA2D42"/></svg>`,
     db: `<svg viewBox="0 0 24 24" width="22" height="22"><path d="M12 2C6.5 2 2 4 2 6.5s4.5 4.5 10 4.5 10-2 10-4.5S17.5 2 12 2zm0 6c-5 0-8-1.5-8-2.5s3-2.5 8-2.5 8 1.5 8 2.5-3 2.5-8 2.5z" fill="#00a2ed"/><path d="M2 6.5v5c0 2.5 4.5 4.5 10 4.5s10-2 10-4.5v-5" fill="none" stroke="#00a2ed" stroke-width="1.5"/><path d="M2 11.5v5c0 2.5 4.5 4.5 10 4.5s10-2 10-4.5v-5" fill="none" stroke="#00a2ed" stroke-width="1.5"/></svg>`,
     client: `<svg viewBox="0 0 24 24" width="22" height="22"><rect x="2" y="3" width="20" height="13" rx="2" fill="none" stroke="#06b6d4" stroke-width="2"/><path d="M12 16v4M8 20h8" stroke="#06b6d4" stroke-width="2"/></svg>`
   };
 
+  const arrowDef = `
+    <defs>
+      <marker id="arrow" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+        <path d="M 0 2 L 10 5 L 0 8 z" fill="#38bdf8"/>
+      </marker>
+    </defs>
+  `;
+
   if (type === "iis") {
-    svg = `
-    <svg viewBox="0 0 720 220" width="100%" height="100%">
-      <defs>
-        <marker id="arrow" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
-          <path d="M 0 2 L 10 5 L 0 8 z" fill="#64748b"/>
-        </marker>
-      </defs>
+    return `
+    <svg viewBox="0 0 740 180" width="100%" height="100%" style="display:block;">
+      ${arrowDef}
       
-      <!-- Connectors with flows -->
-      <path d="M 85 110 L 105 110" fill="none" stroke="#64748b" stroke-width="2" marker-end="url(#arrow)" class="packet-flow"/>
-      <path d="M 190 110 L 210 110" fill="none" stroke="#64748b" stroke-width="2" marker-end="url(#arrow)" class="packet-flow"/>
-      <path d="M 295 110 L 315 110" fill="none" stroke="#64748b" stroke-width="2" marker-end="url(#arrow)" class="packet-flow"/>
-      <path d="M 400 110 L 420 110" fill="none" stroke="#64748b" stroke-width="2" marker-end="url(#arrow)" class="packet-flow"/>
-      <path d="M 505 110 L 525 110" fill="none" stroke="#64748b" stroke-width="2" marker-end="url(#arrow)" class="packet-flow"/>
-      <path d="M 610 110 L 630 110" fill="none" stroke="#64748b" stroke-width="2" marker-end="url(#arrow)" class="packet-flow"/>
+      <!-- Connectors with directional packet flow -->
+      <path d="M 114 90 L 135 90" fill="none" stroke="#38bdf8" stroke-width="2" marker-end="url(#arrow)" class="packet-flow"/>
+      <path d="M 239 90 L 260 90" fill="none" stroke="#38bdf8" stroke-width="2" marker-end="url(#arrow)" class="packet-flow"/>
+      <path d="M 364 90 L 385 90" fill="none" stroke="#38bdf8" stroke-width="2" marker-end="url(#arrow)" class="packet-flow"/>
+      <path d="M 489 90 L 510 90" fill="none" stroke="#38bdf8" stroke-width="2" marker-end="url(#arrow)" class="packet-flow"/>
+      <path d="M 614 90 L 635 90" fill="none" stroke="#38bdf8" stroke-width="2" marker-end="url(#arrow)" class="packet-flow"/>
       
-      <!-- Nodes -->
-      <g class="node-group">
-        <rect x="5" y="80" width="80" height="60" rx="6" fill="rgba(30, 41, 59, 0.6)" stroke="rgba(255,255,255,0.08)" stroke-width="1.5"/>
-        <foreignObject x="34" y="86" width="22" height="22">${logos.client}</foreignObject>
-        <text x="45" y="125" text-anchor="middle" font-size="7" fill="#f8fafc" font-weight="bold">Users</text>
-        <text x="45" y="133" text-anchor="middle" font-size="5.5" fill="#94a3b8">Ingress Source</text>
+      <!-- Node 1: Client Ingress -->
+      <g class="node-group" data-node-id="client" style="cursor:pointer;">
+        <rect x="10" y="58" width="104" height="64" rx="8" fill="rgba(30, 41, 59, 0.7)" stroke="rgba(56, 189, 248, 0.25)" stroke-width="1.5"/>
+        <foreignObject x="51" y="64" width="22" height="22">${logos.client}</foreignObject>
+        <text x="62" y="100" text-anchor="middle" font-size="7.5" fill="#f8fafc" font-weight="700">Client Ingress</text>
+        <text x="62" y="112" text-anchor="middle" font-size="6" fill="#94a3b8">External Traffic</text>
       </g>
       
-      <g class="node-group">
-        <rect x="105" y="80" width="85" height="60" rx="6" fill="rgba(30, 41, 59, 0.6)" stroke="rgba(255,255,255,0.08)" stroke-width="1.5"/>
-        <foreignObject x="136" y="86" width="22" height="22">${logos.nginx}</foreignObject>
-        <text x="147" y="125" text-anchor="middle" font-size="7" fill="#f8fafc" font-weight="bold">NGINX</text>
-        <text x="147" y="133" text-anchor="middle" font-size="5.5" fill="#94a3b8">Load Balancer</text>
+      <!-- Node 2: Nginx & WAF -->
+      <g class="node-group" data-node-id="nginx" style="cursor:pointer;">
+        <rect x="135" y="58" width="104" height="64" rx="8" fill="rgba(30, 41, 59, 0.7)" stroke="rgba(56, 189, 248, 0.25)" stroke-width="1.5"/>
+        <foreignObject x="176" y="64" width="22" height="22">${logos.nginx}</foreignObject>
+        <text x="187" y="100" text-anchor="middle" font-size="7.5" fill="#f8fafc" font-weight="700">Nginx &amp; WAF</text>
+        <text x="187" y="112" text-anchor="middle" font-size="6" fill="#94a3b8">TLS Termination</text>
       </g>
       
-      <g class="node-group">
-        <rect x="210" y="80" width="85" height="60" rx="6" fill="rgba(30, 41, 59, 0.6)" stroke="rgba(255,255,255,0.08)" stroke-width="1.5"/>
-        <foreignObject x="241" y="86" width="22" height="22">${logos.nginx}</foreignObject>
-        <text x="252" y="125" text-anchor="middle" font-size="7" fill="#f8fafc" font-weight="bold">Rev Proxy</text>
-        <text x="252" y="133" text-anchor="middle" font-size="5.5" fill="#94a3b8">Routing Edge</text>
+      <!-- Node 3: IIS Web Tier -->
+      <g class="node-group" data-node-id="iis" style="cursor:pointer;">
+        <rect x="260" y="58" width="104" height="64" rx="8" fill="rgba(30, 41, 59, 0.7)" stroke="rgba(56, 189, 248, 0.25)" stroke-width="1.5"/>
+        <foreignObject x="301" y="64" width="22" height="22">${logos.iis}</foreignObject>
+        <text x="312" y="100" text-anchor="middle" font-size="7.5" fill="#f8fafc" font-weight="700">IIS 10 Host</text>
+        <text x="312" y="112" text-anchor="middle" font-size="6" fill="#94a3b8">App Pool Tier</text>
       </g>
       
-      <g class="node-group">
-        <rect x="315" y="80" width="85" height="60" rx="6" fill="rgba(30, 41, 59, 0.6)" stroke="rgba(255,255,255,0.08)" stroke-width="1.5"/>
-        <foreignObject x="346" y="86" width="22" height="22">${logos.iis}</foreignObject>
-        <text x="357" y="125" text-anchor="middle" font-size="7" fill="#f8fafc" font-weight="bold">IIS Server</text>
-        <text x="357" y="133" text-anchor="middle" font-size="5.5" fill="#94a3b8">Web Host</text>
+      <!-- Node 4: ASP.NET -->
+      <g class="node-group" data-node-id="dotnet" style="cursor:pointer;">
+        <rect x="385" y="58" width="104" height="64" rx="8" fill="rgba(30, 41, 59, 0.7)" stroke="rgba(56, 189, 248, 0.25)" stroke-width="1.5"/>
+        <foreignObject x="426" y="64" width="22" height="22">${logos.dotnet}</foreignObject>
+        <text x="437" y="100" text-anchor="middle" font-size="7.5" fill="#f8fafc" font-weight="700">ASP.NET</text>
+        <text x="437" y="112" text-anchor="middle" font-size="6" fill="#94a3b8">App Runtime</text>
       </g>
       
-      <g class="node-group">
-        <rect x="420" y="80" width="85" height="60" rx="6" fill="rgba(30, 41, 59, 0.6)" stroke="rgba(255,255,255,0.08)" stroke-width="1.5"/>
-        <foreignObject x="451" y="86" width="22" height="22">${logos.dotnet}</foreignObject>
-        <text x="462" y="125" text-anchor="middle" font-size="7" fill="#f8fafc" font-weight="bold">ASP.NET</text>
-        <text x="462" y="133" text-anchor="middle" font-size="5.5" fill="#94a3b8">Application</text>
-      </g>
-      
-      <g class="node-group">
-        <rect x="525" y="80" width="85" height="60" rx="6" fill="rgba(30, 41, 59, 0.6)" stroke="rgba(255,255,255,0.08)" stroke-width="1.5"/>
-        <foreignObject x="556" y="86" width="22" height="22">${logos.db}</foreignObject>
-        <text x="567" y="125" text-anchor="middle" font-size="7" fill="#f8fafc" font-weight="bold">SQL DB</text>
-        <text x="567" y="133" text-anchor="middle" font-size="5.5" fill="#94a3b8">Database</text>
+      <!-- Node 5: SQL Server -->
+      <g class="node-group" data-node-id="db" style="cursor:pointer;">
+        <rect x="510" y="58" width="104" height="64" rx="8" fill="rgba(30, 41, 59, 0.7)" stroke="rgba(56, 189, 248, 0.25)" stroke-width="1.5"/>
+        <foreignObject x="551" y="64" width="22" height="22">${logos.db}</foreignObject>
+        <text x="562" y="100" text-anchor="middle" font-size="7.5" fill="#f8fafc" font-weight="700">SQL Server</text>
+        <text x="562" y="112" text-anchor="middle" font-size="6" fill="#94a3b8">Data Persistence</text>
       </g>
 
-      <g class="node-group">
-        <rect x="630" y="80" width="85" height="60" rx="6" fill="rgba(30, 41, 59, 0.6)" stroke="rgba(255,255,255,0.08)" stroke-width="1.5"/>
-        <foreignObject x="661" y="86" width="22" height="22">${logos.prometheus}</foreignObject>
-        <text x="672" y="125" text-anchor="middle" font-size="7" fill="#f8fafc" font-weight="bold">Prometheus</text>
-        <text x="672" y="133" text-anchor="middle" font-size="5.5" fill="#94a3b8">Metrics Collector</text>
+      <!-- Node 6: Prometheus -->
+      <g class="node-group" data-node-id="prom" style="cursor:pointer;">
+        <rect x="635" y="58" width="95" height="64" rx="8" fill="rgba(30, 41, 59, 0.7)" stroke="rgba(56, 189, 248, 0.25)" stroke-width="1.5"/>
+        <foreignObject x="671" y="64" width="22" height="22">${logos.prometheus}</foreignObject>
+        <text x="682" y="100" text-anchor="middle" font-size="7.5" fill="#f8fafc" font-weight="700">Prometheus</text>
+        <text x="682" y="112" text-anchor="middle" font-size="6" fill="#94a3b8">Win Exporter</text>
       </g>
     </svg>
     `;
   } else if (type === "docker") {
-    svg = `
-    <svg viewBox="0 0 620 220" width="100%" height="100%">
-      <defs>
-        <marker id="arrow" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
-          <path d="M 0 2 L 10 5 L 0 8 z" fill="#64748b"/>
-        </marker>
-      </defs>
+    return `
+    <svg viewBox="0 0 740 180" width="100%" height="100%" style="display:block;">
+      ${arrowDef}
       
-      <!-- Connectors -->
-      <path d="M 85 110 L 105 110" fill="none" stroke="#64748b" stroke-width="2" marker-end="url(#arrow)" class="packet-flow"/>
-      <path d="M 190 110 L 210 110" fill="none" stroke="#64748b" stroke-width="2" marker-end="url(#arrow)" class="packet-flow"/>
-      <path d="M 295 110 L 315 110" fill="none" stroke="#64748b" stroke-width="2" marker-end="url(#arrow)" class="packet-flow"/>
-      <path d="M 400 110 L 420 110" fill="none" stroke="#64748b" stroke-width="2" marker-end="url(#arrow)" class="packet-flow"/>
-      <path d="M 505 110 L 525 110" fill="none" stroke="#64748b" stroke-width="2" marker-end="url(#arrow)" class="packet-flow"/>
+      <!-- Connectors with directional packet flow -->
+      <path d="M 114 90 L 135 90" fill="none" stroke="#38bdf8" stroke-width="2" marker-end="url(#arrow)" class="packet-flow"/>
+      <path d="M 239 90 L 260 90" fill="none" stroke="#38bdf8" stroke-width="2" marker-end="url(#arrow)" class="packet-flow"/>
+      <path d="M 364 90 L 385 90" fill="none" stroke="#38bdf8" stroke-width="2" marker-end="url(#arrow)" class="packet-flow"/>
+      <path d="M 489 90 L 510 90" fill="none" stroke="#38bdf8" stroke-width="2" marker-end="url(#arrow)" class="packet-flow"/>
+      <path d="M 614 90 L 635 90" fill="none" stroke="#38bdf8" stroke-width="2" marker-end="url(#arrow)" class="packet-flow"/>
       
-      <!-- Nodes -->
-      <g class="node-group">
-        <rect x="5" y="80" width="80" height="60" rx="6" fill="rgba(30, 41, 59, 0.6)" stroke="rgba(255,255,255,0.08)" stroke-width="1.5"/>
-        <foreignObject x="33" y="86" width="22" height="22">${logos.client}</foreignObject>
-        <text x="45" y="125" text-anchor="middle" font-size="7" fill="#f8fafc" font-weight="bold">Client</text>
-        <text x="45" y="133" text-anchor="middle" font-size="5.5" fill="#94a3b8">Request Source</text>
+      <!-- Node 1: Client Ingress -->
+      <g class="node-group" data-node-id="client" style="cursor:pointer;">
+        <rect x="10" y="58" width="104" height="64" rx="8" fill="rgba(30, 41, 59, 0.7)" stroke="rgba(56, 189, 248, 0.25)" stroke-width="1.5"/>
+        <foreignObject x="51" y="64" width="22" height="22">${logos.client}</foreignObject>
+        <text x="62" y="100" text-anchor="middle" font-size="7.5" fill="#f8fafc" font-weight="700">Client Ingress</text>
+        <text x="62" y="112" text-anchor="middle" font-size="6" fill="#94a3b8">HTTPS Request</text>
       </g>
       
-      <g class="node-group">
-        <rect x="105" y="80" width="85" height="60" rx="6" fill="rgba(30, 41, 59, 0.6)" stroke="rgba(255,255,255,0.08)" stroke-width="1.5"/>
-        <foreignObject x="136" y="86" width="22" height="22">${logos.nginx}</foreignObject>
-        <text x="147" y="125" text-anchor="middle" font-size="7" fill="#f8fafc" font-weight="bold">NGINX</text>
-        <text x="147" y="133" text-anchor="middle" font-size="5.5" fill="#94a3b8">Ingress Proxy</text>
+      <!-- Node 2: Nginx Gateway -->
+      <g class="node-group" data-node-id="nginx" style="cursor:pointer;">
+        <rect x="135" y="58" width="104" height="64" rx="8" fill="rgba(30, 41, 59, 0.7)" stroke="rgba(56, 189, 248, 0.25)" stroke-width="1.5"/>
+        <foreignObject x="176" y="64" width="22" height="22">${logos.nginx}</foreignObject>
+        <text x="187" y="100" text-anchor="middle" font-size="7.5" fill="#f8fafc" font-weight="700">Nginx Ingress</text>
+        <text x="187" y="112" text-anchor="middle" font-size="6" fill="#94a3b8">Reverse Proxy</text>
       </g>
       
-      <g class="node-group">
-        <rect x="210" y="80" width="85" height="60" rx="6" fill="rgba(30, 41, 59, 0.6)" stroke="rgba(255,255,255,0.08)" stroke-width="1.5"/>
-        <foreignObject x="241" y="86" width="22" height="22">${logos.docker}</foreignObject>
-        <text x="252" y="125" text-anchor="middle" font-size="7" fill="#f8fafc" font-weight="bold">Docker</text>
-        <text x="252" y="133" text-anchor="middle" font-size="5.5" fill="#94a3b8">API Container</text>
+      <!-- Node 3: React Frontend -->
+      <g class="node-group" data-node-id="react" style="cursor:pointer;">
+        <rect x="260" y="58" width="104" height="64" rx="8" fill="rgba(30, 41, 59, 0.7)" stroke="rgba(56, 189, 248, 0.25)" stroke-width="1.5"/>
+        <foreignObject x="301" y="64" width="22" height="22">${logos.react}</foreignObject>
+        <text x="312" y="100" text-anchor="middle" font-size="7.5" fill="#f8fafc" font-weight="700">React Frontend</text>
+        <text x="312" y="112" text-anchor="middle" font-size="6" fill="#94a3b8">UI Container</text>
       </g>
       
-      <g class="node-group">
-        <rect x="315" y="80" width="85" height="60" rx="6" fill="rgba(30, 41, 59, 0.6)" stroke="rgba(255,255,255,0.08)" stroke-width="1.5"/>
-        <foreignObject x="346" y="86" width="22" height="22">${logos.ubuntu}</foreignObject>
-        <text x="357" y="125" text-anchor="middle" font-size="7" fill="#f8fafc" font-weight="bold">Ubuntu</text>
-        <text x="357" y="133" text-anchor="middle" font-size="5.5" fill="#94a3b8">Host Platform</text>
+      <!-- Node 4: Golang Services -->
+      <g class="node-group" data-node-id="golang" style="cursor:pointer;">
+        <rect x="385" y="58" width="104" height="64" rx="8" fill="rgba(30, 41, 59, 0.7)" stroke="rgba(56, 189, 248, 0.25)" stroke-width="1.5"/>
+        <foreignObject x="426" y="64" width="22" height="22">${logos.golang}</foreignObject>
+        <text x="437" y="100" text-anchor="middle" font-size="7.5" fill="#f8fafc" font-weight="700">Golang Service</text>
+        <text x="437" y="112" text-anchor="middle" font-size="6" fill="#94a3b8">Integration Hub</text>
       </g>
       
-      <g class="node-group">
-        <rect x="420" y="80" width="85" height="60" rx="6" fill="rgba(30, 41, 59, 0.6)" stroke="rgba(255,255,255,0.08)" stroke-width="1.5"/>
-        <foreignObject x="451" y="86" width="22" height="22">${logos.golang}</foreignObject>
-        <text x="462" y="125" text-anchor="middle" font-size="7" fill="#f8fafc" font-weight="bold">Go Service</text>
-        <text x="462" y="133" text-anchor="middle" font-size="5.5" fill="#94a3b8">Integration Hub</text>
+      <!-- Node 5: Linux Host & Docker -->
+      <g class="node-group" data-node-id="linux" style="cursor:pointer;">
+        <rect x="510" y="58" width="104" height="64" rx="8" fill="rgba(30, 41, 59, 0.7)" stroke="rgba(56, 189, 248, 0.25)" stroke-width="1.5"/>
+        <foreignObject x="551" y="64" width="22" height="22">${logos.docker}</foreignObject>
+        <text x="562" y="100" text-anchor="middle" font-size="7.5" fill="#f8fafc" font-weight="700">Linux &amp; Docker</text>
+        <text x="562" y="112" text-anchor="middle" font-size="6" fill="#94a3b8">Compose Runtime</text>
       </g>
-      
-      <g class="node-group">
-        <rect x="525" y="80" width="90" height="60" rx="6" fill="rgba(30, 41, 59, 0.6)" stroke="rgba(255,255,255,0.08)" stroke-width="1.5"/>
-        <foreignObject x="559" y="86" width="22" height="22">${logos.client}</foreignObject>
-        <text x="570" y="125" text-anchor="middle" font-size="7" fill="#f8fafc" font-weight="bold">External APIs</text>
-        <text x="570" y="133" text-anchor="middle" font-size="5.5" fill="#94a3b8">Endpoints</text>
-      </g>
-    </svg>
-    `;
-  } else if (type === "monitoring") {
-    svg = `
-    <svg viewBox="0 0 520 220" width="100%" height="100%">
-      <defs>
-        <marker id="arrow" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
-          <path d="M 0 2 L 10 5 L 0 8 z" fill="#64748b"/>
-        </marker>
-      </defs>
-      
-      <!-- Connectors -->
-      <path d="M 85 110 L 105 110" fill="none" stroke="#64748b" stroke-width="2" marker-end="url(#arrow)" class="packet-flow"/>
-      <path d="M 190 110 L 210 110" fill="none" stroke="#64748b" stroke-width="2" marker-end="url(#arrow)" class="packet-flow"/>
-      <path d="M 295 110 L 315 110" fill="none" stroke="#64748b" stroke-width="2" marker-end="url(#arrow)" class="packet-flow"/>
-      <path d="M 400 110 L 420 110" fill="none" stroke="#64748b" stroke-width="2" marker-end="url(#arrow)" class="packet-flow"/>
-      
-      <!-- Nodes -->
-      <g class="node-group">
-        <rect x="5" y="80" width="80" height="60" rx="6" fill="rgba(30, 41, 59, 0.6)" stroke="rgba(255,255,255,0.08)" stroke-width="1.5"/>
-        <foreignObject x="34" y="86" width="22" height="22">${logos.iis}</foreignObject>
-        <text x="45" y="125" text-anchor="middle" font-size="7" fill="#f8fafc" font-weight="bold">Win Exporter</text>
-        <text x="45" y="133" text-anchor="middle" font-size="5.5" fill="#94a3b8">Host Metrics</text>
-      </g>
-      
-      <g class="node-group">
-        <rect x="105" y="80" width="85" height="60" rx="6" fill="rgba(30, 41, 59, 0.6)" stroke="rgba(255,255,255,0.08)" stroke-width="1.5"/>
-        <foreignObject x="136" y="86" width="22" height="22">${logos.prometheus}</foreignObject>
-        <text x="147" y="125" text-anchor="middle" font-size="7" fill="#f8fafc" font-weight="bold">Prometheus</text>
-        <text x="147" y="133" text-anchor="middle" font-size="5.5" fill="#94a3b8">Database</text>
-      </g>
-      
-      <g class="node-group">
-        <rect x="210" y="80" width="85" height="60" rx="6" fill="rgba(30, 41, 59, 0.6)" stroke="rgba(255,255,255,0.08)" stroke-width="1.5"/>
-        <foreignObject x="241" y="86" width="22" height="22">${logos.grafana}</foreignObject>
-        <text x="252" y="125" text-anchor="middle" font-size="7" fill="#f8fafc" font-weight="bold">Grafana</text>
-        <text x="252" y="133" text-anchor="middle" font-size="5.5" fill="#94a3b8">Observability Panel</text>
-      </g>
-      
-      <g class="node-group">
-        <rect x="315" y="80" width="85" height="60" rx="6" fill="rgba(30, 41, 59, 0.6)" stroke="rgba(255,255,255,0.08)" stroke-width="1.5"/>
-        <foreignObject x="346" y="86" width="22" height="22">${logos.prometheus}</foreignObject>
-        <text x="357" y="125" text-anchor="middle" font-size="7" fill="#f8fafc" font-weight="bold">Alert Manager</text>
-        <text x="357" y="133" text-anchor="middle" font-size="5.5" fill="#94a3b8">Incident Dispatch</text>
-      </g>
-      
-      <g class="node-group">
-        <rect x="420" y="80" width="95" height="60" rx="6" fill="rgba(30, 41, 59, 0.6)" stroke="rgba(255,255,255,0.08)" stroke-width="1.5"/>
-        <foreignObject x="456" y="86" width="22" height="22">${logos.client}</foreignObject>
-        <text x="467" y="125" text-anchor="middle" font-size="7" fill="#f8fafc" font-weight="bold">Ops Team</text>
-        <text x="467" y="133" text-anchor="middle" font-size="5.5" fill="#94a3b8">Active Responders</text>
+
+      <!-- Node 6: External Endpoints -->
+      <g class="node-group" data-node-id="endpoints" style="cursor:pointer;">
+        <rect x="635" y="58" width="95" height="64" rx="8" fill="rgba(30, 41, 59, 0.7)" stroke="rgba(56, 189, 248, 0.25)" stroke-width="1.5"/>
+        <foreignObject x="671" y="64" width="22" height="22">${logos.db}</foreignObject>
+        <text x="682" y="100" text-anchor="middle" font-size="7.5" fill="#f8fafc" font-weight="700">Endpoints</text>
+        <text x="682" y="112" text-anchor="middle" font-size="6" fill="#94a3b8">DB &amp; Cloud APIs</text>
       </g>
     </svg>
     `;
   } else if (type === "pipeline") {
-    svg = `
-    <svg viewBox="0 0 650 300" width="100%" height="100%">
-      <defs>
-        <marker id="arrow" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
-          <path d="M 0 2 L 10 5 L 0 8 z" fill="#64748b"/>
-        </marker>
-      </defs>
+    return `
+    <svg viewBox="0 0 740 180" width="100%" height="100%" style="display:block;">
+      ${arrowDef}
       
-      <!-- Connectors Row 1 -->
-      <path d="M 125 55 L 165 55" fill="none" stroke="#64748b" stroke-width="2" marker-end="url(#arrow)" class="packet-flow"/>
-      <path d="M 265 55 L 305 55" fill="none" stroke="#64748b" stroke-width="2" marker-end="url(#arrow)" class="packet-flow"/>
-      <path d="M 405 55 L 445 55" fill="none" stroke="#64748b" stroke-width="2" marker-end="url(#arrow)" class="packet-flow"/>
+      <!-- Connectors with directional packet flow -->
+      <path d="M 114 90 L 135 90" fill="none" stroke="#38bdf8" stroke-width="2" marker-end="url(#arrow)" class="packet-flow"/>
+      <path d="M 239 90 L 260 90" fill="none" stroke="#38bdf8" stroke-width="2" marker-end="url(#arrow)" class="packet-flow"/>
+      <path d="M 364 90 L 385 90" fill="none" stroke="#38bdf8" stroke-width="2" marker-end="url(#arrow)" class="packet-flow"/>
+      <path d="M 489 90 L 510 90" fill="none" stroke="#38bdf8" stroke-width="2" marker-end="url(#arrow)" class="packet-flow"/>
+      <path d="M 614 90 L 635 90" fill="none" stroke="#38bdf8" stroke-width="2" marker-end="url(#arrow)" class="packet-flow"/>
       
-      <!-- Serpentine connector down to Row 2 -->
-      <path d="M 500 80 L 500 115" fill="none" stroke="#64748b" stroke-width="2" marker-end="url(#arrow)" class="packet-flow"/>
-      
-      <!-- Connectors Row 2 -->
-      <path d="M 445 140 L 405 140" fill="none" stroke="#64748b" stroke-width="2" marker-end="url(#arrow)" class="packet-flow"/>
-      <path d="M 305 140 L 265 140" fill="none" stroke="#64748b" stroke-width="2" marker-end="url(#arrow)" class="packet-flow"/>
-      <path d="M 165 140 L 125 140" fill="none" stroke="#64748b" stroke-width="2" marker-end="url(#arrow)" class="packet-flow"/>
-      
-      <!-- Serpentine connector down to Row 3 -->
-      <path d="M 75 165 L 75 200" fill="none" stroke="#64748b" stroke-width="2" marker-end="url(#arrow)" class="packet-flow"/>
-      
-      <!-- Connectors Row 3 -->
-      <path d="M 125 225 L 165 225" fill="none" stroke="#64748b" stroke-width="2" marker-end="url(#arrow)" class="packet-flow"/>
-      <path d="M 265 225 L 305 225" fill="none" stroke="#64748b" stroke-width="2" marker-end="url(#arrow)" class="packet-flow"/>
-      <path d="M 405 225 L 445 225" fill="none" stroke="#64748b" stroke-width="2" marker-end="url(#arrow)" class="packet-flow"/>
-      
-      <!-- Layer Labels -->
-      <text x="25" y="20" font-size="7" fill="#38bdf8" font-weight="bold" font-family="monospace">DEVELOPMENT STAGE</text>
-      <text x="530" y="110" font-size="7" fill="#38bdf8" font-weight="bold" font-family="monospace">CI/CD BUILD</text>
-      <text x="25" y="195" font-size="7" fill="#38bdf8" font-weight="bold" font-family="monospace">PROD ROLLOUT</text>
-
-      <!-- Row 1 Nodes -->
-      <g class="node-group">
-        <rect x="25" y="30" width="100" height="50" rx="6" fill="rgba(30, 41, 59, 0.6)" stroke="rgba(255,255,255,0.08)" stroke-width="1.5"/>
-        <foreignObject x="64" y="36" width="22" height="22">${logos.client}</foreignObject>
-        <text x="75" y="71" text-anchor="middle" font-size="7" fill="#f8fafc" font-weight="bold">Developer</text>
+      <!-- Node 1: Git Repository -->
+      <g class="node-group" data-node-id="git" style="cursor:pointer;">
+        <rect x="10" y="58" width="104" height="64" rx="8" fill="rgba(30, 41, 59, 0.7)" stroke="rgba(56, 189, 248, 0.25)" stroke-width="1.5"/>
+        <foreignObject x="51" y="64" width="22" height="22">${logos.git}</foreignObject>
+        <text x="62" y="100" text-anchor="middle" font-size="7.5" fill="#f8fafc" font-weight="700">Git Repo</text>
+        <text x="62" y="112" text-anchor="middle" font-size="6" fill="#94a3b8">Source Control</text>
       </g>
       
-      <g class="node-group">
-        <rect x="165" y="30" width="100" height="50" rx="6" fill="rgba(30, 41, 59, 0.6)" stroke="rgba(255,255,255,0.08)" stroke-width="1.5"/>
-        <foreignObject x="204" y="36" width="22" height="22">${logos.git}</foreignObject>
-        <text x="215" y="71" text-anchor="middle" font-size="7" fill="#f8fafc" font-weight="bold">Git Commit</text>
+      <!-- Node 2: Azure DevOps CI/CD -->
+      <g class="node-group" data-node-id="cicd" style="cursor:pointer;">
+        <rect x="135" y="58" width="104" height="64" rx="8" fill="rgba(30, 41, 59, 0.7)" stroke="rgba(56, 189, 248, 0.25)" stroke-width="1.5"/>
+        <foreignObject x="176" y="64" width="22" height="22">${logos.azure}</foreignObject>
+        <text x="187" y="100" text-anchor="middle" font-size="7.5" fill="#f8fafc" font-weight="700">Azure DevOps</text>
+        <text x="187" y="112" text-anchor="middle" font-size="6" fill="#94a3b8">CI/CD Pipeline</text>
       </g>
       
-      <g class="node-group">
-        <rect x="305" y="30" width="100" height="50" rx="6" fill="rgba(30, 41, 59, 0.6)" stroke="rgba(255,255,255,0.08)" stroke-width="1.5"/>
-        <foreignObject x="344" y="36" width="22" height="22">${logos.github}</foreignObject>
-        <text x="355" y="71" text-anchor="middle" font-size="7" fill="#f8fafc" font-weight="bold">GitHub Repo</text>
+      <!-- Node 3: Build Artifact -->
+      <g class="node-group" data-node-id="artifact" style="cursor:pointer;">
+        <rect x="260" y="58" width="104" height="64" rx="8" fill="rgba(30, 41, 59, 0.7)" stroke="rgba(56, 189, 248, 0.25)" stroke-width="1.5"/>
+        <foreignObject x="301" y="64" width="22" height="22">${logos.db}</foreignObject>
+        <text x="312" y="100" text-anchor="middle" font-size="7.5" fill="#f8fafc" font-weight="700">Build Artifact</text>
+        <text x="312" y="112" text-anchor="middle" font-size="6" fill="#94a3b8">JAR / WAR Package</text>
       </g>
       
-      <g class="node-group">
-        <rect x="445" y="30" width="110" height="50" rx="6" fill="rgba(30, 41, 59, 0.6)" stroke="rgba(255,255,255,0.08)" stroke-width="1.5"/>
-        <foreignObject x="489" y="36" width="22" height="22">${logos.azure}</foreignObject>
-        <text x="500" y="71" text-anchor="middle" font-size="7" fill="#f8fafc" font-weight="bold">Azure Pipelines</text>
+      <!-- Node 4: Linux Target -->
+      <g class="node-group" data-node-id="linux" style="cursor:pointer;">
+        <rect x="385" y="58" width="104" height="64" rx="8" fill="rgba(30, 41, 59, 0.7)" stroke="rgba(56, 189, 248, 0.25)" stroke-width="1.5"/>
+        <foreignObject x="426" y="64" width="22" height="22">${logos.ubuntu}</foreignObject>
+        <text x="437" y="100" text-anchor="middle" font-size="7.5" fill="#f8fafc" font-weight="700">Linux Target</text>
+        <text x="437" y="112" text-anchor="middle" font-size="6" fill="#94a3b8">systemd &amp; Script</text>
+      </g>
+      
+      <!-- Node 5: Java Application -->
+      <g class="node-group" data-node-id="java" style="cursor:pointer;">
+        <rect x="510" y="58" width="104" height="64" rx="8" fill="rgba(30, 41, 59, 0.7)" stroke="rgba(56, 189, 248, 0.25)" stroke-width="1.5"/>
+        <foreignObject x="551" y="64" width="22" height="22">${logos.java}</foreignObject>
+        <text x="562" y="100" text-anchor="middle" font-size="7.5" fill="#f8fafc" font-weight="700">Java App</text>
+        <text x="562" y="112" text-anchor="middle" font-size="6" fill="#94a3b8">Fintech Service</text>
       </g>
 
-      <!-- Row 2 Nodes -->
-      <g class="node-group">
-        <rect x="445" y="115" width="110" height="50" rx="6" fill="rgba(30, 41, 59, 0.6)" stroke="rgba(255,255,255,0.08)" stroke-width="1.5"/>
-        <foreignObject x="489" y="121" width="22" height="22">${logos.dotnet}</foreignObject>
-        <text x="500" y="156" text-anchor="middle" font-size="7" fill="#f8fafc" font-weight="bold">Dotnet Build</text>
-      </g>
-      
-      <g class="node-group">
-        <rect x="305" y="115" width="100" height="50" rx="6" fill="rgba(30, 41, 59, 0.6)" stroke="rgba(255,255,255,0.08)" stroke-width="1.5"/>
-        <foreignObject x="344" y="121" width="22" height="22">${logos.dotnet}</foreignObject>
-        <text x="355" y="156" text-anchor="middle" font-size="7" fill="#f8fafc" font-weight="bold">Code Validation</text>
-      </g>
-      
-      <g class="node-group">
-        <rect x="165" y="115" width="100" height="50" rx="6" fill="rgba(30, 41, 59, 0.6)" stroke="rgba(255,255,255,0.08)" stroke-width="1.5"/>
-        <foreignObject x="204" y="121" width="22" height="22">${logos.db}</foreignObject>
-        <text x="215" y="156" text-anchor="middle" font-size="7" fill="#f8fafc" font-weight="bold">Build Artifact</text>
-      </g>
-      
-      <g class="node-group">
-        <rect x="25" y="115" width="100" height="50" rx="6" fill="rgba(30, 41, 59, 0.6)" stroke="rgba(255,255,255,0.08)" stroke-width="1.5"/>
-        <foreignObject x="64" y="121" width="22" height="22">${logos.azure}</foreignObject>
-        <text x="75" y="156" text-anchor="middle" font-size="7" fill="#f8fafc" font-weight="bold">Deployment</text>
-      </g>
-
-      <!-- Row 3 Nodes -->
-      <g class="node-group">
-        <rect x="25" y="200" width="100" height="50" rx="6" fill="rgba(30, 41, 59, 0.6)" stroke="rgba(255,255,255,0.08)" stroke-width="1.5"/>
-        <foreignObject x="64" y="206" width="22" height="22">${logos.iis}</foreignObject>
-        <text x="75" y="241" text-anchor="middle" font-size="7" fill="#f8fafc" font-weight="bold">IIS Server</text>
-      </g>
-      
-      <g class="node-group">
-        <rect x="165" y="200" width="100" height="50" rx="6" fill="rgba(30, 41, 59, 0.6)" stroke="rgba(255,255,255,0.08)" stroke-width="1.5"/>
-        <foreignObject x="204" y="206" width="22" height="22">${logos.iis}</foreignObject>
-        <text x="215" y="241" text-anchor="middle" font-size="7" fill="#f8fafc" font-weight="bold">Production Web</text>
-      </g>
-      
-      <g class="node-group">
-        <rect x="305" y="200" width="100" height="50" rx="6" fill="rgba(30, 41, 59, 0.6)" stroke="rgba(255,255,255,0.08)" stroke-width="1.5"/>
-        <foreignObject x="344" y="206" width="22" height="22">${logos.prometheus}</foreignObject>
-        <text x="355" y="241" text-anchor="middle" font-size="7" fill="#f8fafc" font-weight="bold">Prom Metrics</text>
-      </g>
-      
-      <g class="node-group">
-        <rect x="445" y="200" width="110" height="50" rx="6" fill="rgba(30, 41, 59, 0.6)" stroke="rgba(255,255,255,0.08)" stroke-width="1.5"/>
-        <foreignObject x="489" y="206" width="22" height="22">${logos.grafana}</foreignObject>
-        <text x="500" y="241" text-anchor="middle" font-size="7" fill="#f8fafc" font-weight="bold">Grafana Monitor</text>
+      <!-- Node 6: Health & Telemetry -->
+      <g class="node-group" data-node-id="verify" style="cursor:pointer;">
+        <rect x="635" y="58" width="95" height="64" rx="8" fill="rgba(30, 41, 59, 0.7)" stroke="rgba(56, 189, 248, 0.25)" stroke-width="1.5"/>
+        <foreignObject x="671" y="64" width="22" height="22">${logos.prometheus}</foreignObject>
+        <text x="682" y="100" text-anchor="middle" font-size="7.5" fill="#f8fafc" font-weight="700">Validation</text>
+        <text x="682" y="112" text-anchor="middle" font-size="6" fill="#94a3b8">Health &amp; Telemetry</text>
       </g>
     </svg>
     `;
   }
-  return svg;
+  return "";
 }
 
 function renderTimeline() {
@@ -1194,8 +1195,8 @@ function setupContactForm() {
       const msgObj = {
         name: nameInput.value.trim(),
         email: emailInput.value.trim(),
-        company: companyInput.value.trim(),
-        phone: phoneInput.value.trim(),
+        company: companyInput ? companyInput.value.trim() : "",
+        phone: phoneInput ? phoneInput.value.trim() : "",
         message: messageInput.value.trim(),
         timestamp: new Date().toISOString()
       };

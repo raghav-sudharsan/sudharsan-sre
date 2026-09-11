@@ -2,30 +2,60 @@ if (typeof portfolioData === 'undefined') {
   var portfolioData = {};
 }
 
-portfolioData.achievements = [
+portfolioData.workflowStages = [
   {
+    step: "01",
     title: "Production Operations",
-    description: "Supported high-availability fintech platforms, managing IIS 10, ASP.NET application pools, runtime configurations, and deployment validations.",
+    subtitle: "Application & Infrastructure Operations",
+    flow: "IIS 10 • Windows Server • .NET • Runtime Health",
+    description: "Manage high-availability application pools, runtime limits, and worker process health for monolithic ASP.NET platforms.",
     icon: "server",
-    metric: "Production Ops"
+    tags: ["IIS 10", "Windows Server", "ASP.NET", "Health Probes"]
   },
   {
-    title: "Reliability & DR",
-    description: "Executed Disaster Recovery drills across SaaS and enterprise applications, validating infrastructure recovery, failovers, and service restoration.",
-    icon: "refresh-cw",
-    metric: "Disaster Recovery"
+    step: "02",
+    title: "Deployments",
+    subtitle: "Artifacts → Deployment → Validation",
+    flow: "Azure DevOps • TFS • Build Artifacts • CI/CD",
+    description: "Orchestrate release promotion, manage versioned build artifacts, and execute automated deployment validation scripts.",
+    icon: "git-pull-request",
+    tags: ["Azure DevOps", "TFS", "CI/CD", "Release Validation"]
   },
   {
-    title: "Observability & Alerting",
-    description: "Engineered Prometheus and Grafana monitoring layers across Windows and Linux servers using exporters and PromQL queries for resource visibility.",
+    step: "03",
+    title: "Monitoring",
+    subtitle: "Prometheus → PromQL → Grafana",
+    flow: "node_exporter • windows_exporter • Telemetry",
+    description: "Collect host and application metrics across Linux and Windows, creating PromQL queries and real-time Grafana dashboards.",
     icon: "activity",
-    metric: "Observability"
+    tags: ["Prometheus", "Grafana", "PromQL", "Exporters"]
   },
   {
-    title: "Operational Automation",
-    description: "Automated recurring system tasks, configuration audits, and process management routines using PowerShell and Bash scripts.",
+    step: "04",
+    title: "Reliability",
+    subtitle: "Health Checks → DR → Recovery",
+    flow: "Failover Validation • Service Restoration • DR",
+    description: "Execute structured Disaster Recovery drills across multi-cloud infrastructure, validating replication and recovery objectives.",
+    icon: "refresh-cw",
+    tags: ["Disaster Recovery", "Failover", "DNS Routing", "SLA/SLO"]
+  },
+  {
+    step: "05",
+    title: "Automation",
+    subtitle: "PowerShell → Bash → AWS CLI → Cron",
+    flow: "Playbooks • Health Audits • Resource Discovery",
+    description: "Develop administrative scripting tools to automate routine configuration audits, log retention, and cloud discovery.",
     icon: "terminal",
-    metric: "Automation"
+    tags: ["PowerShell", "Bash", "AWS CLI", "Cron Automation"]
+  },
+  {
+    step: "06",
+    title: "Troubleshooting",
+    subtitle: "Logs → RCA → Corrective Action",
+    flow: "Incident Triage • Sub-status Analysis • Remediation",
+    description: "Diagnose application exceptions, memory exhaustion, WAF blocks, and connectivity failures to prevent recurrence.",
+    icon: "alert-triangle",
+    tags: ["Root Cause Analysis", "Log Analysis", "Incident Response", "VAPT"]
   }
 ];
 
