@@ -4,37 +4,38 @@ if (typeof portfolioData === 'undefined') {
 
 portfolioData.achievements = [
   {
-    title: "AWS & GCP Operations",
-    description: "Supported and maintained secure, high-availability application resources, firewalls, and network endpoints across AWS and GCP environments.",
-    icon: "cloud",
-    metric: "Multi-Cloud"
+    title: "Production Engineering",
+    description: "Supported high-availability platforms, managing release engineering rollouts and deployment validations.",
+    icon: "git-pull-request",
+    metric: "Deployments"
   },
   {
-    title: "Production Incident Management",
-    description: "Managed high-priority application incidents, driving triage, service restoration, and root cause analysis (RCA) to protect banking SLAs.",
+    title: "Application Reliability",
+    description: "Ensured service availability for banking workloads through automated checks and IIS recycle setups.",
     icon: "shield",
-    metric: "SLA / SLO"
+    metric: "Availability"
   },
   {
-    title: "Enterprise Application Support",
-    description: "Orchestrated operations for business-critical banking workloads hosted on IIS and .NET servers, maintaining system integrity.",
-    icon: "server",
-    metric: "IIS / .NET"
-  },
-  {
-    title: "Monitoring Platform Implementation",
-    description: "Built centralized, proactive observability stacks using Windows Exporter agents, Prometheus, and Grafana monitoring dashboards.",
+    title: "Monitoring & Observability",
+    description: "Established comprehensive alerts and Prometheus dashboard layers across enterprise nodes.",
     icon: "activity",
-    metric: "Observability"
+    metric: "Monitoring"
+  },
+  {
+    title: "Incident Management",
+    description: "Led incident response operations, performing root cause investigations to reduce MTTR.",
+    icon: "alert-triangle",
+    metric: "Incident Triage"
   }
 ];
 
 portfolioData.metrics = [
-  { label: "Years Experience", value: 3, suffix: "+" },
-  { label: "DR Drills Completed", value: 7, suffix: "+" },
-  { label: "Production Incidents Resolved", value: 50, suffix: "+" },
-  { label: "Proactive Incident ", value: 50, suffix: "+" },
-  { label: "Servers Managed", value: 80, suffix: "+" },
-  { label: "DR Execution Success", value: 100, suffix: "%" },
-
+  { label: "Production Deployments", value: 80, suffix: "+" },
+  { label: "Incident Resolution", value: 50, suffix: "+" },
+  { label: "Applications Supported", value: 5, suffix: "+" },
+  { label: "Cloud Environments Managed", value: 4, suffix: "+" },
+  { label: "Monitoring Coverage", value: 100, suffix: "%" },
+  { label: "Automation Tasks", value: 15, suffix: "+" },
+  { label: "Disaster Recovery drills", value: 7, suffix: "+" },
+  { label: "Operational Improvements", value: 10, suffix: "+" }
 ];

@@ -4,56 +4,79 @@ if (typeof portfolioData === 'undefined') {
 
 portfolioData.skills = [
   {
-    category: "Cloud Platforms",
-    items: [
-      { name: "AWS", level: 90, icon: "cloud" },
-      { name: "Google Cloud Platform", level: 85, icon: "cloud" }
-    ]
+    title: "Cloud & Infrastructure",
+    description: "Orchestration and provisioning of secure cloud environments and physical server infrastructure.",
+    icon: "cloud",
+    technologies: ["AWS", "Google Cloud Platform", "Windows Server", "Linux", "Virtual Machines", "VPC"]
   },
   {
-    category: "Monitoring & Observability",
-    items: [
-      { name: "Prometheus", level: 90, icon: "activity" },
-      { name: "Grafana", level: 92, icon: "layout" },
-      { name: "Windows Exporter", level: 90, icon: "cpu" },
-      { name: "Infrastructure Monitoring", level: 92, icon: "activity" },
-      { name: "Alerting", level: 92, icon: "bell" },
-      { name: "Dashboard Development", level: 88, icon: "layout" }
-    ]
+    title: "Application Engineering",
+    description: "Deployment, configuration, and optimization of enterprise application hosts and runtime systems.",
+    icon: "code",
+    technologies: ["ASP.NET", ".NET 9", "Microsoft IIS", "Java", "Node.js", "Golang Integration"]
   },
   {
-    category: "Application Operations",
-    items: [
-      { name: "IIS", level: 95, icon: "server" },
-      { name: ".NET Hosting", level: 90, icon: "server" },
-      { name: "Application Reliability", level: 92, icon: "shield" },
-      { name: "Performance Monitoring", level: 90, icon: "activity" }
-    ]
+    title: "Monitoring & Reliability",
+    description: "Implementation of comprehensive telemetry dashboards and proactive threshold alerting paths.",
+    icon: "activity",
+    technologies: ["Prometheus", "Grafana", "Windows Exporter", "Application Monitoring", "Infrastructure Monitoring", "Alerting"]
   },
   {
-    category: "Automation",
-    items: [
-      { name: "PowerShell", level: 95, icon: "terminal" },
-      { name: "Batch Scripting", level: 90, icon: "terminal" },
-      { name: "Python", level: 80, icon: "code" }
-    ]
+    title: "Automation & Scripting",
+    description: "Development of administrative scripts and automated playbooks to eliminate manual toil.",
+    icon: "terminal",
+    technologies: ["PowerShell", "Batch", "Python", "Bash", "Operational Automation"]
   },
   {
-    category: "Reliability Engineering",
-    items: [
-      { name: "Incident Management", level: 92, icon: "shield" },
-      { name: "Problem Management", level: 90, icon: "shield" },
-      { name: "RCA", level: 92, icon: "search" },
-      { name: "SLA Management", level: 95, icon: "check-circle" },
-      { name: "SLO Monitoring", level: 90, icon: "activity" },
-      { name: "DR Validation", level: 95, icon: "refresh-cw" }
-    ]
+    title: "DevOps & Deployment",
+    description: "Configuration of continuous release pipelines and post-release check verification boundaries.",
+    icon: "git-pull-request",
+    technologies: ["Azure DevOps", "Git", "GitHub", "CI/CD", "Release Validation", "Deployment Validation"]
   },
   {
-    category: "Operating Systems",
-    items: [
-      { name: "Windows Server", level: 95, icon: "server" },
-      { name: "Linux", level: 85, icon: "terminal" }
-    ]
+    title: "Production Operations",
+    description: "Lead priority incident response, root cause investigations, and disaster recovery validation.",
+    icon: "shield",
+    technologies: ["Incident Response", "Root Cause Analysis", "Disaster Recovery", "Change Management", "Problem Management", "SLA/SLO"]
   }
 ];
+
+portfolioData.engineeringContributions = [
+  {
+    title: "Production Engineering",
+    description: "Manage high-availability server configurations and runtime limits for business-critical SaaS platforms.",
+    outcome: "Maintained 99.9% uptime compliance across multiple live application nodes.",
+    icon: "server"
+  },
+  {
+    title: "Monitoring & Observability",
+    description: "Deploy target exporters and dashboards to gain real-time system resource insights.",
+    outcome: "Identified memory leaks and disk exhaustion events before degradation occurred.",
+    icon: "activity"
+  },
+  {
+    title: "Deployment Engineering",
+    description: "Orchestrate continuous delivery cycles and construct environment approval gates.",
+    outcome: "Eliminated configuration drift and manual verification errors during rollouts.",
+    icon: "git-pull-request"
+  },
+  {
+    title: "Infrastructure Automation",
+    description: "Write administrative scripting playbooks to optimize routine server auditing chores.",
+    outcome: "Recovered gigabytes of disk storage space and cut manual toil.",
+    icon: "terminal"
+  },
+  {
+    title: "Disaster Recovery & BC",
+    description: "Validate data replication pathways and coordinate passive host switchover routines.",
+    outcome: "Certified recovery readiness across business client infrastructure locations.",
+    icon: "refresh-cw"
+  },
+  {
+    title: "Incident Response & RCA",
+    description: "Lead priority incident triage cycles and perform thorough root-cause investigations.",
+    outcome: "Minimized outage durations and established preventive measures to stop recurrence.",
+    icon: "alert-triangle"
+  }
+];
+

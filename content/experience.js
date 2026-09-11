@@ -8,44 +8,34 @@ portfolioData.experience = [
     role: "Site Reliability Engineer",
     duration: "Feb 2025 – Present",
     responsibilities: [
-      "Support business-critical banking applications",
-      "IIS and .NET application operations",
-      "Production deployments",
-      "Incident response",
-      "Root cause analysis",
-      "AWS and GCP operations",
-      "Monitoring and observability",
-      "Release validation",
-      "Change implementation",
-      "DR execution"
+      "Managed production deployments, release validations, and rollback support for business-critical SaaS and enterprise applications.",
+      "Configured web hosting parameters across 10+ isolated client environments in Windows and Linux, securing 99.9% availability.",
+      "Collaborated with Development, QA, and Infrastructure teams to coordinate deployment checkouts and config change controls.",
+      "Deployed centralized monitoring dashboards to establish real-time host observability and trace system resource bottlenecks.",
+      "Led active incident response triage and performed root cause analysis (RCA) to restore degraded services.",
+      "Authored PowerShell and shell script automation to audit configurations and eliminate repetitive manual toil."
     ],
     achievements: [
-      "Implemented Prometheus and Grafana monitoring",
-      "Automated operational activities",
-      "Successfully executed DR drills for 7+ client environments"
+      "Reduced system MTTR by establishing automated alert policies and telemetry metrics dashboards.",
+      "Accelerated post-deployment verification cycles using custom check scripting pipelines.",
+      "Validated disaster recovery readiness by coordinating active-passive failover mock drills across multiple client environments."
     ],
-    tools: ["AWS", "GCP", "IIS", ".NET", "Prometheus", "Grafana", "PowerShell", "Windows Server", "Linux"],
-    businessImpact: "Ensured high availability and reliability for business-critical banking platforms while streamlining operational overhead through scripting and automation."
+    businessImpact: "Ensured high service availability, regulatory compliance, and smooth deployment cycles for business-critical SaaS and enterprise platforms by establishing proactive monitoring and cross-team collaboration."
   },
   {
     company: "Wikiprospects",
     role: "IT Administrator",
     duration: "May 2023 – Jan 2025",
     responsibilities: [
-      "Managed infrastructure supporting 150+ users",
-      "Active Directory administration",
-      "DNS and DHCP administration",
-      "Network operations",
-      "VPN management",
-      "Backup and recovery processes",
-      "End-user support"
+      "Designed and administered directory and core network services to support enterprise host connectivity.",
+      "Configured secure network topologies, remote access tunnels, and firewall parameters.",
+      "Automated system backup routines and data archival procedures to maintain compliance."
     ],
     achievements: [
-      "Ensured 99.9% uptime for office network services",
-      "Streamlined user onboarding and Active Directory management",
-      "Automated system backups and system integrity checks"
+      "Maintained network operations and authentication services to meet availability SLAs.",
+      "Optimized employee access provisioning to accelerate onboarding workflows.",
+      "Reduced manual operational overhead by establishing task scheduling automation."
     ],
-    tools: ["Windows Server", "Active Directory", "DNS", "DHCP", "VPN", "Linux", "PowerShell", "Batch Scripting"],
-    businessImpact: "Maintained a stable, secure, and performant office infrastructure ensuring high productivity for 150+ users and reliable IT services."
+    businessImpact: "Built a highly performant and secure network topology, ensuring operational continuity and reducing helpdesk ticket volume."
   }
 ];
