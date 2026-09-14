@@ -27,7 +27,7 @@
     content="DevOps Engineer and Site Reliability Engineer with 3+ years of experience supporting business-critical fintech applications across production, infrastructure, deployment, monitoring, and cloud environments.">
   <meta property="twitter:image" content="Sudharsan_SRE.jpeg">
 
-  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="styles.css?v=2.1">
 </head>
 
 <body>
@@ -427,7 +427,6 @@
           </div>
         </section>
 
-        <!-- Redesigned Let's Connect CTA Section -->
         <!-- Redesigned Contact Section: Production Engineering Glass UI -->
         <section class="content-section contact-control-section" id="contact-section">
           <div class="contact-ambient-glow"></div>
@@ -451,25 +450,6 @@
                     <span class="ping-dot"></span>
                   </span>
                   <span>ONLINE</span>
-                </div>
-              </div>
-
-              <!-- Telemetry Status Badges with Glow & Live Effect -->
-              <div class="cta-status-badge-row">
-                <div class="cta-status-badge telemetry-glass-badge">
-                  <span class="badge-beacon-dot"></span>
-                  <span class="badge-label">Status:</span>
-                  <span class="badge-val">Available for DevOps &amp; SRE Roles</span>
-                </div>
-                <div class="cta-status-badge telemetry-glass-badge">
-                  <span class="badge-beacon-dot"></span>
-                  <span class="badge-label">Focus:</span>
-                  <span class="badge-val">DevOps • SRE • Multi-Cloud</span>
-                </div>
-                <div class="cta-status-badge telemetry-glass-badge">
-                  <span class="badge-beacon-dot"></span>
-                  <span class="badge-label">Environment:</span>
-                  <span class="badge-val">Production Engineering</span>
                 </div>
               </div>
 
@@ -599,9 +579,10 @@
 
                 <!-- Submit CTA Button -->
                 <div class="form-submit-row">
-                  <button type="submit" id="contact-submit-btn" class="glass-send-button" data-fs-submit-btn>
+                  <button type="submit" id="contact-submit-btn" class="glass-send-button" data-fs-submit-btn aria-label="Send Message">
                     <span class="btn-state-default">
                       <span>Send Message</span>
+                      <span class="send-btn-emoji" aria-hidden="true">🚀</span>
                       <i data-lucide="send" class="btn-send-icon"></i>
                     </span>
                     <span class="btn-state-sending" style="display:none;">
@@ -612,23 +593,55 @@
                 </div>
               </form>
 
-              <!-- In-Card Success State (Integrated Glass UI) -->
-              <div class="submission-state-panel success-panel" id="submission-success-panel" style="display:none;">
+              <!-- 3D Transmission Glow Response (Phase 2 Animation) -->
+              <div class="transmission-3d-overlay" id="transmission-3d-stage" style="display:none;" aria-hidden="true">
+                <div class="transmission-3d-rig">
+                  <div class="ring-orbit ring-orbit-outer"></div>
+                  <div class="ring-orbit ring-orbit-mid"></div>
+                  <div class="ring-orbit ring-orbit-inner"></div>
+                  <div class="telemetry-beam-axis"></div>
+                  <div class="telemetry-node-cluster">
+                    <span class="t-node t-node-left"></span>
+                    <span class="t-node-core">
+                      <i data-lucide="check" class="core-check-icon"></i>
+                    </span>
+                    <span class="t-node-right"></span>
+                  </div>
+                  <div class="transmission-energy-pulse"></div>
+                </div>
+                <div class="transmission-status-label">
+                  <span class="tx-pulse-dot"></span>
+                  <span class="tx-status-text">DISPATCHING TELEMETRY PACKET...</span>
+                </div>
+              </div>
+
+              <!-- In-Card Success State with Cooldown UI -->
+              <div class="submission-state-panel success-panel" id="submission-success-panel" style="display:none;" aria-live="polite">
                 <div class="state-icon-wrap success-icon-wrap">
                   <i data-lucide="check" class="state-status-icon"></i>
                 </div>
                 <div class="state-content-wrap">
                   <h4 class="state-title">TRANSMISSION COMPLETE</h4>
-                  <p class="state-message">Thanks for reaching out.<br>Your message has been received.</p>
+                  <p class="state-message">Thanks for reaching out.<br>Your message has been received successfully.</p>
                 </div>
-                <button type="button" class="btn-send-another" id="btn-send-another">
-                  <i data-lucide="rotate-ccw" style="width:14px; height:14px;"></i>
-                  <span>Send Another Message</span>
-                </button>
+                <div class="cooldown-actions-container" id="cooldown-actions-container">
+                  <div class="cooldown-flex-row">
+                    <button type="button" class="btn-message-sent" id="btn-message-sent" disabled aria-disabled="true">
+                      <i data-lucide="check" style="width:15px; height:15px; color:#10b981;"></i>
+                      <span>Message Sent</span>
+                    </button>
+                    <div class="cooldown-badge" id="cooldown-badge">
+                      <span class="cooldown-indicator-spin">
+                        <i data-lucide="rotate-ccw" style="width:13px; height:13px;"></i>
+                      </span>
+                      <span class="cooldown-timer-text" id="cooldown-timer-text">Ready again in 30s</span>
+                    </div>
+                  </div>
+                </div>
               </div>
 
               <!-- In-Card Error State (Integrated Glass UI) -->
-              <div class="submission-state-panel error-panel" id="submission-error-panel" style="display:none;">
+              <div class="submission-state-panel error-panel" id="submission-error-panel" style="display:none;" aria-live="assertive">
                 <div class="state-icon-wrap error-icon-wrap">
                   <i data-lucide="alert-triangle" class="state-status-icon"></i>
                 </div>

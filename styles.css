@@ -3025,79 +3025,7 @@ body.light-mode .arch-node-inspector {
   100% { transform: scale(3); opacity: 0; }
 }
 
-/* Telemetry Status Badges with Glow & Live Effect */
-.cta-status-badge-row {
-  display: flex;
-  flex-direction: column;
-  gap: 9px;
-  width: 100%;
-}
 
-.telemetry-glass-badge {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  padding: 9px 14px;
-  border-radius: var(--radius-sm);
-  background: rgba(5, 8, 17, 0.55);
-  border: 1px solid var(--border-color);
-  font-size: 0.8rem;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  position: relative;
-  overflow: hidden;
-}
-
-.telemetry-glass-badge::before {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: -100%;
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(90deg, transparent, rgba(6, 182, 212, 0.08), transparent);
-  transition: left 0.6s ease;
-}
-
-.telemetry-glass-badge:hover {
-  border-color: rgba(6, 182, 212, 0.4);
-  background: rgba(8, 14, 28, 0.8);
-  box-shadow: 0 4px 16px rgba(6, 182, 212, 0.16);
-  transform: translateX(3px);
-}
-
-.telemetry-glass-badge:hover::before {
-  left: 100%;
-}
-
-.badge-beacon-dot {
-  width: 6px;
-  height: 6px;
-  border-radius: 50%;
-  background: #06b6d4;
-  box-shadow: 0 0 8px #06b6d4;
-  flex-shrink: 0;
-  animation: beaconPulse 2.5s infinite ease-in-out;
-}
-
-@keyframes beaconPulse {
-  0%, 100% { opacity: 0.5; transform: scale(0.9); box-shadow: 0 0 4px #06b6d4; }
-  50% { opacity: 1; transform: scale(1.2); box-shadow: 0 0 10px #06b6d4; }
-}
-
-.badge-label {
-  font-family: var(--font-mono);
-  color: #06b6d4;
-  font-size: 0.74rem;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.04em;
-}
-
-.badge-val {
-  font-weight: 600;
-  color: var(--text-primary);
-  font-size: 0.82rem;
-}
 
 /* Narrative Identity */
 .connection-narrative-box {
@@ -3555,6 +3483,19 @@ body.light-mode .arch-node-inspector {
   transition: transform 0.2s ease;
 }
 
+.send-btn-emoji {
+  font-size: 1.15rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
+  transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.glass-send-button:hover .send-btn-emoji {
+  transform: translate(2px, -2px) scale(1.18);
+}
+
 .glass-send-button:hover .btn-send-icon {
   transform: translateX(4px);
 }
@@ -3576,6 +3517,183 @@ body.light-mode .arch-node-inspector {
 
 @keyframes spinLoader {
   to { transform: rotate(360deg); }
+}
+
+/* --- 3D Transmission Animation Response (Phase 2) --- */
+.transmission-3d-overlay {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 380px;
+  gap: 32px;
+  perspective: 900px;
+  transform-style: preserve-3d;
+  animation: fadeInStage 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+@keyframes fadeInStage {
+  from { opacity: 0; transform: scale(0.96); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+.transmission-3d-rig {
+  position: relative;
+  width: 140px;
+  height: 140px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transform-style: preserve-3d;
+  animation: rigFloat 3.5s ease-in-out infinite alternate;
+}
+
+@keyframes rigFloat {
+  0% { transform: translateY(-3px) rotateY(-4deg); }
+  100% { transform: translateY(3px) rotateY(4deg); }
+}
+
+.ring-orbit {
+  position: absolute;
+  border-radius: 50%;
+  transform-style: preserve-3d;
+}
+
+.ring-orbit-outer {
+  width: 140px;
+  height: 140px;
+  border: 1.5px solid rgba(6, 182, 212, 0.45);
+  box-shadow: 0 0 18px rgba(6, 182, 212, 0.28);
+  animation: orbitSpin3D 3s linear infinite;
+}
+
+.ring-orbit-mid {
+  width: 100px;
+  height: 100px;
+  border: 1.5px solid rgba(99, 102, 241, 0.55);
+  box-shadow: 0 0 16px rgba(99, 102, 241, 0.35);
+  animation: orbitSpinCounter3D 2.4s linear infinite;
+}
+
+.ring-orbit-inner {
+  width: 65px;
+  height: 65px;
+  border: 1.5px solid rgba(56, 189, 248, 0.7);
+  box-shadow: 0 0 12px rgba(56, 189, 248, 0.5);
+  animation: orbitSpinFast3D 1.6s linear infinite;
+}
+
+@keyframes orbitSpin3D {
+  0% { transform: rotateX(65deg) rotateY(20deg) rotateZ(0deg); }
+  100% { transform: rotateX(65deg) rotateY(20deg) rotateZ(360deg); }
+}
+
+@keyframes orbitSpinCounter3D {
+  0% { transform: rotateX(55deg) rotateY(-35deg) rotateZ(360deg); }
+  100% { transform: rotateX(55deg) rotateY(-35deg) rotateZ(0deg); }
+}
+
+@keyframes orbitSpinFast3D {
+  0% { transform: rotateX(75deg) rotateY(45deg) rotateZ(0deg); }
+  100% { transform: rotateX(75deg) rotateY(45deg) rotateZ(360deg); }
+}
+
+.telemetry-beam-axis {
+  position: absolute;
+  width: 150px;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, #06b6d4, #38bdf8, transparent);
+  transform: rotateZ(-30deg);
+  box-shadow: 0 0 10px #06b6d4;
+}
+
+.telemetry-node-cluster {
+  position: relative;
+  z-index: 5;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+}
+
+.t-node {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #06b6d4;
+  box-shadow: 0 0 10px #06b6d4;
+  animation: nodePulse 1.2s infinite alternate ease-in-out;
+}
+
+@keyframes nodePulse {
+  0% { transform: scale(0.85); opacity: 0.7; }
+  100% { transform: scale(1.2); opacity: 1; box-shadow: 0 0 14px #06b6d4; }
+}
+
+.t-node-core {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: rgba(16, 185, 129, 0.18);
+  border: 1.5px solid #10b981;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 0 24px rgba(16, 185, 129, 0.45);
+  animation: corePop 1.2s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
+
+.core-check-icon {
+  width: 22px;
+  height: 22px;
+  color: #10b981;
+  filter: drop-shadow(0 0 6px #10b981);
+}
+
+@keyframes corePop {
+  0% { transform: scale(0.3); opacity: 0; }
+  60% { transform: scale(1.15); opacity: 1; }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+.transmission-energy-pulse {
+  position: absolute;
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(6, 182, 212, 0.4) 0%, transparent 70%);
+  animation: energyPulseWave 1.4s infinite ease-out;
+  pointer-events: none;
+}
+
+@keyframes energyPulseWave {
+  0% { transform: scale(0.6); opacity: 0.9; }
+  100% { transform: scale(2.2); opacity: 0; }
+}
+
+.transmission-status-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--font-mono);
+  font-size: 0.76rem;
+  font-weight: 700;
+  color: #38bdf8;
+  letter-spacing: 0.06em;
+  background: rgba(6, 182, 212, 0.08);
+  padding: 5px 14px;
+  border-radius: 12px;
+  border: 1px solid rgba(6, 182, 212, 0.25);
+  box-shadow: 0 0 12px rgba(6, 182, 212, 0.15);
+}
+
+.tx-pulse-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #38bdf8;
+  box-shadow: 0 0 8px #38bdf8;
+  animation: beaconPulse 1s infinite alternate;
 }
 
 /* Submission State Panels (In-Card Seamless UI) */
@@ -3649,7 +3767,69 @@ body.light-mode .arch-node-inspector {
   line-height: 1.6;
 }
 
-.btn-send-another,
+/* 30-Second Cooldown UI */
+.cooldown-actions-container {
+  width: 100%;
+  margin-top: 8px;
+}
+
+.cooldown-flex-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  flex-wrap: wrap;
+  width: 100%;
+}
+
+.btn-message-sent {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  height: 48px;
+  padding: 0 22px;
+  border-radius: var(--radius-sm);
+  background: rgba(16, 185, 129, 0.12);
+  border: 1px solid rgba(16, 185, 129, 0.35);
+  color: #10b981;
+  font-family: var(--font-heading);
+  font-size: 0.9rem;
+  font-weight: 700;
+  box-shadow: 0 0 16px rgba(16, 185, 129, 0.2);
+  cursor: not-allowed;
+  user-select: none;
+}
+
+.cooldown-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  height: 48px;
+  padding: 0 18px;
+  border-radius: var(--radius-sm);
+  background: rgba(6, 182, 212, 0.08);
+  border: 1px solid rgba(6, 182, 212, 0.3);
+  color: #06b6d4;
+  font-family: var(--font-mono);
+  font-size: 0.82rem;
+  font-weight: 700;
+  box-shadow: 0 0 14px rgba(6, 182, 212, 0.18);
+  user-select: none;
+  white-space: nowrap;
+}
+
+.cooldown-indicator-spin {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  animation: cooldownSpin 2.5s linear infinite;
+}
+
+@keyframes cooldownSpin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
 .btn-try-again {
   display: inline-flex;
   align-items: center;
@@ -3665,7 +3845,6 @@ body.light-mode .arch-node-inspector {
   transition: all var(--transition-fast);
 }
 
-.btn-send-another:hover,
 .btn-try-again:hover {
   border-color: #06b6d4;
   color: #06b6d4;
@@ -3727,6 +3906,68 @@ body.light-mode .node-group.active-node rect {
   .cta-form-row {
     flex-direction: column;
   }
+
+  /* Contact Section - Tablet Layout */
+  .contact-control-grid {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+
+  .contact-panel-left,
+  .contact-panel-right {
+    padding: 24px 20px;
+    border-radius: var(--radius-md);
+  }
+
+  .connection-headline {
+    font-size: 1.55rem;
+  }
+
+  .form-panel-header {
+    gap: 12px;
+  }
+}
+
+@media (max-width: 600px) {
+  /* Contact Section - Phablet & Mobile Transition */
+  .form-panel-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+    margin-bottom: 18px;
+    padding-bottom: 12px;
+  }
+
+  .channel-ready-badge {
+    align-self: flex-start;
+  }
+
+  .cooldown-flex-row {
+    flex-direction: column;
+    width: 100%;
+    gap: 10px;
+    align-items: stretch;
+  }
+
+  .btn-message-sent,
+  .cooldown-badge {
+    width: 100%;
+    justify-content: center;
+    height: 46px;
+  }
+
+  .social-glass-cards-grid {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+  }
+
+  .social-glass-card {
+    padding: 10px 8px;
+  }
+
+  .social-card-name {
+    font-size: 0.78rem;
+  }
 }
 
 @media (max-width: 480px) {
@@ -3738,6 +3979,194 @@ body.light-mode .node-group.active-node rect {
 
   .cta-headline {
     font-size: 1.4rem;
+  }
+
+  /* Contact Section - Mobile Deep Optimization */
+  .contact-control-section {
+    padding: 36px 0;
+  }
+
+  .contact-control-grid {
+    gap: 16px;
+  }
+
+  .contact-panel-left,
+  .contact-panel-right {
+    padding: 18px 14px;
+    border-radius: var(--radius-sm);
+  }
+
+  /* Terminal Header on Small Mobile */
+  .terminal-bar-header {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    padding: 9px 12px;
+  }
+
+  .terminal-dots-cluster {
+    order: 1;
+  }
+
+  .online-status-badge {
+    order: 2;
+    padding: 2px 8px;
+    font-size: 0.68rem;
+  }
+
+  .terminal-command-line {
+    order: 3;
+    width: 100%;
+    margin-top: 3px;
+    font-size: 0.71rem;
+    overflow-x: auto;
+    white-space: nowrap;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
+
+  .terminal-command-line::-webkit-scrollbar {
+    display: none;
+  }
+
+  /* Narrative text on mobile */
+  .connection-headline {
+    font-size: 1.35rem;
+    line-height: 1.25;
+  }
+
+  .connection-subheading {
+    font-size: 0.82rem;
+  }
+
+  /* Focus areas */
+  .focus-tags-grid {
+    gap: 6px;
+  }
+
+  .focus-pill {
+    padding: 5px 9px;
+    font-size: 0.73rem;
+  }
+
+  /* Social channels single-column stack on small screens */
+  .social-glass-cards-grid {
+    grid-template-columns: 1fr;
+    gap: 8px;
+  }
+
+  .social-glass-card {
+    padding: 11px 14px;
+  }
+
+  .social-card-name {
+    font-size: 0.82rem;
+  }
+
+  /* Form Container */
+  .form-panel-title {
+    font-size: 1.15rem;
+  }
+
+  .form-panel-subtitle {
+    font-size: 0.72rem;
+  }
+
+  .glass-control-form {
+    gap: 14px;
+  }
+
+  .floating-input {
+    height: 52px;
+    padding: 20px 34px 6px 13px;
+    font-size: 0.86rem;
+  }
+
+  .floating-label {
+    top: 15px;
+    left: 13px;
+    font-size: 0.8rem;
+  }
+
+  .floating-input:focus ~ .floating-label,
+  .floating-input:not(:placeholder-shown) ~ .floating-label {
+    top: 5px;
+    left: 13px;
+    font-size: 0.63rem;
+  }
+
+  .floating-textarea {
+    min-height: 95px;
+  }
+
+  .field-feedback-icon {
+    right: 10px;
+    top: 15px;
+  }
+
+  .field-validation-msg {
+    font-size: 0.69rem;
+    margin-top: 3px;
+  }
+
+  .glass-send-button {
+    height: 48px;
+    font-size: 0.9rem;
+  }
+
+  /* 3D Stage on Mobile */
+  .transmission-3d-overlay {
+    min-height: 290px;
+    gap: 20px;
+  }
+
+  .transmission-3d-rig {
+    width: 105px;
+    height: 105px;
+  }
+
+  .ring-orbit-outer {
+    width: 105px;
+    height: 105px;
+  }
+
+  .ring-orbit-mid {
+    width: 75px;
+    height: 75px;
+  }
+
+  .ring-orbit-inner {
+    width: 48px;
+    height: 48px;
+  }
+
+  .telemetry-beam-axis {
+    width: 110px;
+  }
+
+  .t-node-core {
+    width: 36px;
+    height: 36px;
+  }
+
+  .core-check-icon {
+    width: 18px;
+    height: 18px;
+  }
+
+  .transmission-status-label {
+    font-size: 0.68rem;
+    padding: 4px 10px;
+  }
+
+  .state-title {
+    font-size: 1.15rem;
+  }
+
+  .state-message {
+    font-size: 0.84rem;
   }
 }
 

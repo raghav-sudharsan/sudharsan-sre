@@ -1170,10 +1170,12 @@ function setupContactForm() {
 
   const channelBadge = document.getElementById("channel-ready-badge");
   const formCard = document.getElementById("contact-form-card");
+  const stage3D = document.getElementById("transmission-3d-stage");
   const successPanel = document.getElementById("submission-success-panel");
   const errorPanel = document.getElementById("submission-error-panel");
-  const btnSendAnother = document.getElementById("btn-send-another");
   const btnTryAgain = document.getElementById("btn-try-again");
+
+  let cooldownInterval = null;
 
   // Track validation status
   const fields = [
@@ -1230,6 +1232,72 @@ function setupContactForm() {
       }
     }
   }
+
+  // 30-Second Cooldown Countdown Logic
+  function startCooldownCountdown(expiryTimestamp) {
+    if (cooldownInterval) clearInterval(cooldownInterval);
+
+    const updateDisplay = () => {
+      const remaining = Math.max(0, Math.ceil((expiryTimestamp - Date.now()) / 1000));
+      const timerTextEl = document.getElementById("cooldown-timer-text");
+      if (timerTextEl) {
+        timerTextEl.textContent = `Ready again in ${remaining}s`;
+      }
+
+      if (remaining <= 0) {
+        clearInterval(cooldownInterval);
+        cooldownInterval = null;
+        try {
+          localStorage.removeItem("contact_cooldown_expiry");
+        } catch (e) {}
+
+        // Reset to CHANNEL READY state
+        if (successPanel) successPanel.style.display = "none";
+        form.style.display = "flex";
+        fields.forEach(f => setFieldState(f, true, false));
+
+        if (submitBtn) {
+          submitBtn.disabled = false;
+          const defSpan = submitBtn.querySelector(".btn-state-default");
+          const sendSpan = submitBtn.querySelector(".btn-state-sending");
+          if (defSpan) defSpan.style.display = "inline-flex";
+          if (sendSpan) sendSpan.style.display = "none";
+        }
+
+        if (channelBadge) {
+          channelBadge.classList.remove("active-focus");
+          const badgeText = channelBadge.querySelector(".channel-ready-text");
+          if (badgeText) badgeText.textContent = "CHANNEL READY";
+        }
+      }
+    };
+
+    updateDisplay();
+    cooldownInterval = setInterval(updateDisplay, 1000);
+  }
+
+  // Check persistent cooldown on page load / initialization
+  function checkExistingCooldown() {
+    try {
+      const storedExpiry = localStorage.getItem("contact_cooldown_expiry");
+      if (!storedExpiry) return;
+      const expiryTimestamp = parseInt(storedExpiry, 10);
+      if (!isNaN(expiryTimestamp) && expiryTimestamp > Date.now()) {
+        form.style.display = "none";
+        if (successPanel) {
+          successPanel.style.display = "flex";
+          if (window.lucide) lucide.createIcons();
+        }
+        startCooldownCountdown(expiryTimestamp);
+      } else {
+        localStorage.removeItem("contact_cooldown_expiry");
+      }
+    } catch (err) {
+      console.warn("Storage access restricted:", err);
+    }
+  }
+
+  checkExistingCooldown();
 
   // Real-time micro-interactions and validation
   fields.forEach(fieldObj => {
@@ -1342,7 +1410,7 @@ function setupContactForm() {
       return;
     }
 
-    // Enter Sending State
+    // Enter Phase 1: Sending State
     if (submitBtn) {
       submitBtn.disabled = true;
       const defSpan = submitBtn.querySelector(".btn-state-default");
@@ -1370,35 +1438,46 @@ function setupContactForm() {
       });
 
       if (response.ok) {
-        // Successful Transmission Transition
-        form.style.display = "none";
-        if (successPanel) {
-          successPanel.style.display = "flex";
-          lucide.createIcons();
-        }
-
-        // Save message locally
+        // Save telemetry record locally
         const updatedMessages = [...(appState.messages || []), payload];
         saveState("messages", updatedMessages);
 
-        // Reset form inputs & states
+        // Reset form inputs & validation classes
         form.reset();
         fields.forEach(f => setFieldState(f, true, false));
 
-        // Restore button state for future submissions
-        if (submitBtn) {
-          submitBtn.disabled = false;
-          const defSpan = submitBtn.querySelector(".btn-state-default");
-          const sendSpan = submitBtn.querySelector(".btn-state-sending");
-          if (defSpan) defSpan.style.display = "inline-flex";
-          if (sendSpan) sendSpan.style.display = "none";
+        // Enter Phase 2: 3D Transmission Animation (~1.4s)
+        form.style.display = "none";
+        if (stage3D) {
+          stage3D.style.display = "flex";
+          if (window.lucide) lucide.createIcons();
         }
+
+        const isReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+        const animationDelay = isReducedMotion ? 100 : 1400;
+
+        setTimeout(() => {
+          // Enter Phase 3: Success State & Start 30s Cooldown
+          if (stage3D) stage3D.style.display = "none";
+          if (successPanel) {
+            successPanel.style.display = "flex";
+            if (window.lucide) lucide.createIcons();
+          }
+
+          const expiryTimestamp = Date.now() + 30000;
+          try {
+            localStorage.setItem("contact_cooldown_expiry", expiryTimestamp.toString());
+          } catch (e) {}
+
+          startCooldownCountdown(expiryTimestamp);
+        }, animationDelay);
+
       } else {
-        // Failed Transmission Transition
+        // Failed Transmission Transition -> Do NOT start cooldown
         form.style.display = "none";
         if (errorPanel) {
           errorPanel.style.display = "flex";
-          lucide.createIcons();
+          if (window.lucide) lucide.createIcons();
         }
         if (submitBtn) {
           submitBtn.disabled = false;
@@ -1413,7 +1492,7 @@ function setupContactForm() {
       form.style.display = "none";
       if (errorPanel) {
         errorPanel.style.display = "flex";
-        lucide.createIcons();
+        if (window.lucide) lucide.createIcons();
       }
       if (submitBtn) {
         submitBtn.disabled = false;
@@ -1425,17 +1504,7 @@ function setupContactForm() {
     }
   });
 
-  // Action: Send Another Message
-  if (btnSendAnother) {
-    btnSendAnother.addEventListener("click", () => {
-      if (successPanel) successPanel.style.display = "none";
-      form.style.display = "flex";
-      fields.forEach(f => setFieldState(f, true, false));
-      if (nameInput) nameInput.focus();
-    });
-  }
-
-  // Action: Try Again
+  // Action: Try Again on Failure
   if (btnTryAgain) {
     btnTryAgain.addEventListener("click", () => {
       if (errorPanel) errorPanel.style.display = "none";
