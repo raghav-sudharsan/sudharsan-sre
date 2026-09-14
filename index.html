@@ -471,22 +471,22 @@
                   <h4 class="dispatch-title"><i data-lucide="send" style="width:14px; height:14px; color:#38bdf8;"></i> Direct Transmission</h4>
                   <span class="dispatch-tag">Encrypted Telemetry Dispatch</span>
                 </div>
-                <form id="contact-form" class="cta-form">
+                <form id="contact-form" class="cta-form" action="https://formspree.io/f/maeygazz" method="POST">
                   <div class="cta-form-row">
                     <div class="form-group" style="flex:1;">
-                      <input type="text" id="form-name" class="form-input" placeholder="Your Name or Team" required>
-                      <span class="form-error-msg" id="name-error">Name required</span>
+                      <input type="text" id="form-name" name="name" class="form-input" placeholder="Your Name or Team" required data-fs-field>
+                      <span class="form-error-msg" id="name-error" data-fs-error="name">Name required</span>
                     </div>
                     <div class="form-group" style="flex:1;">
-                      <input type="email" id="form-email" class="form-input" placeholder="Your Work Email" required>
-                      <span class="form-error-msg" id="email-error">Valid email required</span>
+                      <input type="email" id="form-email" name="email" class="form-input" placeholder="Your Work Email" required data-fs-field>
+                      <span class="form-error-msg" id="email-error" data-fs-error="email">Valid email required</span>
                     </div>
                   </div>
                   <div class="form-group">
-                    <textarea id="form-message" class="form-input" rows="3" placeholder="Describe inquiry, production challenge, or role details..." required></textarea>
-                    <span class="form-error-msg" id="message-error">Message required</span>
+                    <textarea id="form-message" name="message" class="form-input" rows="3" placeholder="Describe inquiry, production challenge, or role details..." required data-fs-field></textarea>
+                    <span class="form-error-msg" id="message-error" data-fs-error="message">Message required</span>
                   </div>
-                  <button type="submit" class="btn btn-primary" style="align-self: flex-start;">
+                  <button type="submit" id="contact-submit-btn" class="btn btn-primary" style="align-self: flex-start;" data-fs-submit-btn>
                     <i data-lucide="send"></i> Dispatch Message
                   </button>
                 </form>

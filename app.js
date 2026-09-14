@@ -1157,12 +1157,12 @@ function renderContactCards() {
   });
 }
 
-// Contact form validators
+// Contact form validators & Formspree AJAX submission
 function setupContactForm() {
   const form = document.getElementById("contact-form");
   if (!form) return;
 
-  form.addEventListener("submit", (e) => {
+  form.addEventListener("submit", async (e) => {
     e.preventDefault();
 
     const nameInput = document.getElementById("form-name");
@@ -1170,6 +1170,7 @@ function setupContactForm() {
     const companyInput = document.getElementById("form-company");
     const phoneInput = document.getElementById("form-phone");
     const messageInput = document.getElementById("form-message");
+    const submitBtn = form.querySelector('button[type="submit"]');
 
     let isValid = true;
 
@@ -1192,7 +1193,14 @@ function setupContactForm() {
     }
 
     if (isValid) {
-      const msgObj = {
+      const originalBtnContent = submitBtn ? submitBtn.innerHTML : "";
+      if (submitBtn) {
+        submitBtn.disabled = true;
+        submitBtn.innerHTML = `<i data-lucide="loader-2"></i> Dispatching...`;
+        if (window.lucide) lucide.createIcons();
+      }
+
+      const payload = {
         name: nameInput.value.trim(),
         email: emailInput.value.trim(),
         company: companyInput ? companyInput.value.trim() : "",
@@ -1201,11 +1209,38 @@ function setupContactForm() {
         timestamp: new Date().toISOString()
       };
 
-      const updatedMessages = [...appState.messages, msgObj];
-      saveState("messages", updatedMessages);
+      try {
+        const response = await fetch("https://formspree.io/f/maeygazz", {
+          method: "POST",
+          headers: {
+            "Accept": "application/json",
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify(payload)
+        });
 
-      showToast("Telemetry dispatched to core coordinator.");
-      form.reset();
+        if (response.ok) {
+          const updatedMessages = [...(appState.messages || []), payload];
+          saveState("messages", updatedMessages);
+
+          showToast("Telemetry dispatched successfully! Thank you for reaching out.");
+          form.reset();
+        } else {
+          const data = await response.json().catch(() => null);
+          const errorMsg = data && data.errors && data.errors.length > 0
+            ? data.errors.map(err => err.message).join(", ")
+            : "Transmission error. Please email directly or try again.";
+          showToast(errorMsg, true);
+        }
+      } catch (err) {
+        showToast("Network error. Please email directly at raghavsudhar07@gmail.com.", true);
+      } finally {
+        if (submitBtn) {
+          submitBtn.disabled = false;
+          submitBtn.innerHTML = originalBtnContent;
+          if (window.lucide) lucide.createIcons();
+        }
+      }
     }
   });
 }
@@ -1225,10 +1260,12 @@ function resetFormErrors() {
   document.querySelectorAll(".form-error-msg").forEach(m => m.style.display = "none");
 }
 
-function showToast(text) {
+function showToast(text, isError = false) {
   const toast = document.getElementById("toast-msg-container");
   const msgEl = document.getElementById("toast-msg-text");
+  if (!toast || !msgEl) return;
   msgEl.innerText = text;
+  toast.style.background = isError ? "#ef4444" : "#10b981";
   toast.classList.add("show");
   setTimeout(() => {
     toast.classList.remove("show");
