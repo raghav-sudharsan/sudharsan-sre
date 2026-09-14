@@ -428,112 +428,218 @@
         </section>
 
         <!-- Redesigned Let's Connect CTA Section -->
-        <section class="content-section" id="contact-section">
-          <div class="terminal-cta-card glass-panel">
+        <!-- Redesigned Contact Section: Production Engineering Glass UI -->
+        <section class="content-section contact-control-section" id="contact-section">
+          <div class="contact-ambient-glow"></div>
+          <div class="contact-control-grid">
 
-            <!-- Terminal Header Bar -->
-            <div class="terminal-cta-header">
-              <div class="terminal-dots-cluster">
-                <span class="terminal-dot dot-red"></span>
-                <span class="terminal-dot dot-yellow"></span>
-                <span class="terminal-dot dot-green"></span>
+            <!-- LEFT COLUMN: Production Connection Panel -->
+            <div class="contact-panel-left glass-panel">
+              <!-- Terminal Bar -->
+              <div class="terminal-bar-header">
+                <div class="terminal-dots-cluster">
+                  <span class="terminal-dot dot-red"></span>
+                  <span class="terminal-dot dot-yellow"></span>
+                  <span class="terminal-dot dot-green"></span>
+                </div>
+                <div class="terminal-command-line">
+                  <span class="prompt-user">ops@sudharsan</span>:<span class="prompt-path">~/production</span>$&nbsp;<span class="cmd-text" id="term-cmd-text">connect --with Sudharsan</span><span class="terminal-cmd-cursor"></span>
+                </div>
+                <div class="online-status-badge" id="online-status-badge">
+                  <span class="online-status-ping">
+                    <span class="ping-ring"></span>
+                    <span class="ping-dot"></span>
+                  </span>
+                  <span>ONLINE</span>
+                </div>
               </div>
-              <div class="terminal-title-text">
-                <span class="prompt-user">ops@sudharsan</span>:<span class="prompt-path">~/production</span>$ connect
-                --with Sudharsan
-              </div>
-              <div class="terminal-system-status">
-                <span class="status-dot-blink"></span>
-                <span>ONLINE</span>
-              </div>
-            </div>
 
-            <!-- Terminal CTA Body -->
-            <div class="terminal-cta-body">
+              <!-- Telemetry Status Badges with Glow & Live Effect -->
               <div class="cta-status-badge-row">
-                <div class="cta-status-badge">
+                <div class="cta-status-badge telemetry-glass-badge">
+                  <span class="badge-beacon-dot"></span>
                   <span class="badge-label">Status:</span>
                   <span class="badge-val">Available for DevOps &amp; SRE Roles</span>
                 </div>
-                <div class="cta-status-badge">
+                <div class="cta-status-badge telemetry-glass-badge">
+                  <span class="badge-beacon-dot"></span>
                   <span class="badge-label">Focus:</span>
                   <span class="badge-val">DevOps • SRE • Multi-Cloud</span>
                 </div>
-                <div class="cta-status-badge">
+                <div class="cta-status-badge telemetry-glass-badge">
+                  <span class="badge-beacon-dot"></span>
                   <span class="badge-label">Environment:</span>
                   <span class="badge-val">Production Engineering</span>
                 </div>
               </div>
 
-              <div class="cta-narrative-box">
-                <h2 class="cta-headline">Let's build reliable systems.</h2>
-                <p class="cta-subheading">DevOps Engineer | Site Reliability Engineer</p>
-                <div class="cta-pillar-tags">
-                  <span class="pillar-tag">Production Operations</span>
-                  <span class="pillar-tag">Cloud Infrastructure</span>
-                  <span class="pillar-tag">Observability</span>
-                  <span class="pillar-tag">Automation</span>
-                  <span class="pillar-tag">Reliability Engineering</span>
+              <!-- Narrative Identity -->
+              <div class="connection-narrative-box">
+                <h2 class="connection-headline">Let's build reliable systems.</h2>
+                <p class="connection-subheading">DevOps Engineer | Site Reliability Engineer</p>
+              </div>
+
+              <!-- Engineering Focus Areas -->
+              <div class="focus-areas-container">
+                <div class="focus-tags-grid">
+                  <span class="focus-pill"><span class="focus-pip"></span>Production Operations</span>
+                  <span class="focus-pill"><span class="focus-pip"></span>Cloud Infrastructure</span>
+                  <span class="focus-pill"><span class="focus-pip"></span>Observability</span>
+                  <span class="focus-pill"><span class="focus-pip"></span>Automation</span>
+                  <span class="focus-pill"><span class="focus-pip"></span>Reliability Engineering</span>
                 </div>
               </div>
 
-              <!-- Action Command Links -->
-              <div class="cta-actions-row">
-                <a href="https://github.com/raghav-sudharsan" target="_blank" class="cta-action-pill cta-btn-github"
-                  aria-label="GitHub Profile">
-                  <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor">
-                    <path
-                      d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z" />
-                  </svg>
-                  <span>GitHub</span>
-                </a>
-                <a href="https://linkedin.com/in/sudharsan-sre/" target="_blank"
-                  class="cta-action-pill cta-btn-linkedin" aria-label="LinkedIn Profile">
-                  <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor">
-                    <path
-                      d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.779-1.75-1.75s.784-1.75 1.75-1.75 1.75.779 1.75 1.75-.784 1.75-1.75 1.75zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z" />
-                  </svg>
-                  <span>LinkedIn</span>
-                </a>
-                <a href="mailto:raghavsudhar07@gmail.com" class="cta-action-pill cta-btn-email" aria-label="Send Email">
-                  <i data-lucide="mail"></i> <span>Mail</span>
-                </a>
-                <!-- <a href="assets/documents/Sudharsan_S_DevOps_SRE_Resume.pdf" download="Sudharsan_S_DevOps_SRE_Resume.pdf" class="cta-action-pill cta-btn-resume" aria-label="Download Resume">
-                  <i data-lucide="file-text"></i> <span>Resume (PDF)</span>
-                </a> -->
+              <!-- Social Communication Channels -->
+              <div class="connection-channels-wrap">
+                <div class="social-glass-cards-grid">
+                  <a href="https://github.com/raghav-sudharsan" target="_blank" class="social-glass-card" aria-label="GitHub Profile">
+                    <div class="social-card-inner">
+                      <div class="social-card-left">
+                        <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor" class="social-icon">
+                          <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
+                        </svg>
+                        <span class="social-card-name">GitHub</span>
+                      </div>
+                      <i data-lucide="arrow-up-right" class="social-arrow"></i>
+                    </div>
+                  </a>
+
+                  <a href="https://linkedin.com/in/sudharsan-sre/" target="_blank" class="social-glass-card" aria-label="LinkedIn Profile">
+                    <div class="social-card-inner">
+                      <div class="social-card-left">
+                        <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor" class="social-icon">
+                          <path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.779-1.75-1.75s.784-1.75 1.75-1.75 1.75.779 1.75 1.75-.784 1.75-1.75 1.75zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/>
+                        </svg>
+                        <span class="social-card-name">LinkedIn</span>
+                      </div>
+                      <i data-lucide="arrow-up-right" class="social-arrow"></i>
+                    </div>
+                  </a>
+
+                  <a href="mailto:raghavsudhar07@gmail.com" class="social-glass-card" aria-label="Send Direct Email">
+                    <div class="social-card-inner">
+                      <div class="social-card-left">
+                        <i data-lucide="mail" class="social-icon"></i>
+                        <span class="social-card-name">Mail</span>
+                      </div>
+                      <i data-lucide="arrow-up-right" class="social-arrow"></i>
+                    </div>
+                  </a>
+                </div>
+              </div>
+            </div>
+
+            <!-- RIGHT COLUMN: Contact Form (Visual Focal Point) -->
+            <div class="contact-panel-right glass-panel" id="contact-form-card">
+              <div class="form-panel-header">
+                <div class="form-title-wrap">
+                  <h3 class="form-panel-title">Direct Contact</h3>
+                  <p class="form-panel-subtitle">Secure Message Channel • All Fields Required</p>
+                </div>
+                <div class="channel-ready-badge" id="channel-ready-badge">
+                  <span class="channel-ready-dot"></span>
+                  <span class="channel-ready-text">CHANNEL READY</span>
+                </div>
               </div>
 
-              <!-- Quick Dispatch Transmission Form -->
-              <div class="cta-dispatch-container">
-                <div class="dispatch-header-row">
-                  <h4 class="dispatch-title"><i data-lucide="send" style="width:14px; height:14px; color:#38bdf8;"></i>
-                    Direct Transmission</h4>
-                  <span class="dispatch-tag">Encrypted Telemetry Dispatch</span>
+              <!-- Main Form Container -->
+              <form id="contact-form" class="glass-control-form" action="https://formspree.io/f/maeygazz" method="POST" novalidate>
+                <!-- Field 1: Name / Organization -->
+                <div class="floating-field-group" id="group-name">
+                  <div class="input-glass-box">
+                    <input type="text" id="form-name" name="name" class="floating-input" placeholder="e.g. Alex Rivera or Platform Team" required autocomplete="name">
+                    <label for="form-name" class="floating-label">
+                      Name / Organization <span class="req-star">*</span>
+                    </label>
+                    <span class="input-highlight-border"></span>
+                    <span class="field-feedback-icon" id="name-feedback-icon"></span>
+                  </div>
+                  <span class="field-validation-msg" id="name-error">Please enter your name or organization (minimum 2 characters)</span>
                 </div>
-                <form id="contact-form" class="cta-form" action="https://formspree.io/f/maeygazz" method="POST">
-                  <div class="cta-form-row">
-                    <div class="form-group" style="flex:1;">
-                      <input type="text" id="form-name" name="name" class="form-input" placeholder="Your Name or Team"
-                        required data-fs-field>
-                      <span class="form-error-msg" id="name-error" data-fs-error="name">Name required</span>
-                    </div>
-                    <div class="form-group" style="flex:1;">
-                      <input type="email" id="form-email" name="email" class="form-input" placeholder="Your Work Email"
-                        required data-fs-field>
-                      <span class="form-error-msg" id="email-error" data-fs-error="email">Valid email required</span>
-                    </div>
+
+                <!-- Field 2: Work Email -->
+                <div class="floating-field-group" id="group-email">
+                  <div class="input-glass-box">
+                    <input type="email" id="form-email" name="email" class="floating-input" placeholder="e.g. alex@company.com" required autocomplete="email">
+                    <label for="form-email" class="floating-label">
+                      Work Email <span class="req-star">*</span>
+                    </label>
+                    <span class="input-highlight-border"></span>
+                    <span class="field-feedback-icon" id="email-feedback-icon"></span>
                   </div>
-                  <div class="form-group">
-                    <textarea id="form-message" name="message" class="form-input" rows="3"
-                      placeholder="Describe inquiry, production challenge, or role details..." required
-                      data-fs-field></textarea>
-                    <span class="form-error-msg" id="message-error" data-fs-error="message">Message required</span>
+                  <span class="field-validation-msg" id="email-error">Please enter a valid work email</span>
+                </div>
+
+                <!-- Field 3: Phone Number -->
+                <div class="floating-field-group" id="group-phone">
+                  <div class="input-glass-box">
+                    <input type="tel" id="form-phone" name="phone" class="floating-input" placeholder="e.g. +91 98765 43210 or +1 (555) 019-2834" required autocomplete="tel">
+                    <label for="form-phone" class="floating-label">
+                      Phone Number <span class="req-star">*</span>
+                    </label>
+                    <span class="input-highlight-border"></span>
+                    <span class="field-feedback-icon" id="phone-feedback-icon"></span>
                   </div>
-                  <button type="submit" id="contact-submit-btn" class="btn btn-primary" style="align-self: flex-start;"
-                    data-fs-submit-btn>
-                    <i data-lucide="send"></i> Dispatch Message
+                  <span class="field-validation-msg" id="phone-error">Please enter a valid phone number</span>
+                </div>
+
+                <!-- Field 4: Message -->
+                <div class="floating-field-group" id="group-message">
+                  <div class="input-glass-box textarea-box">
+                    <textarea id="form-message" name="message" class="floating-input floating-textarea" rows="4" placeholder="Tell me about the role, project, production challenge, or engineering requirement..." required></textarea>
+                    <label for="form-message" class="floating-label">
+                      Message <span class="req-star">*</span>
+                    </label>
+                    <span class="input-highlight-border"></span>
+                    <span class="field-feedback-icon" id="message-feedback-icon"></span>
+                  </div>
+                  <span class="field-validation-msg" id="message-error">Please enter a message (minimum 5 characters)</span>
+                </div>
+
+                <!-- Submit CTA Button -->
+                <div class="form-submit-row">
+                  <button type="submit" id="contact-submit-btn" class="glass-send-button" data-fs-submit-btn>
+                    <span class="btn-state-default">
+                      <span>Send Message</span>
+                      <i data-lucide="send" class="btn-send-icon"></i>
+                    </span>
+                    <span class="btn-state-sending" style="display:none;">
+                      <span class="sre-spin-loader"></span>
+                      <span>Sending...</span>
+                    </span>
                   </button>
-                </form>
+                </div>
+              </form>
+
+              <!-- In-Card Success State (Integrated Glass UI) -->
+              <div class="submission-state-panel success-panel" id="submission-success-panel" style="display:none;">
+                <div class="state-icon-wrap success-icon-wrap">
+                  <i data-lucide="check" class="state-status-icon"></i>
+                </div>
+                <div class="state-content-wrap">
+                  <h4 class="state-title">TRANSMISSION COMPLETE</h4>
+                  <p class="state-message">Thanks for reaching out.<br>Your message has been received.</p>
+                </div>
+                <button type="button" class="btn-send-another" id="btn-send-another">
+                  <i data-lucide="rotate-ccw" style="width:14px; height:14px;"></i>
+                  <span>Send Another Message</span>
+                </button>
+              </div>
+
+              <!-- In-Card Error State (Integrated Glass UI) -->
+              <div class="submission-state-panel error-panel" id="submission-error-panel" style="display:none;">
+                <div class="state-icon-wrap error-icon-wrap">
+                  <i data-lucide="alert-triangle" class="state-status-icon"></i>
+                </div>
+                <div class="state-content-wrap">
+                  <h4 class="state-title">TRANSMISSION FAILED</h4>
+                  <p class="state-message">Unable to send the message right now.<br>Please try again.</p>
+                </div>
+                <button type="button" class="btn-try-again" id="btn-try-again">
+                  <i data-lucide="refresh-cw" style="width:14px; height:14px;"></i>
+                  <span>Try Again</span>
+                </button>
               </div>
 
             </div>

@@ -370,15 +370,15 @@ function renderSkills(lensFilter = "all") {
   const filtered = (!lensFilter || lensFilter === "all")
     ? portfolioData.skills
     : portfolioData.skills.filter(domain => {
-        if (!domain.domainLens) return false;
-        return domain.domainLens.toLowerCase().includes(lensFilter.toLowerCase());
-      });
+      if (!domain.domainLens) return false;
+      return domain.domainLens.toLowerCase().includes(lensFilter.toLowerCase());
+    });
 
   filtered.forEach((domain, idx) => {
     const card = document.createElement("div");
     const staggerClass = `reveal-stagger-${(idx % 3) + 1}`;
     card.className = `skills-category-card glass-panel reveal-on-scroll ${staggerClass}`;
-    
+
     const techItemsHTML = domain.technologies.map(tech => {
       const svgLogo = getTechSVG(tech);
       return `
@@ -997,7 +997,7 @@ let archRotationTimer = null;
 let isArchHovered = false;
 function initArchitectureAutoRotation() {
   if (archRotationTimer) clearInterval(archRotationTimer);
-  
+
   // Attach hover listeners to pause/resume auto rotation
   const containerEl = document.querySelector(".architecture-tabs-container");
   if (containerEl && !containerEl.dataset.hoverBound) {
@@ -1018,7 +1018,7 @@ function initArchitectureAutoRotation() {
     const nextIndex = (currentIndex + 1) % architectures.length;
     const nextArch = architectures[nextIndex];
     activeArchTab = nextArch.id;
-    
+
     const buttons = document.querySelectorAll(".arch-tab-btn");
     buttons.forEach((btn, idx) => {
       if (idx === nextIndex) {
@@ -1157,92 +1157,291 @@ function renderContactCards() {
   });
 }
 
-// Contact form validators & Formspree AJAX submission
+// Contact form validators & Formspree AJAX submission with Production Engineering Glass UI
 function setupContactForm() {
   const form = document.getElementById("contact-form");
   if (!form) return;
 
+  const nameInput = document.getElementById("form-name");
+  const emailInput = document.getElementById("form-email");
+  const phoneInput = document.getElementById("form-phone");
+  const messageInput = document.getElementById("form-message");
+  const submitBtn = document.getElementById("contact-submit-btn");
+
+  const channelBadge = document.getElementById("channel-ready-badge");
+  const formCard = document.getElementById("contact-form-card");
+  const successPanel = document.getElementById("submission-success-panel");
+  const errorPanel = document.getElementById("submission-error-panel");
+  const btnSendAnother = document.getElementById("btn-send-another");
+  const btnTryAgain = document.getElementById("btn-try-again");
+
+  // Track validation status
+  const fields = [
+    {
+      input: nameInput,
+      group: document.getElementById("group-name"),
+      feedback: document.getElementById("name-feedback-icon"),
+      validate: (val) => val.trim().length >= 2
+    },
+    {
+      input: emailInput,
+      group: document.getElementById("group-email"),
+      feedback: document.getElementById("email-feedback-icon"),
+      validate: (val) => validateEmail(val.trim())
+    },
+    {
+      input: phoneInput,
+      group: document.getElementById("group-phone"),
+      feedback: document.getElementById("phone-feedback-icon"),
+      validate: (val) => validatePhone(val.trim())
+    },
+    {
+      input: messageInput,
+      group: document.getElementById("group-message"),
+      feedback: document.getElementById("message-feedback-icon"),
+      validate: (val) => val.trim().length >= 5
+    }
+  ];
+
+  function setFieldState(fieldObj, isValid, showValidation = true) {
+    if (!fieldObj.group) return;
+    const errMsg = fieldObj.group.querySelector(".field-validation-msg");
+    if (!showValidation) {
+      fieldObj.group.classList.remove("valid", "invalid");
+      if (fieldObj.feedback) fieldObj.feedback.innerHTML = "";
+      if (errMsg) errMsg.style.display = "none";
+      return;
+    }
+    if (isValid) {
+      fieldObj.group.classList.remove("invalid");
+      fieldObj.group.classList.add("valid");
+      if (errMsg) errMsg.style.display = "none";
+      if (fieldObj.feedback) {
+        fieldObj.feedback.innerHTML = `<i data-lucide="check" style="width:13px;height:13px;color:#10b981;"></i>`;
+        lucide.createIcons();
+      }
+    } else {
+      fieldObj.group.classList.remove("valid");
+      fieldObj.group.classList.add("invalid");
+      if (errMsg) errMsg.style.display = "block";
+      if (fieldObj.feedback) {
+        fieldObj.feedback.innerHTML = `<i data-lucide="alert-circle" style="width:13px;height:13px;color:#f87171;"></i>`;
+        lucide.createIcons();
+      }
+    }
+  }
+
+  // Real-time micro-interactions and validation
+  fields.forEach(fieldObj => {
+    if (!fieldObj.input) return;
+
+    // Focus state -> Increase glow on CHANNEL READY indicator & field
+    fieldObj.input.addEventListener("focus", () => {
+      if (channelBadge) channelBadge.classList.add("active-focus");
+      if (fieldObj.group) fieldObj.group.classList.add("is-focused");
+    });
+
+    // Blur state -> Validate field if interacted with, deactivate badge glow if no fields active
+    fieldObj.input.addEventListener("blur", () => {
+      if (fieldObj.group) fieldObj.group.classList.remove("is-focused");
+      if (fieldObj.input.value.trim().length > 0) {
+        const isValid = fieldObj.validate(fieldObj.input.value);
+        setFieldState(fieldObj, isValid, true);
+      }
+      setTimeout(() => {
+        const hasFocus = fields.some(f => f.input && document.activeElement === f.input);
+        if (!hasFocus && channelBadge) {
+          channelBadge.classList.remove("active-focus");
+        }
+      }, 50);
+    });
+
+    // Input state -> Clear error dynamically when corrected
+    ["input", "change", "keyup"].forEach(evtName => {
+      fieldObj.input.addEventListener(evtName, () => {
+        if (fieldObj.group && fieldObj.group.classList.contains("invalid")) {
+          const isValid = fieldObj.validate(fieldObj.input.value);
+          if (isValid) {
+            setFieldState(fieldObj, true, true);
+          }
+        }
+      });
+    });
+  });
+
+  // Desktop subtle 3D tilt
+  if (formCard && window.matchMedia("(min-width: 1024px)").matches) {
+    formCard.addEventListener("mousemove", (e) => {
+      const rect = formCard.getBoundingClientRect();
+      const x = e.clientX - rect.left;
+      const y = e.clientY - rect.top;
+      const centerX = rect.width / 2;
+      const centerY = rect.height / 2;
+
+      // Subtle tilt max 1.5 degrees
+      const rotateX = Math.max(-1.5, Math.min(1.5, ((centerY - y) / centerY) * 1.5)).toFixed(2);
+      const rotateY = Math.max(-1.5, Math.min(1.5, ((x - centerX) / centerX) * 1.5)).toFixed(2);
+
+      formCard.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
+    });
+
+    formCard.addEventListener("mouseleave", () => {
+      formCard.style.transform = "perspective(1000px) rotateX(0deg) rotateY(0deg)";
+    });
+  }
+
+  // Smooth Terminal Entrance Animation
+  const terminalCmd = document.getElementById("term-cmd-text");
+  const contactSection = document.getElementById("contact-section");
+  let terminalAnimated = false;
+
+  if (terminalCmd && contactSection && "IntersectionObserver" in window) {
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting && !terminalAnimated) {
+          terminalAnimated = true;
+          observer.disconnect();
+
+          const fullCmd = "connect --with Sudharsan";
+          terminalCmd.textContent = "";
+          terminalCmd.style.opacity = "1";
+          let charIdx = 0;
+          const typeInterval = setInterval(() => {
+            if (charIdx < fullCmd.length) {
+              terminalCmd.textContent += fullCmd.charAt(charIdx);
+              charIdx++;
+            } else {
+              clearInterval(typeInterval);
+            }
+          }, 35); // ~800ms total fast smooth reveal
+        }
+      });
+    }, { threshold: 0.2 });
+    observer.observe(contactSection);
+  }
+
+  // Form Submission Handler
   form.addEventListener("submit", async (e) => {
     e.preventDefault();
 
-    const nameInput = document.getElementById("form-name");
-    const emailInput = document.getElementById("form-email");
-    const companyInput = document.getElementById("form-company");
-    const phoneInput = document.getElementById("form-phone");
-    const messageInput = document.getElementById("form-message");
-    const submitBtn = form.querySelector('button[type="submit"]');
+    let isFormValid = true;
 
-    let isValid = true;
+    // Validate all fields
+    fields.forEach(fieldObj => {
+      if (!fieldObj.input) return;
+      const isValid = fieldObj.validate(fieldObj.input.value);
+      setFieldState(fieldObj, isValid, true);
+      if (!isValid) isFormValid = false;
+    });
 
-    // Reset validations
-    resetFormErrors();
-
-    if (!nameInput.value.trim()) {
-      showInputError(nameInput, "name-error");
-      isValid = false;
+    if (!isFormValid) {
+      // Haptic shake animation
+      form.classList.remove("form-shake");
+      void form.offsetWidth; // Force reflow
+      form.classList.add("form-shake");
+      return;
     }
 
-    if (!validateEmail(emailInput.value.trim())) {
-      showInputError(emailInput, "email-error");
-      isValid = false;
+    // Enter Sending State
+    if (submitBtn) {
+      submitBtn.disabled = true;
+      const defSpan = submitBtn.querySelector(".btn-state-default");
+      const sendSpan = submitBtn.querySelector(".btn-state-sending");
+      if (defSpan) defSpan.style.display = "none";
+      if (sendSpan) sendSpan.style.display = "inline-flex";
     }
 
-    if (!messageInput.value.trim()) {
-      showInputError(messageInput, "message-error");
-      isValid = false;
-    }
+    const payload = {
+      name: nameInput ? nameInput.value.trim() : "",
+      email: emailInput ? emailInput.value.trim() : "",
+      phone: phoneInput ? phoneInput.value.trim() : "",
+      message: messageInput ? messageInput.value.trim() : "",
+      timestamp: new Date().toISOString()
+    };
 
-    if (isValid) {
-      const originalBtnContent = submitBtn ? submitBtn.innerHTML : "";
-      if (submitBtn) {
-        submitBtn.disabled = true;
-        submitBtn.innerHTML = `<i data-lucide="loader-2"></i> Dispatching...`;
-        if (window.lucide) lucide.createIcons();
-      }
+    try {
+      const response = await fetch("https://formspree.io/f/maeygazz", {
+        method: "POST",
+        headers: {
+          "Accept": "application/json",
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify(payload)
+      });
 
-      const payload = {
-        name: nameInput.value.trim(),
-        email: emailInput.value.trim(),
-        company: companyInput ? companyInput.value.trim() : "",
-        phone: phoneInput ? phoneInput.value.trim() : "",
-        message: messageInput.value.trim(),
-        timestamp: new Date().toISOString()
-      };
-
-      try {
-        const response = await fetch("https://formspree.io/f/maeygazz", {
-          method: "POST",
-          headers: {
-            "Accept": "application/json",
-            "Content-Type": "application/json"
-          },
-          body: JSON.stringify(payload)
-        });
-
-        if (response.ok) {
-          const updatedMessages = [...(appState.messages || []), payload];
-          saveState("messages", updatedMessages);
-
-          showToast("Telemetry dispatched successfully! Thank you for reaching out.");
-          form.reset();
-        } else {
-          const data = await response.json().catch(() => null);
-          const errorMsg = data && data.errors && data.errors.length > 0
-            ? data.errors.map(err => err.message).join(", ")
-            : "Transmission error. Please email directly or try again.";
-          showToast(errorMsg, true);
+      if (response.ok) {
+        // Successful Transmission Transition
+        form.style.display = "none";
+        if (successPanel) {
+          successPanel.style.display = "flex";
+          lucide.createIcons();
         }
-      } catch (err) {
-        showToast("Network error. Please email directly at raghavsudhar07@gmail.com.", true);
-      } finally {
+
+        // Save message locally
+        const updatedMessages = [...(appState.messages || []), payload];
+        saveState("messages", updatedMessages);
+
+        // Reset form inputs & states
+        form.reset();
+        fields.forEach(f => setFieldState(f, true, false));
+
+        // Restore button state for future submissions
         if (submitBtn) {
           submitBtn.disabled = false;
-          submitBtn.innerHTML = originalBtnContent;
-          if (window.lucide) lucide.createIcons();
+          const defSpan = submitBtn.querySelector(".btn-state-default");
+          const sendSpan = submitBtn.querySelector(".btn-state-sending");
+          if (defSpan) defSpan.style.display = "inline-flex";
+          if (sendSpan) sendSpan.style.display = "none";
         }
+      } else {
+        // Failed Transmission Transition
+        form.style.display = "none";
+        if (errorPanel) {
+          errorPanel.style.display = "flex";
+          lucide.createIcons();
+        }
+        if (submitBtn) {
+          submitBtn.disabled = false;
+          const defSpan = submitBtn.querySelector(".btn-state-default");
+          const sendSpan = submitBtn.querySelector(".btn-state-sending");
+          if (defSpan) defSpan.style.display = "inline-flex";
+          if (sendSpan) sendSpan.style.display = "none";
+        }
+      }
+    } catch (err) {
+      console.error("Form transmission error:", err);
+      form.style.display = "none";
+      if (errorPanel) {
+        errorPanel.style.display = "flex";
+        lucide.createIcons();
+      }
+      if (submitBtn) {
+        submitBtn.disabled = false;
+        const defSpan = submitBtn.querySelector(".btn-state-default");
+        const sendSpan = submitBtn.querySelector(".btn-state-sending");
+        if (defSpan) defSpan.style.display = "inline-flex";
+        if (sendSpan) sendSpan.style.display = "none";
       }
     }
   });
+
+  // Action: Send Another Message
+  if (btnSendAnother) {
+    btnSendAnother.addEventListener("click", () => {
+      if (successPanel) successPanel.style.display = "none";
+      form.style.display = "flex";
+      fields.forEach(f => setFieldState(f, true, false));
+      if (nameInput) nameInput.focus();
+    });
+  }
+
+  // Action: Try Again
+  if (btnTryAgain) {
+    btnTryAgain.addEventListener("click", () => {
+      if (errorPanel) errorPanel.style.display = "none";
+      form.style.display = "flex";
+    });
+  }
 }
 
 function validateEmail(email) {
@@ -1250,14 +1449,11 @@ function validateEmail(email) {
   return re.test(email);
 }
 
-function showInputError(inputEl, errorId) {
-  inputEl.classList.add("invalid");
-  document.getElementById(errorId).style.display = "block";
-}
-
-function resetFormErrors() {
-  document.querySelectorAll(".form-input").forEach(i => i.classList.remove("invalid"));
-  document.querySelectorAll(".form-error-msg").forEach(m => m.style.display = "none");
+function validatePhone(phone) {
+  if (!phone) return false;
+  const digitsOnly = phone.replace(/\D/g, "");
+  const allowedCharsPattern = /^[+]?[\d\s().-]{7,25}$/;
+  return digitsOnly.length >= 7 && digitsOnly.length <= 16 && allowedCharsPattern.test(phone.trim());
 }
 
 function showToast(text, isError = false) {
@@ -1525,7 +1721,7 @@ function initTelemetryParticles() {
           ctx.beginPath();
           ctx.moveTo(particles[i].x, particles[i].y);
           ctx.lineTo(particles[j].x, particles[j].y);
-          ctx.strokeStyle = `rgba(99, 102, 241, ${(1 - dist/110) * 0.08})`;
+          ctx.strokeStyle = `rgba(99, 102, 241, ${(1 - dist / 110) * 0.08})`;
           ctx.lineWidth = 0.5;
           ctx.stroke();
         }
